@@ -19,7 +19,7 @@ module.exports = {
     plugins: [
         "@typescript-eslint",
     ],
-	ignorePatterns: ["*.config.js", "*.js"],
+	ignorePatterns: ["*.config.js", "*.js", "App-test.tsx"],
 	rules: {
 		'@typescript-eslint/adjacent-overload-signatures': 2,
 		'@typescript-eslint/array-type': [2, { ArrayOption: 'generic' }],
