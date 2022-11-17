@@ -16,7 +16,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "@typescript-eslint/prefer-ts-expect-error"
     ],
     "ignorePatterns": ["*.config.js"],
     "rules": {
