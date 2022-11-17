@@ -19,7 +19,7 @@ module.exports = {
     plugins: [
         "@typescript-eslint",
     ],
-	ignorePatterns: ["*.config.js", "*.js"],
+	ignorePatterns: ["*.config.js", "*.js", "App-test.tsx"],
 	rules: {
 		'@typescript-eslint/adjacent-overload-signatures': 2,
 		'@typescript-eslint/array-type': [2, { ArrayOption: 'generic' }],
@@ -307,7 +307,6 @@ module.exports = {
 		'getter-return': 2,
 		'grouped-accessor-pairs': [2, 'getBeforeSet'],
 		'implicit-arrow-linebreak': [2, 'beside'],
-		'indent': [2, 'tab'],
 		'init-declarations': 0,
 		'keyword-spacing': 0,
 		'linebreak-style': [2, 'unix'],
