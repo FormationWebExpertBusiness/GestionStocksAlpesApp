@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.gestionstocksalpesapp-mergeDebugResources-20:/values-zh-rCN/values-zh-rCN.xml",
+            "outputFile": "com.gestionstocksalpesapp-mergeDebugResources-27:/values-zh-rCN/values-zh-rCN.xml",
             "map": [
                 {
                     "source": "/home/web/.gradle/caches/transforms-3/1b40e4574e76bff5831ef4bf4270480d/transformed/appcompat-1.4.1/res/values-zh-rCN/values-zh-rCN.xml",
