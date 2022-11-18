@@ -223,9 +223,9 @@ export const ITEMS:
                 ]
             },
             {
-                category: 'routeur',
-                model: 'AX180',
-                brand: 'asus',
+                category: 'LAST',
+                model: 'ONE',
+                brand: '!!!',
                 numSeries: [
                     {
                         numSerie: 'DJOZBCUBZ',

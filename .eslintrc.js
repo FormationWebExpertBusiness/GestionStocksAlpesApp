@@ -94,75 +94,6 @@ module.exports = {
 			}
 		],
 		'@typescript-eslint/method-signature-style': [2, 'method'],
-		'@typescript-eslint/naming-convention': [
-			2,
-			{
-				selector: 'default',
-				format: ['strictCamelCase'],
-				leadingUnderscore: 'forbid',
-				trailingUnderscore: 'forbid'
-			},
-			{
-				selector: 'class',
-				format: ['StrictPascalCase'],
-				leadingUnderscore: 'forbid',
-				trailingUnderscore: 'forbid'
-			},
-			{
-				selector: 'variable',
-				modifiers: ['const'],
-				format: ['UPPER_CASE'],
-				leadingUnderscore: 'forbid',
-				trailingUnderscore: 'forbid'
-			},
-			{
-				selector: 'variable',
-				modifiers: ['const'],
-				format: ['strictCamelCase'],
-				types: ['function'],
-				leadingUnderscore: 'forbid',
-				trailingUnderscore: 'forbid'
-			},
-			{
-				selector: 'variable',
-				types: ['boolean'],
-				format: ['PascalCase'],
-				prefix: ['is', 'should', 'has', 'can', 'did', 'will']
-			},
-			{
-				selector: 'classProperty',
-				format: ['strictCamelCase'],
-				leadingUnderscore: 'require',
-				trailingUnderscore: 'forbid'
-			},
-			{
-				selector: 'objectLiteralProperty',
-				format: ['camelCase'],
-				leadingUnderscore: 'forbid',
-				trailingUnderscore: 'forbid'
-			},
-			{
-				selector: 'parameterProperty',
-				format: ['strictCamelCase'],
-				leadingUnderscore: 'require',
-				trailingUnderscore: 'forbid'
-			},
-			{
-				selector: 'typeLike',
-				format: ['StrictPascalCase'],
-				leadingUnderscore: 'forbid',
-				trailingUnderscore: 'forbid'
-			},
-			{
-				selector: 'interface',
-				format: ['StrictPascalCase'],
-				prefix: ['I']
-			},
-			{
-				selector: 'enumMember',
-				format: ['UPPER_CASE'],
-			}
-		],
 		'@typescript-eslint/no-array-constructor' : 2,
 		'@typescript-eslint/no-confusing-void-expression': 2,
 		'@typescript-eslint/no-dupe-class-members': 2,
@@ -249,7 +180,6 @@ module.exports = {
 			}
 		],
 		'block-scoped-var': 2,
-		'block-spacing': [2, 'always'],
 		'brace-style': 0,
 		'camelcase': 2,
 		'class-methods-use-this': 2,
@@ -351,7 +281,6 @@ module.exports = {
 		'no-class-assign': 2,
 		'no-compare-neg-zero': 2,
 		'no-cond-assign': 2,
-		'no-console': 2,
 		'no-const-assign': 2,
 		'no-constant-condition': 2,
 		'no-control-regex': 2,

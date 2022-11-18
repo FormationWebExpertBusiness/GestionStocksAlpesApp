@@ -1,4 +1,4 @@
-import {AVERAGE_GREY, PURPLE, RED, BLACK, WHITE, VERY_LIGHT_GREY} from '../style/colors';
+import {AVERAGE_GREY, RED, BLACK, WHITE, VERY_LIGHT_GREY, ALMOST_BLACK} from '../style/colors';
 
 import React, {
     type LegacyRef,
@@ -10,7 +10,7 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 const STYLES = StyleSheet.create({
     active: {
         backgroundColor: WHITE,
-        borderColor: PURPLE,
+        borderColor: ALMOST_BLACK,
         borderWidth: 2
     },
     activePlaceholder: {
@@ -106,11 +106,11 @@ const customTextInput = (props: TextInputProps): React.ReactElement => {
                         setLittlePlaceholercolor(RED);
                     } else {
                         setStyleInput(STYLES.active);
-                        setLittlePlaceholercolor(PURPLE);
+                        setLittlePlaceholercolor(ALMOST_BLACK);
                     }
                 }}
                 style={[STYLES.baseInput, STYLEINPUT]}
-                selectionColor={PURPLE}
+                selectionColor={ALMOST_BLACK}
                 placeholderTextColor={AVERAGE_GREY}
                 placeholder={PLACEHOLDERVALUE}
                 secureTextEntry={props.password}
