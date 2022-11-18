@@ -1,15 +1,26 @@
 import {
+    ScrollView,
     View,
     StyleSheet
 } from 'react-native';
 import React from 'react';
 import ItemLine from './ItemLine';
+import {DARKBLUEBLACK} from '../../style/colors';
 
 const STYLES = StyleSheet.create({
     wrapper: {
-        height: '100%',
-        width: '100%',
-        paddingBottom: 20
+        flex: 1,
+        marginTop: 20,
+        borderTopRightRadius: 5,
+        borderTopLeftRadius: 5,
+        shadowColor: DARKBLUEBLACK,
+        shadowOffset: {
+            width: 0,
+            height: 1
+        },
+        shadowOpacity:  0.16,
+        shadowRadius: 1.51,
+        elevation: 2
     }
 });
 
@@ -26,6 +37,7 @@ type ItemTableProps = {
         }[];
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const itemTable = (props: ItemTableProps): React.ReactElement => {
 
     function renderItems(): React.ReactElement[] {
@@ -53,7 +65,9 @@ const itemTable = (props: ItemTableProps): React.ReactElement => {
                     model={'Modèle'}
                     brand={'Marque'}
             />
-            {renderItems()}
+            <ScrollView>
+                {renderItems()}
+            </ScrollView>
         </View>
     );
 };

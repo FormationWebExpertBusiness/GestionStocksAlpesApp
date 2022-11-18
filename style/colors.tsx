@@ -24,7 +24,11 @@ export const CHARCOAL_GREY = '#3E5377';
 
 export const ALMOST_WHITE = '#f9fafb';
 
+export const VERY_VERY_LIGHT_GREY = '#EFF0F5';
+
 export const VERY_LIGHT_GREY = '#EEEFF4';
 
 export const AVERAGE_GREY = '#8292A2';
+
+export const DARKBLUEBLACK = '#252d3a';
 
