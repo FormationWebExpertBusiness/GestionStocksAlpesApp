@@ -164,7 +164,6 @@ module.exports = {
 			}
 		],
 		'@typescript-eslint/no-array-constructor' : 2,
-		'@typescript-eslint/no-confusing-non-null-assertion': 2,
 		'@typescript-eslint/no-confusing-void-expression': 2,
 		'@typescript-eslint/no-dupe-class-members': 2,
 		'@typescript-eslint/no-duplicate-imports': 2,
@@ -172,7 +171,6 @@ module.exports = {
 		'@typescript-eslint/no-empty-function': [2, { allow: ['private-constructors', 'protected-constructors', 'decoratedFunctions'] }],
 		'@typescript-eslint/no-empty-interface': 2,
 		'@typescript-eslint/no-explicit-any': 2,
-		'@typescript-eslint/no-extra-non-null-assertion': 2,
 		'@typescript-eslint/no-extra-parens': 2,
 		'@typescript-eslint/no-extra-semi': 2,
 		'@typescript-eslint/no-extraneous-class': [2, { allowWithDecorator: true }],
@@ -182,12 +180,8 @@ module.exports = {
 		'@typescript-eslint/no-invalid-void-type': 2,
 		'@typescript-eslint/no-loop-func': 2,
 		'@typescript-eslint/no-loss-of-precision': 2,
-		'@typescript-eslint/no-magic-numbers': [2, { ignoreEnums: true, ignoreReadonlyClassProperties: true }],
 		'@typescript-eslint/no-misused-new': 2,
 		'@typescript-eslint/no-namespace': 2,
-		'@typescript-eslint/no-non-null-asserted-nullish-coalescing': 2,
-		'@typescript-eslint/no-non-null-asserted-optional-chain': 2,
-		'@typescript-eslint/no-non-null-assertion': 2,
 		'@typescript-eslint/no-parameter-properties': 2,
 		'@typescript-eslint/no-redeclare': 2,
 		'@typescript-eslint/no-require-imports': 2,
@@ -202,10 +196,6 @@ module.exports = {
 		'@typescript-eslint/prefer-literal-enum-member': [2, { allowBitwiseExpressions: true }],
 		'@typescript-eslint/prefer-namespace-keyword': 2,
 		'@typescript-eslint/prefer-optional-chain': 2,
-		'@typescript-eslint/prefer-readonly-parameter-types': [
-			2,
-			{ checkParameterProperties: true, treatMethodsAsReadonly: true }
-		],
 		'@typescript-eslint/prefer-reduce-type-parameter': 2,
 		'@typescript-eslint/prefer-regexp-exec': 2,
 		'@typescript-eslint/prefer-return-this-type': 2,
@@ -233,17 +223,12 @@ module.exports = {
 		'@typescript-eslint/space-before-blocks': [2, 'always'],
 		'@typescript-eslint/space-before-function-paren': [2, 'never'],
 		'@typescript-eslint/space-infix-ops': 2,
-		'@typescript-eslint/strict-boolean-expressions': [
-			2,
-			{ allowString: true, allowNumber: true, allowNullableObject: true }
-		],
 		'@typescript-eslint/switch-exhaustiveness-check': 2,
 		'@typescript-eslint/triple-slash-reference': [2, { path: 'never', types: 'never', lib: 'never' }],
 		'@typescript-eslint/type-annotation-spacing': [
 			2,
 			{ before: false, after: true, overrides: { arrow: { before: true, after: true } } }
 		],
-		'@typescript-eslint/unbound-method': 2,
 		'@typescript-eslint/unified-signatures': 2,
 		'array-bracket-newline': [
 			2,
@@ -267,7 +252,6 @@ module.exports = {
 		'block-spacing': [2, 'always'],
 		'brace-style': 0,
 		'camelcase': 2,
-		'capitalized-comments': 2,
 		'class-methods-use-this': 2,
 		'constructor-super': 2,
 		'comma-dangle': 0,
@@ -296,7 +280,6 @@ module.exports = {
 			}
 		],
 		'function-call-argument-newline': [2, 'never'],
-		'function-paren-newline': [2, 'multiline'],
 		'generator-star-spacing': [
 			2,
 			{
@@ -453,7 +436,6 @@ module.exports = {
 		'no-throw-literal': 0,
 		'no-undef': 2,
 		'no-undef-init': 2,
-		'no-undefined': 2,
 		'no-underscore-dangle': [2, { allowAfterThis: true, allowAfterSuper: true, allowAfterThisConstructor: true }],
 		'no-unexpected-multiline': 2,
 		'no-unmodified-loop-condition': 2,
@@ -479,13 +461,6 @@ module.exports = {
 		'no-whitespace-before-property': 2,
 		'no-with': 2,
 		'nonblock-statement-body-position': [2, 'below'],
-		'object-curly-newline': [
-			2,
-			{
-				multiline: true,
-				minProperties: 3
-			}
-		],
 		'object-curly-spacing': 0,
 		'object-property-newline': [
 			2,
@@ -498,7 +473,6 @@ module.exports = {
 		'one-var-declaration-per-line': [2, 'initializations'],
 		'operator-assignment': [2, 'always'],
 		'operator-linebreak': [2, 'before'],
-		'padded-blocks': [2, 'never'],
 		'prefer-arrow-callback': 2,
 		'prefer-const': 2,
 		'prefer-exponentiation-operator': 2,
@@ -524,8 +498,6 @@ module.exports = {
 			}
 		],
 		'semi-style': [2, 'last'],
-		'sort-keys': 2,
-		'sort-vars': 2,
 		'space-before-function-paren': 0,
 		'space-in-parens': [2, 'never'],
 		'space-before-blocks': 0,
