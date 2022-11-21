@@ -46,6 +46,7 @@ const STYLES = StyleSheet.create({
     iconSwitchWrapper: {
         display: 'flex',
         flexDirection: 'row',
+        marginTop: 10,
         justifyContent: 'center',
         alignItems: 'center'
     }
