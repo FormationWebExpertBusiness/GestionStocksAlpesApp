@@ -107,19 +107,19 @@ const CustomTopTabNavigator = (props: CustomTopTabNavigatorProps): React.ReactEl
 				backdropOpacity={0}
 			>
 				<View style={STYLES.modalView}>
-					<Pressable style={STYLES.links} onPress={(): void => {props.onPressScan();}}>
+					<Pressable style={STYLES.links} onPress={(): void => {props.onPressScan(); setIsModalVisible(false);}}>
 						<FontAwesomeIcon color={ALMOST_BLACK} icon={faQrcode} size={20} />
 						<Text style={STYLES.linksText}>Scanner</Text>
 					</Pressable>
 
 					<View style={STYLES.separator} />
-					<Pressable style={STYLES.links} onPress={(): void => {props.onPressRemove();}}>
+					<Pressable style={STYLES.links} onPress={(): void => {props.onPressRemove(); setIsModalVisible(false);}}>
 						<FontAwesomeIcon color={ALMOST_BLACK} icon={faMinus} size={20} />
 						<Text style={STYLES.linksText}>Retirer</Text>
 					</Pressable>
 
 					<View style={STYLES.separator} />
-					<Pressable style={STYLES.links} onPress={(): void => {props.onPressAdd();}}>
+					<Pressable style={STYLES.links} onPress={(): void => {props.onPressAdd(); setIsModalVisible(false);}}>
 						<FontAwesomeIcon color={ALMOST_BLACK} icon={faPlus} size={20} />
 						<Text style={STYLES.linksText}>Ajouter</Text>
 					</Pressable>
