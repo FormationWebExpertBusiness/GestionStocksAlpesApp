@@ -25,7 +25,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
         <SafeAreaView>
             <CustomTopTabNavigator
                 onPressScan={(): void => {navigation.navigate('Scan');}}
-                onPressRemove={(): void => {navigation.navigate('Remove');}}
+                onPressRemove={(): void => {navigation.navigate('RemoveScan');}}
                 onPressAdd={(): void => {navigation.navigate('Add');}}
             />
                 <View style={STYLES.wrapper}>

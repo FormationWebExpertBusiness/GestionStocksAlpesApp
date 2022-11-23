@@ -5,6 +5,7 @@ import ScanPage from './components/scanPage/ScanPage';
 import RemovePage from './components/removePage/RemovePage';
 import AddPage from './components/addPage/AddPage';
 import CommonItemDetailPage from './components/commonItemDetailPage/commonItemDetailPage';
+import ScanBeforeRemove from './components/removePage/ScanBeforeRemove';
 import React from 'react';
 
 const Stack = createNativeStackNavigator();
@@ -18,6 +19,7 @@ const App = (): React.ReactElement => {
 				<Stack.Screen name="Remove" component={RemovePage} />
 				<Stack.Screen name="CommonItemDetail" component={CommonItemDetailPage} />
 				<Stack.Screen name="Add" component={AddPage} />
+				<Stack.Screen name="RemoveScan" component={ScanBeforeRemove} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
