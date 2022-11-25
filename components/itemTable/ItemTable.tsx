@@ -10,8 +10,6 @@ import {DARKBLUEBLACK} from '../../style/colors';
 
 const STYLES = StyleSheet.create({
     wrapper: {
-        flex: 1,
-        display: 'flex',
         marginTop: 20,
         borderTopRightRadius: 5,
         borderTopLeftRadius: 5,

@@ -16,7 +16,7 @@ const STYLES = StyleSheet.create({
         width: '100%',
         marginTop: 20,
         paddingHorizontal: 20,
-        height: '89%',
+        height: '81%',
         paddingBottom: 50
     },
     textStyle: {
