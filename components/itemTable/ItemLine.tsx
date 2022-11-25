@@ -9,7 +9,6 @@ import React, {useState} from 'react';
 import {WHITE, VERY_LIGHT_GREY, ALMOST_WHITE, ALMOST_BLACK, VERY_VERY_LIGHT_GREY} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
-import {useNavigation} from '@react-navigation/native';
 
 const STYLES = StyleSheet.create({
     wrapper: {
@@ -55,7 +54,6 @@ type ItemLineProps = {
 };
 
 const commonItemLine = (props: ItemLineProps): React.ReactElement => {
-    const navigation = useNavigation();
 
     function getWrapperStyle(): object {
         if(props.head) {
@@ -81,20 +79,10 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
         );
     }
 
-    // function getOnPressNavigate(): () => void {
-    //     if(props.head) {
-    //         // eslint-disable-next-line @typescript-eslint/no-empty-function
-    //         return (): void => {};
-    //     }
-    //     return (): void => { navigation.navigate('CommonItemDetail', {item: props}); };
-    // }
-
     return (
         <Pressable
             style={[STYLES.wrapper, itemStyle]}
             onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
-
-            // onPress={getOnPressNavigate()}
             onPressIn={(): void => { setItemStyle(STYLES.activeItem); }}
         >
             <Text style={[STYLES.text, {width: '35%'}]} numberOfLines={1}>{props.serialNumber}</Text>

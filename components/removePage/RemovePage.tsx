@@ -23,7 +23,6 @@ const STYLES = StyleSheet.create({
 const RemovePage = ({navigation, route}: any): React.ReactElement => {
 
     const {values} = route.params;
-    const val = JSON.parse(values);
 
     const GET_ITEMS = gql`
     query GetItems($rack_id: Int!, $rack_level: Int!) {
@@ -37,8 +36,8 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
 
     const {loading, error, data} = useQuery(GET_ITEMS, {
         variables: {
-            rack_id: val.rack_id,
-            rack_level: val.rack_level
+            rack_id: values.rack_id,
+            rack_level: values.rack_level
         }
     });
 

@@ -4,7 +4,7 @@ import {
     Text
 } from 'react-native';
 import React from 'react';
-import {ALMOST_BLACK, AVERAGE_GREY, BLACK, CHARCOAL_GREY, CULTURED} from '../../style/colors';
+import {ALMOST_BLACK, AVERAGE_GREY, BLACK, CHARCOAL_GREY, CULTURED, RED} from '../../style/colors';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {Switch} from '@rneui/themed';
 import {RNCamera} from 'react-native-camera';
@@ -12,6 +12,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faLightbulb as faLightbulbOn} from '@fortawesome/free-solid-svg-icons/faLightbulb';
 import {faLightbulb as faLightbulbOff} from '@fortawesome/free-regular-svg-icons/faLightbulb';
 import GoBackButton from '../gobackButton';
+import Toast from 'react-native-root-toast';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -49,6 +50,9 @@ const STYLES = StyleSheet.create({
         marginTop: 10,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    toastWrapper: {
+
     }
 });
 
@@ -58,13 +62,29 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
     const [lightSwitchvalue, setLightSwitchValue] = React.useState(false);
     const [lightText, setLightText] = React.useState('Allumez le flash');
     const [lightIcon, setLightIcon] = React.useState(faLightbulbOff);
+    const [errorStatus, setErrorStatus] = React.useState(false);
+
+    function checkQrCodeData(data: string): void {
+        let resData: unknown = {};
+        try {
+            resData = JSON.parse(data);
+            navigation.navigate('Remove', {values: resData});
+        } catch (error) {
+            setErrorStatus(true);
+            console.error(error);
+        }
+
+            // return resData;
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSuccess = (e: any): void => {
         console.log(e);
-        navigation.navigate('Remove', {values: e.data});
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        // Linking.openURL(e.data).catch((err: any): void => { console.error('An error occurred', err); });
+        checkQrCodeData(e.data);
+
+        // if(!errorStatus) {
+        //     navigation.navigate('Remove', {values: data});
+        // }
     };
 
     function switchLightMode(): void {
@@ -94,7 +114,7 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
             showMarker={true}
             onRead={onSuccess}
             reactivate={true}
-            reactivateTimeout={1000}
+            reactivateTimeout={2000}
             vibrate={true}
             markerStyle={{borderColor: CULTURED}}
             flashMode={isLightOn}
@@ -105,6 +125,16 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
                     <Text style={STYLES.centerText}>
                         Scannez le QrCode d'une étagère pour visualiser à son contenu et pouvoir le retirer !
                     </Text>
+                    <Toast
+                        visible={errorStatus}
+                        backgroundColor={RED}
+                        position={50}
+                        shadow={false}
+                        animation={false}
+                        hideOnPress={true}
+                    >
+                        <Text>Le QR code n'est pas valide</Text>
+                    </Toast>
                 </View>
             }
             bottomContent={
