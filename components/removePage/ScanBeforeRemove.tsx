@@ -1,8 +1,7 @@
 import {
     View,
     StyleSheet,
-    Text,
-    Linking
+    Text
 } from 'react-native';
 import React from 'react';
 import {ALMOST_BLACK, AVERAGE_GREY, BLACK, CHARCOAL_GREY, CULTURED} from '../../style/colors';
@@ -12,6 +11,7 @@ import {RNCamera} from 'react-native-camera';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faLightbulb as faLightbulbOn} from '@fortawesome/free-solid-svg-icons/faLightbulb';
 import {faLightbulb as faLightbulbOff} from '@fortawesome/free-regular-svg-icons/faLightbulb';
+import GoBackButton from '../gobackButton';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -52,7 +52,8 @@ const STYLES = StyleSheet.create({
     }
 });
 
-const ScanPage = (): React.ReactElement => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
     const [isLightOn, setIsLightOn] = React.useState(RNCamera.Constants.FlashMode.off);
     const [lightSwitchvalue, setLightSwitchValue] = React.useState(false);
     const [lightText, setLightText] = React.useState('Allumez le flash');
@@ -60,9 +61,10 @@ const ScanPage = (): React.ReactElement => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSuccess = (e: any): void => {
-        console.log(e.data);
+        console.log(e);
+        navigation.navigate('Remove', {values: e.data});
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        Linking.openURL(e.data).catch((err: any): void => { console.error('An error occurred', err); });
+        // Linking.openURL(e.data).catch((err: any): void => { console.error('An error occurred', err); });
     };
 
     function switchLightMode(): void {
@@ -90,16 +92,20 @@ const ScanPage = (): React.ReactElement => {
     return (
         <QRCodeScanner
             showMarker={true}
+            onRead={onSuccess}
             reactivate={true}
+            reactivateTimeout={1000}
             vibrate={true}
             markerStyle={{borderColor: CULTURED}}
-            onRead={onSuccess}
             flashMode={isLightOn}
             containerStyle={STYLES.pageWrapper}
             topContent={
-                <Text style={STYLES.centerText}>
-                    Scannez le QrCode d'une étagère pour visualiser à son contenu !
-                </Text>
+                <View>
+                    <GoBackButton navigation={navigation} color={BLACK} size={20} />
+                    <Text style={STYLES.centerText}>
+                        Scannez le QrCode d'une étagère pour visualiser à son contenu et pouvoir le retirer !
+                    </Text>
+                </View>
             }
             bottomContent={
                 <View style={STYLES.bottomWrapper}>
@@ -120,4 +126,4 @@ const ScanPage = (): React.ReactElement => {
 };
 
 
-export default ScanPage;
+export default ScanBeforeRemove;

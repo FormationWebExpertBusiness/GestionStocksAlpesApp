@@ -21,7 +21,7 @@ const STYLES = StyleSheet.create({
         width: '100%'
     },
     text: {
-        width: '27%',
+        width: '30%',
         textAlign: 'center',
         color: ALMOST_BLACK
     },
@@ -46,21 +46,30 @@ const STYLES = StyleSheet.create({
     }
 });
 
+
 type ItemLineProps = {
     keyI?: number;
     head?: boolean;
-    serialNumber: string;
-    rackLevel: number | string;
-    rackId: number | string;
+    category: string;
+    model: string;
+    brand: string;
+    items?: {
+        numSerie: string;
+        rackId: number;
+        rackLevel: number;
+    }[];
+
 };
 
 const commonItemLine = (props: ItemLineProps): React.ReactElement => {
     const navigation = useNavigation();
 
+
     function getWrapperStyle(): object {
         if(props.head) {
             return STYLES.headWrapper;
         }
+
 
         return props.keyI! % 2 === 0 ? STYLES.evenWrapper : STYLES.oddWrapper;
     }
@@ -81,25 +90,24 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
         );
     }
 
-    // function getOnPressNavigate(): () => void {
-    //     if(props.head) {
-    //         // eslint-disable-next-line @typescript-eslint/no-empty-function
-    //         return (): void => {};
-    //     }
-    //     return (): void => { navigation.navigate('CommonItemDetail', {item: props}); };
-    // }
+    function getOnPressNavigate(): () => void {
+        if(props.head) {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            return (): void => {};
+        }
+        return (): void => { navigation.navigate('CommonItemDetail', {item: props}); };
+    }
 
     return (
         <Pressable
             style={[STYLES.wrapper, itemStyle]}
             onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
-
-            // onPress={getOnPressNavigate()}
+            onPress={getOnPressNavigate()}
             onPressIn={(): void => { setItemStyle(STYLES.activeItem); }}
         >
-            <Text style={[STYLES.text, {width: '35%'}]} numberOfLines={1}>{props.serialNumber}</Text>
-            <Text style={STYLES.text} numberOfLines={1}>{props.rackId}</Text>
-            <Text style={STYLES.text} numberOfLines={1}>{props.rackLevel}</Text>
+            <Text style={STYLES.text} numberOfLines={1}>{props.category}</Text>
+            <Text style={STYLES.text} numberOfLines={1}>{props.model}</Text>
+            <Text style={STYLES.text} numberOfLines={1}>{props.brand}</Text>
             {getIcon()}
         </Pressable>
     );
