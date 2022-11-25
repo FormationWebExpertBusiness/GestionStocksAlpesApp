@@ -181,7 +181,6 @@ module.exports = {
 		],
 		'block-scoped-var': 2,
 		'brace-style': 0,
-		'camelcase': 2,
 		'class-methods-use-this': 2,
 		'constructor-super': 2,
 		'comma-dangle': 0,
@@ -191,7 +190,6 @@ module.exports = {
 		'computed-property-spacing': [2, 'never'],
 		'consistent-return': 2,
 		'consistent-this': [2, 'that'],
-		'curly': [2, 'all'],
 		'default-case': 2,
 		'default-case-last': 2,
 		'default-param-last': 0,
@@ -257,7 +255,6 @@ module.exports = {
 		],
 		'max-nested-callbacks': [2, 5],
 		'max-params': [2, 8],
-		'multiline-comment-style': [2, 'starred-block'],
 		'multiline-ternary': [2, 'never'],
 		'new-cap': [
 			2,
@@ -389,7 +386,6 @@ module.exports = {
 		'no-void': [2, { allowAsStatement: true }],
 		'no-whitespace-before-property': 2,
 		'no-with': 2,
-		'nonblock-statement-body-position': [2, 'below'],
 		'object-curly-spacing': 0,
 		'object-property-newline': [
 			2,

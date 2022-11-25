@@ -4,10 +4,12 @@ import {
     StyleSheet
 } from 'react-native';
 import React from 'react';
-import ItemTable from '../itemTable/ItemTable';
+import CommonItemTable from '../commonItemTable/CommonItemTable';
 import CustomTextInput from '../CustomTextInput';
 import {ITEMS} from '../../jsons';
 import CustomTopTabNavigator from '../../components/CustomTopTabNavigator';
+import {useQuery, gql} from '@apollo/client';
+import {BLACK} from '../../style/colors';
 
 const STYLES = StyleSheet.create({
     wrapper: {
@@ -16,11 +18,40 @@ const STYLES = StyleSheet.create({
         paddingHorizontal: 20,
         height: '89%',
         paddingBottom: 50
+    },
+    textStyle: {
+        color: BLACK
     }
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const HomePage = ({navigation}: any): React.ReactElement => {
+
+    const GET_COMMONITEMS = gql`
+    query GetCommonItems {
+        commonItems {
+            id
+            model
+            brand {
+                name
+            }
+            category {
+                name
+            }
+            items {
+                serial_number
+                rack_id
+                rack_level
+            }
+        }
+      }
+  `;
+
+    const {data} = useQuery(GET_COMMONITEMS);
+    console.log(data);
+
+    // console.log(data.commonItems);
+
     return (
         <SafeAreaView>
             <CustomTopTabNavigator
@@ -30,7 +61,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
             />
                 <View style={STYLES.wrapper}>
                     <CustomTextInput required password={false} placeholder={'Recherche'} />
-                    <ItemTable items={ITEMS}/>
+                    <CommonItemTable items={ITEMS}/>
                 </View>
         </SafeAreaView>
     );

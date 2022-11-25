@@ -7,13 +7,14 @@ type goBackProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     navigation: any;
     color: string;
+    size: number;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const GoBackButton = (props: goBackProps): React.ReactElement => {
     return (
         <Pressable onPress={(): void => {props.navigation.goBack();}}>
-            <FontAwesomeIcon color={props.color} icon={faArrowLeft} size={20} />
+            <FontAwesomeIcon color={props.color} icon={faArrowLeft} size={props.size} />
         </Pressable>
     );
 };

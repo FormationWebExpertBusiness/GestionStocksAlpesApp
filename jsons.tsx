@@ -3,17 +3,18 @@ export const ITEMS:
         category: string;
         model: string;
         brand: string;
-        numSeries: {
+        items: {
             numSerie: string;
             rackId: number;
             rackLevel: number;
+            comment?: string;
         }[];
     }[] = [
             {
                 category: 'switch',
                 model: 'LE435',
                 brand: 'cisco',
-                numSeries: [
+                items: [
                     {
                         numSerie: '1234AE56789',
                         rackId: 1,
@@ -35,7 +36,7 @@ export const ITEMS:
                 category: 'lampe',
                 model: 'ECLJ497',
                 brand: 'makita',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'JFIDH838',
                         rackId: 1,
@@ -52,7 +53,7 @@ export const ITEMS:
                 category: 'cable fibre',
                 model: 'IRHBUV478',
                 brand: 'HP',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'JFIDH838',
                         rackId: 1,
@@ -64,7 +65,7 @@ export const ITEMS:
                 category: 'cable RJ45',
                 model: 'JFO98983',
                 brand: 'cisco',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'KFOJS',
                         rackId: 3,
@@ -76,7 +77,7 @@ export const ITEMS:
                 category: 'routeur',
                 model: 'AX180',
                 brand: 'asus',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'DJOZBCUBZ',
                         rackId: 1,
@@ -88,7 +89,7 @@ export const ITEMS:
                 category: 'switch',
                 model: 'LE435',
                 brand: 'cisco',
-                numSeries: [
+                items: [
                     {
                         numSerie: '1234AE56789',
                         rackId: 1,
@@ -110,7 +111,7 @@ export const ITEMS:
                 category: 'lampe',
                 model: 'ECLJ497',
                 brand: 'makita',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'JFIDH838',
                         rackId: 1,
@@ -127,7 +128,7 @@ export const ITEMS:
                 category: 'cable fibre',
                 model: 'IRHBUV478',
                 brand: 'HP',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'JFIDH838',
                         rackId: 1,
@@ -139,7 +140,7 @@ export const ITEMS:
                 category: 'cable RJ45',
                 model: 'JFO98983',
                 brand: 'cisco',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'KFOJS',
                         rackId: 3,
@@ -151,7 +152,7 @@ export const ITEMS:
                 category: 'routeur',
                 model: 'AX180',
                 brand: 'asus',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'DJOZBCUBZ',
                         rackId: 1,
@@ -163,7 +164,7 @@ export const ITEMS:
                 category: 'switch',
                 model: 'LE435',
                 brand: 'cisco',
-                numSeries: [
+                items: [
                     {
                         numSerie: '1234AE56789',
                         rackId: 1,
@@ -185,7 +186,7 @@ export const ITEMS:
                 category: 'lampe',
                 model: 'ECLJ497',
                 brand: 'makita',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'JFIDH838',
                         rackId: 1,
@@ -202,7 +203,7 @@ export const ITEMS:
                 category: 'cable fibre',
                 model: 'IRHBUV478',
                 brand: 'HP',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'JFIDH838',
                         rackId: 1,
@@ -214,7 +215,7 @@ export const ITEMS:
                 category: 'cable RJ45',
                 model: 'JFO98983',
                 brand: 'cisco',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'KFOJS',
                         rackId: 3,
@@ -226,7 +227,7 @@ export const ITEMS:
                 category: 'LAST',
                 model: 'ONE',
                 brand: '!!!',
-                numSeries: [
+                items: [
                     {
                         numSerie: 'DJOZBCUBZ',
                         rackId: 1,

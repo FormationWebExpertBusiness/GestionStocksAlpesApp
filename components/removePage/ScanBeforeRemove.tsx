@@ -1,8 +1,7 @@
 import {
     View,
     StyleSheet,
-    Text,
-    Linking
+    Text
 } from 'react-native';
 import React from 'react';
 import {ALMOST_BLACK, AVERAGE_GREY, BLACK, CHARCOAL_GREY, CULTURED} from '../../style/colors';
@@ -63,7 +62,7 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSuccess = (e: any): void => {
         console.log(e);
-        navigation.navigate('Remove');
+        navigation.navigate('Remove', {values: e.data});
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         // Linking.openURL(e.data).catch((err: any): void => { console.error('An error occurred', err); });
     };
@@ -95,13 +94,14 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
             showMarker={true}
             onRead={onSuccess}
             reactivate={true}
+            reactivateTimeout={1000}
             vibrate={true}
             markerStyle={{borderColor: CULTURED}}
             flashMode={isLightOn}
             containerStyle={STYLES.pageWrapper}
             topContent={
                 <View>
-                    <GoBackButton navigation={navigation} color={BLACK} />
+                    <GoBackButton navigation={navigation} color={BLACK} size={20} />
                     <Text style={STYLES.centerText}>
                         Scannez le QrCode d'une étagère pour visualiser à son contenu et pouvoir le retirer !
                     </Text>
