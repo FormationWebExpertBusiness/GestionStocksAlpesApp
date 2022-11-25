@@ -66,7 +66,6 @@ module.exports = {
 			}
 		],
 		'@typescript-eslint/func-call-spacing': [2, 'never'],
-		'@typescript-eslint/init-declarations': [2, 'always'],
 		'@typescript-eslint/keyword-spacing': [
 			2,
 			{
