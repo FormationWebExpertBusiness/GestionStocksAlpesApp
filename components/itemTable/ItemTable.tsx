@@ -30,9 +30,9 @@ type ItemTableProps = {
         model: string;
         brand: string;
         items?: {
-            numSerie: string;
-            rackId: number;
-            rackLevel: number;
+            serial_number: string;
+            rack_id: number;
+            rack_level: number;
         }[];
     };
 };
@@ -48,9 +48,9 @@ const commonItemTable = (props: ItemTableProps): React.ReactElement => {
                 <ItemLine
                     key={index}
                     keyI={index}
-                    serialNumber={item.numSerie}
-                    rackLevel={item.rackLevel}
-                    rackId={item.rackId}
+                    serialNumber={item.serial_number}
+                    rackLevel={item.rack_level}
+                    rackId={item.rack_id}
                 />
             );
         });

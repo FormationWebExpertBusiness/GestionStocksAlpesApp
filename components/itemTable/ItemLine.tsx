@@ -79,6 +79,7 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
         );
     }
 
+
     return (
         <Pressable
             style={[STYLES.wrapper, itemStyle]}
