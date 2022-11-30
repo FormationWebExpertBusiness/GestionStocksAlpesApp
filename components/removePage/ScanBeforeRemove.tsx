@@ -1,21 +1,22 @@
 import {
     View,
     StyleSheet,
-    Text
+    Image,
+    Text,
+    Pressable
 } from 'react-native';
 import React from 'react';
-import {ALMOST_BLACK, AVERAGE_GREY, BLACK, CHARCOAL_GREY, CULTURED, RED} from '../../style/colors';
+import {ALMOST_BLACK, BLACK, CULTURED, RED, WHITE} from '../../style/colors';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {Switch} from '@rneui/themed';
 import {RNCamera} from 'react-native-camera';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faLightbulb as faLightbulbOn} from '@fortawesome/free-solid-svg-icons/faLightbulb';
 import {faLightbulb as faLightbulbOff} from '@fortawesome/free-regular-svg-icons/faLightbulb';
-import GoBackButton from '../gobackButton';
 import Toast from 'react-native-root-toast';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
+        position: 'relative',
         display: 'flex',
         flex: 1,
         backgroundColor: CULTURED
@@ -24,76 +25,80 @@ const STYLES = StyleSheet.create({
         color: BLACK
     },
     centerText: {
-        flex: 1,
-        fontSize: 18,
-        padding: 32,
-        color: ALMOST_BLACK
+        position: 'absolute',
+        left: 0,
+        backgroundColor: WHITE,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     textBold: {
         fontWeight: '500',
-        color: '#000'
+        color: WHITE
     },
     lightText: {
         fontSize: 18,
         color: ALMOST_BLACK
     },
     bottomWrapper: {
-        display: 'flex',
-        marginTop: 50,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
+        position: 'absolute',
+        top: -150,
+        paddingBottom: 10,
+        backgroundColor: '#000000C4',
+        borderRadius: 40,
+        height: 75,
+        width: 75,
+        justifyContent: 'center'
     },
-    iconSwitchWrapper: {
+    iconWrapper: {
         display: 'flex',
+        height: 75,
+        borderRadius: 40,
+        width: 75,
+        marginBottom: 240,
         flexDirection: 'row',
-        marginTop: 10,
         justifyContent: 'center',
         alignItems: 'center'
     },
-    toastWrapper: {
-
+    imgWrapper: {
+        marginLeft: -88,
+        top: -85,
+        height: 250,
+        width: 250
     }
+
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
     const [isLightOn, setIsLightOn] = React.useState(RNCamera.Constants.FlashMode.off);
-    const [lightSwitchvalue, setLightSwitchValue] = React.useState(false);
-    const [lightText, setLightText] = React.useState('Allumez le flash');
     const [lightIcon, setLightIcon] = React.useState(faLightbulbOff);
     const [errorStatus, setErrorStatus] = React.useState(false);
+    const [lightFeedback, setLightFeedback] = React.useState('#00000000');
 
     function checkQrCodeData(data: string): void {
         let resData: unknown = {};
         try {
             resData = JSON.parse(data);
+            setErrorStatus(false);
             navigation.navigate('Remove', {values: resData});
         } catch (error) {
             setErrorStatus(true);
             console.error(error);
         }
-
-            // return resData;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSuccess = (e: any): void => {
         console.log(e);
         checkQrCodeData(e.data);
-
-        // if(!errorStatus) {
-        //     navigation.navigate('Remove', {values: data});
-        // }
     };
 
     function switchLightMode(): void {
         setIsLightOn(isLightOn === RNCamera.Constants.FlashMode.off ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off);
     }
 
-    function switchLightText(): void {
-        setLightText(lightText === 'Éteignez le flash' ? 'Allumez le flash' : 'Éteignez le flash');
-    }
+
 
     function switchLightIcon(): void {
         if(isLightOn === RNCamera.Constants.FlashMode.off) {
@@ -105,50 +110,42 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
 
     function switchLight(): void {
         switchLightIcon();
-        switchLightText();
         switchLightMode();
     }
 
     return (
         <QRCodeScanner
-            showMarker={true}
-            onRead={onSuccess}
+            showMarker={false}
             reactivate={true}
-            reactivateTimeout={2000}
             vibrate={true}
-            markerStyle={{borderColor: CULTURED}}
+            reactivateTimeout={3000}
+            onRead={onSuccess}
             flashMode={isLightOn}
+            markerStyle={{borderColor: CULTURED, borderRadius: 15, borderWidth: 10, height: 200, width: 200}}
             containerStyle={STYLES.pageWrapper}
-            topContent={
-                <View>
-                    <GoBackButton navigation={navigation} color={BLACK} size={20} />
-                    <Text style={STYLES.centerText}>
-                        Scannez le QrCode d'une étagère pour visualiser à son contenu et pouvoir le retirer !
-                    </Text>
-                    <Toast
-                        visible={errorStatus}
-                        backgroundColor={RED}
-                        position={50}
-                        shadow={false}
-                        animation={false}
-                        hideOnPress={true}
-                    >
-                        <Text>Le QR code n'est pas valide</Text>
-                    </Toast>
-                </View>
-            }
+            cameraStyle={{height: '100%'}}
             bottomContent={
                 <View style={STYLES.bottomWrapper}>
-                    <Text style={STYLES.lightText}>{lightText}</Text>
-                    <View style={STYLES.iconSwitchWrapper}>
-                        <FontAwesomeIcon color={ALMOST_BLACK} icon={lightIcon} size={20} />
-                        <Switch
-                            color="#252d3a"
-                            trackColor={{false: AVERAGE_GREY, true: CHARCOAL_GREY}}
-                            value={lightSwitchvalue}
-                            onValueChange={(): void => {setLightSwitchValue(!lightSwitchvalue); switchLight();}}
-                        />
-                    </View>
+                    <Toast
+                            hideOnPress={false}
+                            visible={errorStatus}
+                            backgroundColor={RED}
+                            position={50}
+                            shadow={false}
+                            animation={false}
+                        >
+                            <Text>Le QR code n'est pas valide</Text>
+                        </Toast>
+                        <View style={STYLES.imgWrapper}>
+                            <Image
+                                style={{height: 250, width: 250}}
+                                // eslint-disable-next-line @typescript-eslint/no-require-imports, no-undef
+                                source={require('../../assets/qrCodeScannerImg.png')}
+                            />
+                        </View>
+                    <Pressable onPressOut={(): void => {setLightFeedback('#00000000');}} onPressIn={(): void => {setLightFeedback('#000000');}} onPress={(): void => {switchLight();}} style={[STYLES.iconWrapper, {backgroundColor: lightFeedback}]}>
+                        <FontAwesomeIcon icon={lightIcon} size={30} color={WHITE} />
+                    </Pressable>
                 </View>
             }
         />

@@ -1,13 +1,12 @@
 import {
     View,
     StyleSheet,
-    Text,
-    Linking
+    Linking,
+    Pressable
 } from 'react-native';
 import React from 'react';
-import {ALMOST_BLACK, AVERAGE_GREY, BLACK, CHARCOAL_GREY, CULTURED} from '../../style/colors';
+import {ALMOST_BLACK, BLACK, CULTURED, WHITE} from '../../style/colors';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {Switch} from '@rneui/themed';
 import {RNCamera} from 'react-native-camera';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faLightbulb as faLightbulbOn} from '@fortawesome/free-solid-svg-icons/faLightbulb';
@@ -15,8 +14,7 @@ import {faLightbulb as faLightbulbOff} from '@fortawesome/free-regular-svg-icons
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
-        display: 'flex',
-        flex: 1,
+        position: 'relative',
         backgroundColor: CULTURED
     },
     textStyle: {
@@ -37,14 +35,20 @@ const STYLES = StyleSheet.create({
         color: ALMOST_BLACK
     },
     bottomWrapper: {
-        display: 'flex',
-        marginTop: 50,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
+        position: 'absolute',
+        top: -150,
+        paddingBottom: 10,
+        backgroundColor: '#000000C4',
+        borderRadius: 40,
+        height: 75,
+        width: 75,
+        justifyContent: 'center'
     },
-    iconSwitchWrapper: {
+    iconWrapper: {
         display: 'flex',
+        height: 75,
+        borderRadius: 40,
+        width: 75,
         flexDirection: 'row',
         marginTop: 10,
         justifyContent: 'center',
@@ -54,9 +58,9 @@ const STYLES = StyleSheet.create({
 
 const ScanPage = (): React.ReactElement => {
     const [isLightOn, setIsLightOn] = React.useState(RNCamera.Constants.FlashMode.off);
-    const [lightSwitchvalue, setLightSwitchValue] = React.useState(false);
-    const [lightText, setLightText] = React.useState('Allumez le flash');
     const [lightIcon, setLightIcon] = React.useState(faLightbulbOff);
+    const [lightFeedback, setLightFeedback] = React.useState('#00000000');
+
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSuccess = (e: any): void => {
@@ -69,10 +73,6 @@ const ScanPage = (): React.ReactElement => {
         setIsLightOn(isLightOn === RNCamera.Constants.FlashMode.off ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off);
     }
 
-    function switchLightText(): void {
-        setLightText(lightText === 'Éteignez le flash' ? 'Allumez le flash' : 'Éteignez le flash');
-    }
-
     function switchLightIcon(): void {
         if(isLightOn === RNCamera.Constants.FlashMode.off) {
             setLightIcon(faLightbulbOn);
@@ -83,7 +83,6 @@ const ScanPage = (): React.ReactElement => {
 
     function switchLight(): void {
         switchLightIcon();
-        switchLightText();
         switchLightMode();
     }
 
@@ -92,27 +91,16 @@ const ScanPage = (): React.ReactElement => {
             showMarker={true}
             reactivate={true}
             vibrate={true}
-            markerStyle={{borderColor: CULTURED}}
             onRead={onSuccess}
             flashMode={isLightOn}
+            markerStyle={{borderColor: CULTURED, borderRadius: 15, borderWidth: 10, height: 200, width: 200}}
             containerStyle={STYLES.pageWrapper}
-            topContent={
-                <Text style={STYLES.centerText}>
-                    Scannez le QrCode d'une étagère pour visualiser à son contenu !
-                </Text>
-            }
+            cameraStyle={{height: '100%'}}
             bottomContent={
                 <View style={STYLES.bottomWrapper}>
-                    <Text style={STYLES.lightText}>{lightText}</Text>
-                    <View style={STYLES.iconSwitchWrapper}>
-                        <FontAwesomeIcon color={ALMOST_BLACK} icon={lightIcon} size={20} />
-                        <Switch
-                            color="#252d3a"
-                            trackColor={{false: AVERAGE_GREY, true: CHARCOAL_GREY}}
-                            value={lightSwitchvalue}
-                            onValueChange={(): void => {setLightSwitchValue(!lightSwitchvalue); switchLight();}}
-                        />
-                    </View>
+                    <Pressable onPressOut={(): void => {setLightFeedback('#00000000');}} onPressIn={(): void => {setLightFeedback('#000000');}} onPress={(): void => {switchLight();}} style={[STYLES.iconWrapper, {backgroundColor: lightFeedback}]}>
+                        <FontAwesomeIcon icon={lightIcon} size={30} color={WHITE} />
+                    </Pressable>
                 </View>
             }
         />
