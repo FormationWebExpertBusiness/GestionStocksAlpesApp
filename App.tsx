@@ -16,7 +16,9 @@ const App = (): React.ReactElement => {
 
 	const client = new ApolloClient({
 		uri: 'http://10.100.10.134/graphql',
-		cache: new InMemoryCache()
+		cache: new InMemoryCache({
+			addTypename: false
+		})
 	});
 
 	client

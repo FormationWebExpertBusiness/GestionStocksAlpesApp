@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     View,
     SafeAreaView,
@@ -47,10 +48,38 @@ const HomePage = ({navigation}: any): React.ReactElement => {
       }
   `;
 
-    const {data} = useQuery(GET_COMMONITEMS);
-    console.log(data);
+  type CommonItem = {
+        category: string;
+        model: string;
+        brand: string;
+        items: {
+            numSerie: string;
+            rackId: number;
+            rackLevel: number;
+            comment?: string;
+        }[];
+  };
 
-    // console.log(data.commonItems);
+  let commonItems: CommonItem[] = [];
+
+    const commonItemsData = useQuery(GET_COMMONITEMS);
+
+    function createJsonFromData(data: any): CommonItem[] {
+        const JSONDATA: CommonItem[] = [];
+        data.forEach((commonItem: any): void => {
+            JSONDATA.push({
+                category: commonItem.category.name,
+                model: commonItem.model,
+                brand: commonItem.brand.name,
+                items: commonItem.items
+            });
+        });
+        return JSONDATA;
+      }
+
+      if(commonItemsData.data !== undefined) {
+        commonItems = createJsonFromData(commonItemsData.data.commonItems);
+      }
 
     return (
         <SafeAreaView>
@@ -61,7 +90,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
             />
                 <View style={STYLES.wrapper}>
                     <CustomTextInput required password={false} placeholder={'Recherche'} />
-                    <CommonItemTable items={ITEMS}/>
+                    <CommonItemTable items={commonItems}/>
                 </View>
         </SafeAreaView>
     );
