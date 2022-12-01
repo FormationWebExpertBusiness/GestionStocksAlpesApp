@@ -64,7 +64,7 @@ const ScannedItemTable = (props: ScannedItemTableProps): React.ReactElement => {
                     head={true}
                     category={'Catégorie'}
                     model={'Modèle'}
-                    serialNumber={'Num série'}
+                    serialNumber={'N° série'}
             />
             <ScrollView>
                 {renderItems()}

@@ -65,9 +65,9 @@ const ItemTable = (props: ItemTableProps): React.ReactElement => {
         <View style={STYLES.wrapper}>
             <ItemLine
                     head={true}
-                    serialNumber={'Numéro de série'}
-                    rackLevel={'Etage'}
-                    rackName={'Etagère'}
+                    serialNumber={'N° série'}
+                    rackLevel={'Étage'}
+                    rackName={'Étagère'}
             />
             <ScrollView>
                 {renderItems()}
