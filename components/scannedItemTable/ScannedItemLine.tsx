@@ -128,7 +128,6 @@ const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
             style={[STYLES.wrapper, itemStyle]}
             onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
             onPressIn={(): void => { setItemStyle(STYLES.activeItem); }}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onPress={(): void => {
                 deleteItemMutation({
                 notifyOnNetworkStatusChange: true,
