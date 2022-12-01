@@ -123,23 +123,13 @@ const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
         );
     }
 
-    function getStatus(): React.ReactElement {
-        if(loading) {
-            console.log(loading);
-            return <Text style={{color: '#000000'}}>loading</Text>;
-        } else if(error) {
-            return <Text style={{color: '#000000'}}>error</Text>;
-        }
-        return <View />;
-    }
-
     return (
         <Pressable
             style={[STYLES.wrapper, itemStyle]}
             onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
             onPressIn={(): void => { setItemStyle(STYLES.activeItem); }}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onPress={(): any => {
+            onPress={(): void => {
                 deleteItemMutation({
                 notifyOnNetworkStatusChange: true,
                 variables: {
@@ -153,7 +143,6 @@ const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
             <Text style={STYLES.text} numberOfLines={1}>{props.model}</Text>
             <Text style={[STYLES.text, {width: '35%'}]} numberOfLines={1}>{props.serialNumber}</Text>
             {getIcon()}
-            {getStatus()}
         </Pressable>
     );
 };
