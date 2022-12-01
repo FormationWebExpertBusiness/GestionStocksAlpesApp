@@ -10,6 +10,9 @@ import {WHITE, VERY_LIGHT_GREY, ALMOST_WHITE, ALMOST_BLACK, VERY_VERY_LIGHT_GREY
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
+import {useMutation, gql} from '@apollo/client';
+import {GET_ITEMS, GET_RACK} from '../removePage/RemovePage';
+
 
 const STYLES = StyleSheet.create({
     wrapper: {
@@ -47,15 +50,47 @@ const STYLES = StyleSheet.create({
 });
 
 type ScannedItemLineProps = {
+    id: number;
     keyI?: number;
     head?: boolean;
+    rack_id?: number;
+    rack_level?: number;
     serialNumber: string;
     model: string;
     category: string;
     remove?: boolean;
 };
 
+const DELETEITEM = gql`
+  mutation deleteItem($id: ID!) {
+    deleteItem(id: $id) {
+        id
+    }
+  }
+`;
+
 const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
+
+    const [deleteItemMutation, {data, loading, error}] = useMutation(DELETEITEM, {
+        refetchQueries: [
+            {
+                query: GET_ITEMS,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    rack_id: props.rack_id,
+                    rack_level: props.rack_level
+                }
+            },
+            {
+                query: GET_RACK,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    id: props.rack_id,
+                    level: props.rack_level
+                }
+            }
+        ]
+    });
 
     function getWrapperStyle(): object {
         if(props.head) {
@@ -88,17 +123,37 @@ const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
         );
     }
 
+    function getStatus(): React.ReactElement {
+        if(loading) {
+            console.log(loading);
+            return <Text style={{color: '#000000'}}>loading</Text>;
+        } else if(error) {
+            return <Text style={{color: '#000000'}}>error</Text>;
+        }
+        return <View />;
+    }
 
     return (
         <Pressable
             style={[STYLES.wrapper, itemStyle]}
             onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
             onPressIn={(): void => { setItemStyle(STYLES.activeItem); }}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onPress={(): any => {
+                deleteItemMutation({
+                notifyOnNetworkStatusChange: true,
+                variables: {
+                    id: props.id
+                }
+              });
+            }
+            }
         >
             <Text style={STYLES.text} numberOfLines={1}>{props.category}</Text>
             <Text style={STYLES.text} numberOfLines={1}>{props.model}</Text>
             <Text style={[STYLES.text, {width: '35%'}]} numberOfLines={1}>{props.serialNumber}</Text>
             {getIcon()}
+            {getStatus()}
         </Pressable>
     );
 };

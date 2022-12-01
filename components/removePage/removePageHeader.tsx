@@ -51,7 +51,7 @@ const STYLES = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: 38,
+        width: 41,
         height: 20,
         paddingHorizontal: 7
     },
@@ -75,8 +75,10 @@ const STYLES = StyleSheet.create({
 
 type DetailPageHeaderProps = {
     title1: string;
-    size: number;
+    title2: string;
+    size: number | null;
     content1: string;
+    content2: number;
 };
 
 
@@ -89,12 +91,14 @@ const RemovePageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
     return (
         <View style={STYLES.componentWrapper}>
             <View style={STYLES.headerWrapper}>
-                <Text style={[STYLES.textStyle]}>{props.title1}</Text>
-                <Text style={[STYLES.textStyle, {marginRight: -5}]}>Quantité</Text>
+                <Text style={[STYLES.textStyle, {marginLeft: -7}]}>{props.title1}</Text>
+                <Text style={[STYLES.textStyle]}>{props.title2}</Text>
+                <Text style={[STYLES.textStyle, {right: -7}]}>Quantité</Text>
             </View>
             <View style={STYLES.contentWrapper}>
             <View style={STYLES.textContent}>
                 <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content1}</Text>
+                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content2}</Text>
             </View>
             <View style={STYLES.badgeWrapper}>
                 <View style={[STYLES.badge, {backgroundColor: badgeColor}]}>

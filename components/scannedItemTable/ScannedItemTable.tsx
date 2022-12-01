@@ -25,7 +25,11 @@ const STYLES = StyleSheet.create({
 });
 
 type ScannedItemTableProps = {
+    loading: boolean;
+    rack_id: number;
+    rack_level: number;
     items: {
+        id: number;
         serial_number: string;
         category: {
             name: string;
@@ -46,10 +50,13 @@ const ScannedItemTable = (props: ScannedItemTableProps): React.ReactElement => {
         props.items.forEach((item, index): void => {
             SCANNEDITEMSLINES.push(
                 <ScannedItemLine
+                    id={item.id}
                     key={index}
                     keyI={index}
                     serialNumber={item.serial_number}
                     model={item.model}
+                    rack_id={props.rack_id}
+                    rack_level={props.rack_level}
                     category={item.category.name}
                     remove={props.remove}
                 />
@@ -61,6 +68,7 @@ const ScannedItemTable = (props: ScannedItemTableProps): React.ReactElement => {
     return (
         <View style={STYLES.wrapper}>
             <ScannedItemLine
+                    id={0}
                     head={true}
                     category={'Catégorie'}
                     model={'Modèle'}

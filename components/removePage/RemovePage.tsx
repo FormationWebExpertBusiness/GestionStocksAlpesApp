@@ -4,7 +4,7 @@ import {
     Text
 } from 'react-native';
 import React from 'react';
-import {BLACK, CULTURED, RED} from '../../style/colors';
+import {BLACK, CULTURED} from '../../style/colors';
 import GoBackButton from '../gobackButton';
 import {useQuery, gql} from '@apollo/client';
 import ScannedItemTable from '../scannedItemTable/ScannedItemTable';
@@ -28,36 +28,41 @@ const STYLES = StyleSheet.create({
     }
 });
 
+
+export const GET_ITEMS = gql`
+query GetItems($rack_id: Int!, $rack_level: Int!) {
+    items(rack_id: $rack_id, rack_level: $rack_level) {
+                id
+                serial_number
+                model
+                brand {
+                    name
+                }
+                category {
+                    name
+                }
+                created_at
+                comment
+    }
+}
+`;
+
+export const GET_RACK = gql`
+query GetRackName($id: ID!, $level: Int!) {
+    rack(id: $id, level: $level) {
+        id
+        name
+        nb_item
+    }
+}
+`;
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const RemovePage = ({navigation, route}: any): React.ReactElement => {
 
     const {values} = route.params;
 
-    const GET_ITEMS = gql`
-    query GetItems($rack_id: Int!, $rack_level: Int!) {
-        items(rack_id: $rack_id, rack_level: $rack_level) {
-                    id
-                    serial_number
-                    model
-                    brand {
-                        name
-                    }
-                    category {
-                        name
-                    }
-                    created_at
-                    comment
-        }
-    }
-  `;
-
-  const GET_RACK_NAME = gql`
-  query GetRackName($id: ID!) {
-      rack(id: $id) {
-            name
-      }
-  }
-`;
+    let items: {id: number; serial_number: string; category: {name: string;}; model: string; created_at: string; comment: string;}[];
 
     const {loading, error, data} = useQuery(GET_ITEMS, {
         variables: {
@@ -66,37 +71,47 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
         }
     });
 
-    const rack_name = useQuery(GET_RACK_NAME, {
+    const rack_name = useQuery(GET_RACK, {
+        fetchPolicy: 'network-only',
         variables: {
-            id: values.rack_id
+            id: values.rack_id,
+            level: values.rack_level
         }
     });
 
-    function getRackName(): React.ReactElement {
+    function getRackName(): string {
         if(rack_name.loading) {
-            return <Text>Loading...</Text>;
+            return '...';
         }
         if(rack_name.error) {
-            return <Text>Error {rack_name.error.message}</Text>;
+            return '...';
         }
-        return <View />;
+        return rack_name.data.rack.name;
+    }
+
+    function getNbItem(): number | null {
+        if(rack_name.loading) {
+            return null;
+        }
+        if(rack_name.error) {
+            return null;
+        }
+        return rack_name.data.rack.nb_item;
     }
 
     function getResult(): React.ReactElement {
         if(loading) return <Text style={STYLES.textStyle}>Loading...</Text>;
         if(error) return <Text style={STYLES.textStyle}>Error : {error.message}</Text>;
-
-        const items: {id: number; serial_number: string; category: {name: string;}; model: string; created_at: string; comment: string;}[] = data.items;
-        console.log(items);
-        return <ScannedItemTable items={items} remove={true}/>;
+        items = data.items;
+        console.log(loading);
+        return <ScannedItemTable loading={loading} rack_id={values.rack_id} rack_level={values.rack_level} items={items} remove={true}/>;
     }
 
     return (
         <View style={STYLES.pageWrapper}>
             <GoBackButton navigation={navigation} color={BLACK} size={20} />
             <View style={STYLES.pageContent}>
-                <RemovePageHeader title1={'Étagère'} size={Object.keys(data.items).length} content1={rack_name.data.rack.name} />
-                <Text style={STYLES.textStyle}>{getRackName()}</Text>
+                <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={getNbItem()} content1={getRackName()} content2={values.rack_level} />
                 {getResult()}
             </View>
         </View>
