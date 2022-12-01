@@ -4,18 +4,27 @@ import {
     Text
 } from 'react-native';
 import React from 'react';
-import {BLACK, CULTURED} from '../../style/colors';
+import {BLACK, CULTURED, RED} from '../../style/colors';
 import GoBackButton from '../gobackButton';
 import {useQuery, gql} from '@apollo/client';
+import ScannedItemTable from '../scannedItemTable/ScannedItemTable';
+import RemovePageHeader from './removePageHeader';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
-        display: 'flex',
-        flex: 1,
+        width: '100%',
+        marginTop: 20,
+        paddingHorizontal: 20,
+        height: '100%',
         backgroundColor: CULTURED
     },
     textStyle: {
         color: BLACK
+    },
+    pageContent: {
+        height: '92%',
+        paddingBottom: 150,
+        marginTop: 20
     }
 });
 
@@ -27,12 +36,28 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
     const GET_ITEMS = gql`
     query GetItems($rack_id: Int!, $rack_level: Int!) {
         items(rack_id: $rack_id, rack_level: $rack_level) {
-			id
-			serial_number
-			comment
+                    id
+                    serial_number
+                    model
+                    brand {
+                        name
+                    }
+                    category {
+                        name
+                    }
+                    created_at
+                    comment
         }
-      }
+    }
   `;
+
+  const GET_RACK_NAME = gql`
+  query GetRackName($id: ID!) {
+      rack(id: $id) {
+            name
+      }
+  }
+`;
 
     const {loading, error, data} = useQuery(GET_ITEMS, {
         variables: {
@@ -41,27 +66,39 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
         }
     });
 
+    const rack_name = useQuery(GET_RACK_NAME, {
+        variables: {
+            id: values.rack_id
+        }
+    });
+
+    function getRackName(): React.ReactElement {
+        if(rack_name.loading) {
+            return <Text>Loading...</Text>;
+        }
+        if(rack_name.error) {
+            return <Text>Error {rack_name.error.message}</Text>;
+        }
+        return <View />;
+    }
+
     function getResult(): React.ReactElement {
         if(loading) return <Text style={STYLES.textStyle}>Loading...</Text>;
         if(error) return <Text style={STYLES.textStyle}>Error : {error.message}</Text>;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, camelcase
-        return data.items.map(({id, serial_number, comment}: any): React.ReactElement => {
-            return (
-                <View key={id}>
-                    <Text style={STYLES.textStyle}>Id: {id}</Text>
-                    <Text style={STYLES.textStyle}>Serial number: {serial_number}</Text>
-                    <Text style={STYLES.textStyle}>Comment: {comment}</Text>
-                </View>
-            );
-        }, []);
+        const items: {id: number; serial_number: string; category: {name: string;}; model: string; created_at: string; comment: string;}[] = data.items;
+        console.log(items);
+        return <ScannedItemTable items={items} remove={true}/>;
     }
 
     return (
         <View style={STYLES.pageWrapper}>
             <GoBackButton navigation={navigation} color={BLACK} size={20} />
-            <Text style={STYLES.textStyle}>Remove PAGE</Text>
-            {getResult()}
+            <View style={STYLES.pageContent}>
+                <RemovePageHeader title1={'Étagère'} size={Object.keys(data.items).length} content1={rack_name.data.rack.name} />
+                <Text style={STYLES.textStyle}>{getRackName()}</Text>
+                {getResult()}
+            </View>
         </View>
     );
 };

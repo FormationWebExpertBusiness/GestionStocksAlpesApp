@@ -1,12 +1,12 @@
 import {
     View,
-    StyleSheet,
-    Text
+    StyleSheet
 } from 'react-native';
 import React from 'react';
 import {BLACK, CULTURED} from '../../style/colors';
 import ItemTable from '../itemTable/ItemTable';
 import GoBackButton from '../gobackButton';
+import DetailPageHeader from './detailPageHeader';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -23,7 +23,7 @@ const STYLES = StyleSheet.create({
     },
     tableWrapper: {
         width: '100%',
-        height: '87%',
+        height: '80%',
         paddingBottom: 50
     },
     headerWrapper: {
@@ -43,11 +43,7 @@ const CommonItemDetailPage = ({navigation, route}: any): React.ReactElement => {
             <View style={STYLES.backArrow}>
                 <GoBackButton navigation={navigation} color={BLACK} size={30} />
             </View>
-            <View style={STYLES.headerWrapper}>
-                <Text style={STYLES.textStyle}>{item.category}</Text>
-                <Text style={STYLES.textStyle}>{item.model}</Text>
-                <Text style={STYLES.textStyle}>{item.brand}</Text>
-            </View>
+            <DetailPageHeader quantityUrgent={item.quantity_urgent} quantityWarning={item.quantity_warning} size={Object.keys(item.items).length} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} content1={item.category} content2={item.brand} content3={item.model} />
             <View style={STYLES.tableWrapper}>
                 <ItemTable homeItems={item} />
             </View>

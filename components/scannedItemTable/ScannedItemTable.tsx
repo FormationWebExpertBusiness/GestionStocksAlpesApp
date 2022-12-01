@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
     ScrollView,
     View,
     StyleSheet
 } from 'react-native';
 import React from 'react';
-import CommonItemLine from './CommonItemLine';
+import ScannedItemLine from './ScannedItemLine';
 import {DARKBLUEBLACK} from '../../style/colors';
 
 const STYLES = StyleSheet.create({
@@ -23,51 +24,47 @@ const STYLES = StyleSheet.create({
     }
 });
 
-type ItemTableProps = {
+type ScannedItemTableProps = {
     items: {
-            category: string;
-            model: string;
-            quantity_warning: number;
-            quantity_urgent: number;
-            brand: string;
-            items: {
-                numSerie: string;
-                rackId: number;
-                rackLevel: number;
-                createdAt: string;
-            }[];
-        }[];
+        serial_number: string;
+        category: {
+            name: string;
+        };
+        comment: string;
+        created_at: string;
+        model: string;
+    }[];
+    remove?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-const commonItemTable = (props: ItemTableProps): React.ReactElement => {
+const ScannedItemTable = (props: ScannedItemTableProps): React.ReactElement => {
 
     function renderItems(): React.ReactElement[] {
-        const ITEMSLINES: React.ReactElement[] = [];
+        const SCANNEDITEMSLINES: React.ReactElement[] = [];
+
         props.items.forEach((item, index): void => {
-            ITEMSLINES.push(
-                <CommonItemLine
+            SCANNEDITEMSLINES.push(
+                <ScannedItemLine
                     key={index}
                     keyI={index}
-                    category={item.category}
+                    serialNumber={item.serial_number}
                     model={item.model}
-                    brand={item.brand}
-                    items={item.items}
-                    quantity_warning={item.quantity_warning}
-                    quantity_urgent={item.quantity_urgent}
+                    category={item.category.name}
+                    remove={props.remove}
                 />
             );
         });
-        return ITEMSLINES;
+        return SCANNEDITEMSLINES;
     }
 
     return (
         <View style={STYLES.wrapper}>
-            <CommonItemLine
+            <ScannedItemLine
                     head={true}
                     category={'Catégorie'}
                     model={'Modèle'}
-                    brand={'Marque'}
+                    serialNumber={'N° série'}
             />
             <ScrollView>
                 {renderItems()}
@@ -77,4 +74,4 @@ const commonItemTable = (props: ItemTableProps): React.ReactElement => {
 };
 
 
-export default commonItemTable;
+export default ScannedItemTable;

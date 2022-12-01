@@ -31,14 +31,18 @@ type ItemTableProps = {
         brand: string;
         items?: {
             serial_number: string;
-            rack_id: number;
+            rack: {
+                id: number;
+                name: string;
+            };
             rack_level: number;
+            created_at: string;
         }[];
     };
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-const commonItemTable = (props: ItemTableProps): React.ReactElement => {
+const ItemTable = (props: ItemTableProps): React.ReactElement => {
 
     function renderItems(): React.ReactElement[] {
         const ITEMSLINES: React.ReactElement[] = [];
@@ -50,7 +54,7 @@ const commonItemTable = (props: ItemTableProps): React.ReactElement => {
                     keyI={index}
                     serialNumber={item.serial_number}
                     rackLevel={item.rack_level}
-                    rackId={item.rack_id}
+                    rackName={item.rack.name}
                 />
             );
         });
@@ -61,9 +65,9 @@ const commonItemTable = (props: ItemTableProps): React.ReactElement => {
         <View style={STYLES.wrapper}>
             <ItemLine
                     head={true}
-                    serialNumber={'Numéro de série'}
-                    rackLevel={'Etage'}
-                    rackId={'Etagère'}
+                    serialNumber={'N° série'}
+                    rackLevel={'Étage'}
+                    rackName={'Étagère'}
             />
             <ScrollView>
                 {renderItems()}
@@ -73,4 +77,4 @@ const commonItemTable = (props: ItemTableProps): React.ReactElement => {
 };
 
 
-export default commonItemTable;
+export default ItemTable;

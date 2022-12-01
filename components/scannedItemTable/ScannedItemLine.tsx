@@ -6,10 +6,10 @@ import {
     Pressable
 } from 'react-native';
 import React, {useState} from 'react';
-import {WHITE, VERY_LIGHT_GREY, ALMOST_WHITE, ALMOST_BLACK, VERY_VERY_LIGHT_GREY} from '../../style/colors';
+import {WHITE, VERY_LIGHT_GREY, ALMOST_WHITE, ALMOST_BLACK, VERY_VERY_LIGHT_GREY, RED} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
-import {useNavigation} from '@react-navigation/native';
+import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 
 const STYLES = StyleSheet.create({
     wrapper: {
@@ -21,7 +21,7 @@ const STYLES = StyleSheet.create({
         width: '100%'
     },
     text: {
-        width: '30%',
+        width: '27%',
         textAlign: 'center',
         color: ALMOST_BLACK
     },
@@ -46,33 +46,21 @@ const STYLES = StyleSheet.create({
     }
 });
 
-
-type ItemLineProps = {
+type ScannedItemLineProps = {
     keyI?: number;
     head?: boolean;
-    category: string;
+    serialNumber: string;
     model: string;
-    quantity_warning?: number;
-    quantity_urgent?: number;
-    brand: string;
-    items?: {
-        numSerie: string;
-        rackId: number;
-        createdAt: string;
-        rackLevel: number;
-    }[];
-
+    category: string;
+    remove?: boolean;
 };
 
-const commonItemLine = (props: ItemLineProps): React.ReactElement => {
-    const navigation = useNavigation();
-
+const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
 
     function getWrapperStyle(): object {
         if(props.head) {
             return STYLES.headWrapper;
         }
-
 
         return props.keyI! % 2 === 0 ? STYLES.evenWrapper : STYLES.oddWrapper;
     }
@@ -86,6 +74,13 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
         if(props.head) {
             return <View />;
         }
+        if(props.remove) {
+            return (
+                <View style={STYLES.icon}>
+                    <FontAwesomeIcon color={RED} icon={faXmark} size={17} />
+                </View>
+            );
+        }
         return (
             <View style={STYLES.icon}>
                 <FontAwesomeIcon color={ALMOST_BLACK} icon={faMagnifyingGlass} size={15} />
@@ -93,28 +88,20 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
         );
     }
 
-    function getOnPressNavigate(): () => void {
-        if(props.head) {
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            return (): void => {};
-        }
-        return (): void => { navigation.navigate('CommonItemDetail', {item: props}); };
-    }
 
     return (
         <Pressable
             style={[STYLES.wrapper, itemStyle]}
             onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
-            onPress={getOnPressNavigate()}
             onPressIn={(): void => { setItemStyle(STYLES.activeItem); }}
         >
             <Text style={STYLES.text} numberOfLines={1}>{props.category}</Text>
             <Text style={STYLES.text} numberOfLines={1}>{props.model}</Text>
-            <Text style={STYLES.text} numberOfLines={1}>{props.brand}</Text>
+            <Text style={[STYLES.text, {width: '35%'}]} numberOfLines={1}>{props.serialNumber}</Text>
             {getIcon()}
         </Pressable>
     );
 };
 
 
-export default commonItemLine;
+export default ScannedItemLine;

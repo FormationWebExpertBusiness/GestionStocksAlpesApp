@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     View,
+    Text,
     SafeAreaView,
     StyleSheet
 } from 'react-native';
 import React from 'react';
 import CommonItemTable from '../commonItemTable/CommonItemTable';
 import CustomTextInput from '../CustomTextInput';
-import {ITEMS} from '../../jsons';
 import CustomTopTabNavigator from '../../components/CustomTopTabNavigator';
 import {useQuery, gql} from '@apollo/client';
 import {BLACK} from '../../style/colors';
@@ -21,6 +21,8 @@ const STYLES = StyleSheet.create({
         paddingBottom: 50
     },
     textStyle: {
+        height: 100,
+        width: 100,
         color: BLACK
     }
 });
@@ -33,6 +35,8 @@ const HomePage = ({navigation}: any): React.ReactElement => {
         commonItems {
             id
             model
+            quantity_warning
+            quantity_urgent
             brand {
                 name
             }
@@ -41,8 +45,13 @@ const HomePage = ({navigation}: any): React.ReactElement => {
             }
             items {
                 serial_number
-                rack_id
+                rack {
+                    id
+                    name
+                }
                 rack_level
+                created_at
+                comment
             }
         }
       }
@@ -51,11 +60,15 @@ const HomePage = ({navigation}: any): React.ReactElement => {
   type CommonItem = {
         category: string;
         model: string;
+        quantity_warning: number;
+        quantity_urgent: number;
         brand: string;
         items: {
             numSerie: string;
             rackId: number;
+            rackName: string;
             rackLevel: number;
+            createdAt: string;
             comment?: string;
         }[];
   };
@@ -70,6 +83,8 @@ const HomePage = ({navigation}: any): React.ReactElement => {
             JSONDATA.push({
                 category: commonItem.category.name,
                 model: commonItem.model,
+                quantity_warning: commonItem.quantity_warning,
+                quantity_urgent: commonItem.quantity_urgent,
                 brand: commonItem.brand.name,
                 items: commonItem.items
             });
@@ -81,6 +96,19 @@ const HomePage = ({navigation}: any): React.ReactElement => {
         commonItems = createJsonFromData(commonItemsData.data.commonItems);
       }
 
+    function renderTable(): React.ReactElement {
+        if(commonItemsData.loading) {
+            return <View>
+                <Text style={STYLES.textStyle}>Loading...</Text>
+                </View>;
+        } else if(commonItemsData.error) {
+            return <View>
+                <Text style={STYLES.textStyle}>Error : {commonItemsData.error.message}</Text>
+                </View>;
+        }
+        return <CommonItemTable items={commonItems}/>;
+    }
+
     return (
         <SafeAreaView>
             <CustomTopTabNavigator
@@ -90,7 +118,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
             />
                 <View style={STYLES.wrapper}>
                     <CustomTextInput required password={false} placeholder={'Recherche'} />
-                    <CommonItemTable items={commonItems}/>
+                    {renderTable()}
                 </View>
         </SafeAreaView>
     );
