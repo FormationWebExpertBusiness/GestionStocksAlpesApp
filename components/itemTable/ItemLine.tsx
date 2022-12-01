@@ -50,10 +50,10 @@ type ItemLineProps = {
     head?: boolean;
     serialNumber: string;
     rackLevel: number | string;
-    rackId: number | string;
+    rackName: string;
 };
 
-const commonItemLine = (props: ItemLineProps): React.ReactElement => {
+const ItemLine = (props: ItemLineProps): React.ReactElement => {
 
     function getWrapperStyle(): object {
         if(props.head) {
@@ -87,7 +87,7 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
             onPressIn={(): void => { setItemStyle(STYLES.activeItem); }}
         >
             <Text style={[STYLES.text, {width: '35%'}]} numberOfLines={1}>{props.serialNumber}</Text>
-            <Text style={STYLES.text} numberOfLines={1}>{props.rackId}</Text>
+            <Text style={STYLES.text} numberOfLines={1}>{props.rackName}</Text>
             <Text style={STYLES.text} numberOfLines={1}>{props.rackLevel}</Text>
             {getIcon()}
         </Pressable>
@@ -95,4 +95,4 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
 };
 
 
-export default commonItemLine;
+export default ItemLine;
