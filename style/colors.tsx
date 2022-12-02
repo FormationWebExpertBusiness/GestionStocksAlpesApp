@@ -1,3 +1,4 @@
+// Base colors
 export const BLACK = '#000000';
 
 export const ALMOST_BLACK = '#252D3A';
@@ -31,4 +32,42 @@ export const VERY_LIGHT_GREY = '#EEEFF4';
 export const AVERAGE_GREY = '#8292A2';
 
 export const DARKBLUEBLACK = '#252d3a';
+
+export const REDBACKGROUND = '#FF00003C';
+
+
+// Text Badge colors
+export const BADGETEXTRED = '#991B1B';
+
+export const BADGETEXTORANGE = '#9A3412';
+
+export const BADGETEXTGREEN = '#166534';
+
+export const BADGETEXTPURPLE = '#1e40af';
+
+// Dot Badge colors
+export const BADGEDOTRED = '#D50000';
+
+export const BADGEDOTORANGE = '#FB923C';
+
+export const BADGEDOTGREEN = '#00C853';
+
+export const BADGEDOTPURPLE = '#6360FA';
+
+// Badge colors
+export const BADGERED = '#FECACA';
+
+export const BADGEORANGE = '#FED7AA';
+
+export const BADGEGREEN = '#BBF7D0';
+
+export const BADGEPURPLE = '#bfbdfe';
+
+// Button colors
+
+export const BUTTONRED = '#dc2626';
+
+export const BUTTONGREY = '#d1d5db';
+
+
 

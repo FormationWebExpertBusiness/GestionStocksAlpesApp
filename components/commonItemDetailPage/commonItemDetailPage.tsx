@@ -23,7 +23,7 @@ const STYLES = StyleSheet.create({
     },
     tableWrapper: {
         width: '100%',
-        height: '80%',
+        height: '79%',
         paddingBottom: 50
     },
     headerWrapper: {
@@ -37,7 +37,6 @@ const STYLES = StyleSheet.create({
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const CommonItemDetailPage = ({navigation, route}: any): React.ReactElement => {
     const {item} = route.params;
-
     return (
         <View style={STYLES.pageWrapper}>
             <View style={STYLES.backArrow}>

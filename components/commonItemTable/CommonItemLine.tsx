@@ -2,50 +2,14 @@
 import {
     View,
     Text,
-    StyleSheet,
     Pressable
 } from 'react-native';
 import React, {useState} from 'react';
-import {WHITE, VERY_LIGHT_GREY, ALMOST_WHITE, ALMOST_BLACK, VERY_VERY_LIGHT_GREY} from '../../style/colors';
+import {ALMOST_BLACK, VERY_LIGHT_GREY} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 import {useNavigation} from '@react-navigation/native';
-
-const STYLES = StyleSheet.create({
-    wrapper: {
-        paddingBottom: 2,
-        display: 'flex',
-        height: 50,
-        alignItems: 'center',
-        flexDirection: 'row',
-        width: '100%'
-    },
-    text: {
-        width: '30%',
-        textAlign: 'center',
-        color: ALMOST_BLACK
-    },
-    icon: {
-        width: '5%',
-        opacity: 0.5,
-        alignItems: 'center'
-    },
-    oddWrapper: {
-        backgroundColor: WHITE
-    },
-    evenWrapper: {
-        backgroundColor: ALMOST_WHITE
-    },
-    activeItem: {
-        backgroundColor: VERY_VERY_LIGHT_GREY
-    },
-    headWrapper: {
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5,
-        backgroundColor: VERY_LIGHT_GREY
-    }
-});
-
+import {LINESTYLES} from '../../style/tablesStyle';
 
 type ItemLineProps = {
     keyI?: number;
@@ -70,11 +34,11 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
 
     function getWrapperStyle(): object {
         if(props.head) {
-            return STYLES.headWrapper;
+            return LINESTYLES.headWrapper;
         }
 
 
-        return props.keyI! % 2 === 0 ? STYLES.evenWrapper : STYLES.oddWrapper;
+        return props.keyI! % 2 === 0 ? LINESTYLES.evenWrapper : LINESTYLES.oddWrapper;
     }
 
     const [itemStyle, setItemStyle] = useState<object>(getWrapperStyle());
@@ -84,11 +48,11 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
 
     function getIcon(): React.ReactElement {
         if(props.head) {
-            return <View />;
+            return <View style={[LINESTYLES.icon, {backgroundColor: VERY_LIGHT_GREY}]} />;
         }
         return (
-            <View style={STYLES.icon}>
-                <FontAwesomeIcon color={ALMOST_BLACK} icon={faMagnifyingGlass} size={15} />
+            <View style={LINESTYLES.icon}>
+                <FontAwesomeIcon color={ALMOST_BLACK} icon={faMagnifyingGlass} size={12} />
             </View>
         );
     }
@@ -103,14 +67,14 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
 
     return (
         <Pressable
-            style={[STYLES.wrapper, itemStyle]}
+            style={[LINESTYLES.wrapper, itemStyle]}
             onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
             onPress={getOnPressNavigate()}
-            onPressIn={(): void => { setItemStyle(STYLES.activeItem); }}
+            onPressIn={(): void => { setItemStyle(LINESTYLES.activeItem); }}
         >
-            <Text style={STYLES.text} numberOfLines={1}>{props.category}</Text>
-            <Text style={STYLES.text} numberOfLines={1}>{props.model}</Text>
-            <Text style={STYLES.text} numberOfLines={1}>{props.brand}</Text>
+            <Text style={LINESTYLES.text} numberOfLines={1}>{props.category}</Text>
+            <Text style={LINESTYLES.text} numberOfLines={1}>{props.model}</Text>
+            <Text style={LINESTYLES.text} numberOfLines={1}>{props.brand}</Text>
             {getIcon()}
         </Pressable>
     );

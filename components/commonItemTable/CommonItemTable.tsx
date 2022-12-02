@@ -1,27 +1,10 @@
 import {
     ScrollView,
-    View,
-    StyleSheet
+    View
 } from 'react-native';
 import React from 'react';
 import CommonItemLine from './CommonItemLine';
-import {DARKBLUEBLACK} from '../../style/colors';
-
-const STYLES = StyleSheet.create({
-    wrapper: {
-        marginTop: 20,
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5,
-        shadowColor: DARKBLUEBLACK,
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowOpacity:  0.16,
-        shadowRadius: 1.51,
-        elevation: 2
-    }
-});
+import {TABLESTYLES} from '../../style/tablesStyle';
 
 type ItemTableProps = {
     items: {
@@ -62,7 +45,7 @@ const commonItemTable = (props: ItemTableProps): React.ReactElement => {
     }
 
     return (
-        <View style={STYLES.wrapper}>
+        <View style={TABLESTYLES.wrapper}>
             <CommonItemLine
                     head={true}
                     category={'Catégorie'}

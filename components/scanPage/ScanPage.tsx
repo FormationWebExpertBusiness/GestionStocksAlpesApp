@@ -64,7 +64,6 @@ const ScanPage = (): React.ReactElement => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSuccess = (e: any): void => {
-        console.log(e.data);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         Linking.openURL(e.data).catch((err: any): void => { console.error('An error occurred', err); });
     };
