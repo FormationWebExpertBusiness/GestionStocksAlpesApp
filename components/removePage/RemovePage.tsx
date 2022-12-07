@@ -5,17 +5,16 @@ import {
 } from 'react-native';
 import React from 'react';
 import {BLACK, CULTURED} from '../../style/colors';
-import GoBackButton from '../gobackButton';
 import {useQuery} from '@apollo/client';
 import ScannedItemTable from '../scannedItemTable/ScannedItemTable';
 import RemovePageHeader from './removePageHeader';
 import {GET_ITEMS} from '../../graphql/query/getItems';
 import {GET_RACK} from '../../graphql/query/getRack';
+import CustomTopTabNavigator from '../CustomTopTabNavigator';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
         width: '100%',
-        marginTop: 20,
         paddingHorizontal: 20,
         height: '100%',
         backgroundColor: CULTURED
@@ -80,13 +79,18 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
     }
 
     return (
-        <View style={STYLES.pageWrapper}>
-            <GoBackButton navigation={navigation} color={BLACK} size={20} />
-            <View style={STYLES.pageContent}>
-                <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={getNbItem()} content1={getRackName()} content2={values.rack_level} />
-                {getResult()}
+        <>
+            <CustomTopTabNavigator
+                mode={'back'}
+                onPressBack={(): void => { navigation.goBack(); } }
+            />
+            <View style={STYLES.pageWrapper}>
+                <View style={STYLES.pageContent}>
+                    <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={getNbItem()} content1={getRackName()} content2={values.rack_level} />
+                    {getResult()}
+                </View>
             </View>
-        </View>
+        </>
     );
 };
 

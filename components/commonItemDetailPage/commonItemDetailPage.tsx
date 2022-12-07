@@ -5,8 +5,8 @@ import {
 import React from 'react';
 import {BLACK, CULTURED} from '../../style/colors';
 import ItemTable from '../itemTable/ItemTable';
-import GoBackButton from '../gobackButton';
 import DetailPageHeader from './detailPageHeader';
+import CustomTopTabNavigator from '../CustomTopTabNavigator';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -38,15 +38,17 @@ const STYLES = StyleSheet.create({
 const CommonItemDetailPage = ({navigation, route}: any): React.ReactElement => {
     const {item} = route.params;
     return (
-        <View style={STYLES.pageWrapper}>
-            <View style={STYLES.backArrow}>
-                <GoBackButton navigation={navigation} color={BLACK} size={30} />
-            </View>
-            <DetailPageHeader quantityUrgent={item.quantity_urgent} quantityWarning={item.quantity_warning} size={Object.keys(item.items).length} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} content1={item.category} content2={item.brand} content3={item.model} />
-            <View style={STYLES.tableWrapper}>
-                <ItemTable homeItems={item} />
-            </View>
-        </View>
+        <>
+            <CustomTopTabNavigator
+                mode={'back'}
+                onPressBack={(): void => { navigation.goBack(); } }
+            />
+            <View style={STYLES.pageWrapper}>
+                <DetailPageHeader quantityUrgent={item.quantity_urgent} quantityWarning={item.quantity_warning} size={Object.keys(item.items).length} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} content1={item.category} content2={item.brand} content3={item.model} />
+                <View style={STYLES.tableWrapper}>
+                    <ItemTable homeItems={item} />
+                </View>
+            </View></>
     );
 };
 

@@ -86,6 +86,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
     return (
         <SafeAreaView>
             <CustomTopTabNavigator
+                mode={'all'}
                 onPressScan={(): void => {navigation.navigate('Scan');}}
                 onPressRemove={(): void => {navigation.navigate('RemoveScan');}}
                 onPressAdd={(): void => {navigation.navigate('Add');}}
