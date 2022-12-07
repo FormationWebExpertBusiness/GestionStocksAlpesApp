@@ -8,7 +8,6 @@ import React, {useState} from 'react';
 import {ALMOST_BLACK} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
-import DetailModal from '../commonItemDetailPage/detailModal';
 import {LINESTYLES} from '../../style/tablesStyle';
 import DetailItemModal from '../detailItemModal/detailItemModal';
 
