@@ -9,10 +9,12 @@ import {ALMOST_BLACK, BUTTONRED} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
-import {useMutation, gql} from '@apollo/client';
-import {GET_ITEMS, GET_RACK} from '../removePage/RemovePage';
+import {useMutation} from '@apollo/client';
 import {LINESTYLES} from '../../style/tablesStyle';
 import DetailItemModal from '../detailItemModal/detailItemModal';
+import {GET_RACK} from '../../graphql/query/getRack';
+import {GET_ITEMS} from '../../graphql/query/getItems';
+import {DELETE_ITEM} from '../../graphql/mutation/deleteItem';
 
 type ScannedItemLineProps = {
     id: number;
@@ -28,20 +30,12 @@ type ScannedItemLineProps = {
     remove?: boolean;
 };
 
-const DELETEITEM = gql`
-  mutation deleteItem($id: ID!) {
-    deleteItem(id: $id) {
-        id
-    }
-  }
-`;
-
 const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [deleteItemMutation, {data, loading, error}] = useMutation(DELETEITEM, {
+    const [deleteItemMutation, {data, loading, error}] = useMutation(DELETE_ITEM, {
         awaitRefetchQueries: true,
         refetchQueries: [
             {
