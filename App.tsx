@@ -8,7 +8,8 @@ import AddPage from './components/addPage/AddPage';
 import CommonItemDetailPage from './components/commonItemDetailPage/commonItemDetailPage';
 import ScanBeforeRemove from './components/removePage/ScanBeforeRemove';
 import React from 'react';
-import {ApolloClient, InMemoryCache, ApolloProvider, gql} from '@apollo/client';
+import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+import {HELLO_WORLD} from './graphql/query/helloWorld';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,11 +24,7 @@ const App = (): React.ReactElement => {
 
 	client
   .query({
-    query: gql`
-      query GetHello {
-        hello
-      }
-    `
+    query: HELLO_WORLD
   })
   .then((result): void => {console.log(result);});
 

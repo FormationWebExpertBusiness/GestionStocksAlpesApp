@@ -5,15 +5,16 @@ import {
 } from 'react-native';
 import React from 'react';
 import {BLACK, CULTURED} from '../../style/colors';
-import GoBackButton from '../gobackButton';
-import {useQuery, gql} from '@apollo/client';
+import {useQuery} from '@apollo/client';
 import ScannedItemTable from '../scannedItemTable/ScannedItemTable';
 import RemovePageHeader from './removePageHeader';
+import {GET_ITEMS} from '../../graphql/query/getItems';
+import {GET_RACK} from '../../graphql/query/getRack';
+import CustomTopTabNavigator from '../CustomTopTabNavigator';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
         width: '100%',
-        marginTop: 20,
         paddingHorizontal: 20,
         height: '100%',
         backgroundColor: CULTURED
@@ -27,35 +28,6 @@ const STYLES = StyleSheet.create({
         marginTop: 20
     }
 });
-
-
-export const GET_ITEMS = gql`
-query GetItems($rack_id: Int!, $rack_level: Int!) {
-    items(rack_id: $rack_id, rack_level: $rack_level) {
-                id
-                serial_number
-                model
-                brand {
-                    name
-                }
-                category {
-                    name
-                }
-                created_at
-                comment
-    }
-}
-`;
-
-export const GET_RACK = gql`
-query GetRackName($id: ID!, $level: Int!) {
-    rack(id: $id, level: $level) {
-        id
-        name
-        nb_item
-    }
-}
-`;
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const RemovePage = ({navigation, route}: any): React.ReactElement => {
@@ -107,13 +79,18 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
     }
 
     return (
-        <View style={STYLES.pageWrapper}>
-            <GoBackButton navigation={navigation} color={BLACK} size={20} />
-            <View style={STYLES.pageContent}>
-                <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={getNbItem()} content1={getRackName()} content2={values.rack_level} />
-                {getResult()}
+        <>
+            <CustomTopTabNavigator
+                mode={'back'}
+                onPressBack={(): void => { navigation.goBack(); } }
+            />
+            <View style={STYLES.pageWrapper}>
+                <View style={STYLES.pageContent}>
+                    <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={getNbItem()} content1={getRackName()} content2={values.rack_level} />
+                    {getResult()}
+                </View>
             </View>
-        </View>
+        </>
     );
 };
 

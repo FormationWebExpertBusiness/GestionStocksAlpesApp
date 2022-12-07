@@ -9,7 +9,8 @@ import React from 'react';
 import CommonItemTable from '../commonItemTable/CommonItemTable';
 import CustomTextInput from '../CustomTextInput';
 import CustomTopTabNavigator from '../../components/CustomTopTabNavigator';
-import {useQuery, gql} from '@apollo/client';
+import {useQuery} from '@apollo/client';
+import {GET_COMMONITEMS} from '../../graphql/query/getCommonItems';
 import {BLACK} from '../../style/colors';
 
 const STYLES = StyleSheet.create({
@@ -29,33 +30,6 @@ const STYLES = StyleSheet.create({
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const HomePage = ({navigation}: any): React.ReactElement => {
-
-    const GET_COMMONITEMS = gql`
-    query GetCommonItems {
-        commonItems {
-            id
-            model
-            quantity_warning
-            quantity_urgent
-            brand {
-                name
-            }
-            category {
-                name
-            }
-            items {
-                serial_number
-                rack {
-                    id
-                    name
-                }
-                rack_level
-                created_at
-                comment
-            }
-        }
-      }
-  `;
 
   type CommonItem = {
         category: string;
@@ -112,6 +86,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
     return (
         <SafeAreaView>
             <CustomTopTabNavigator
+                mode={'all'}
                 onPressScan={(): void => {navigation.navigate('Scan');}}
                 onPressRemove={(): void => {navigation.navigate('RemoveScan');}}
                 onPressAdd={(): void => {navigation.navigate('Add');}}
