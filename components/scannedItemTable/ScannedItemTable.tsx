@@ -1,28 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
     ScrollView,
-    View,
-    StyleSheet
+    View
 } from 'react-native';
 import React from 'react';
 import ScannedItemLine from './ScannedItemLine';
-import {DARKBLUEBLACK} from '../../style/colors';
-
-const STYLES = StyleSheet.create({
-    wrapper: {
-        marginTop: 20,
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5,
-        shadowColor: DARKBLUEBLACK,
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowOpacity:  0.16,
-        shadowRadius: 1.51,
-        elevation: 2
-    }
-});
+import {TABLESTYLES} from '../../style/tablesStyle';
 
 type ScannedItemTableProps = {
     loading: boolean;
@@ -31,6 +14,9 @@ type ScannedItemTableProps = {
     items: {
         id: number;
         serial_number: string;
+        brand: {
+            name: string;
+        };
         category: {
             name: string;
         };
@@ -52,6 +38,8 @@ const ScannedItemTable = (props: ScannedItemTableProps): React.ReactElement => {
                 <ScannedItemLine
                     id={item.id}
                     key={index}
+                    brand={item.brand.name}
+                    created_at={item.created_at}
                     keyI={index}
                     serialNumber={item.serial_number}
                     model={item.model}
@@ -66,7 +54,7 @@ const ScannedItemTable = (props: ScannedItemTableProps): React.ReactElement => {
     }
 
     return (
-        <View style={STYLES.wrapper}>
+        <View style={TABLESTYLES.wrapper}>
             <ScannedItemLine
                     id={0}
                     head={true}

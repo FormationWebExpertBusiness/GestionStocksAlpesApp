@@ -4,7 +4,7 @@ import {
     Text
 } from 'react-native';
 import React, {useState} from 'react';
-import {ALMOST_BLACK, CULTURED, DARKBLUEBLACK} from '../../style/colors';
+import {ALMOST_BLACK, BADGEDOTORANGE, BADGEDOTRED, BADGEGREEN, BADGEORANGE, BADGERED, BADGETEXTGREEN, BADGETEXTORANGE, BADGETEXTRED, CULTURED, DARKBLUEBLACK} from '../../style/colors';
 
 const STYLES = StyleSheet.create({
     componentWrapper: {
@@ -31,17 +31,17 @@ const STYLES = StyleSheet.create({
     },
     textContent: {
         flexDirection: 'row',
-        width: '60%',
+        width: '80%',
         justifyContent: 'space-between'
     },
     headerWrapper: {
         flexDirection: 'row',
-        opacity: 0.4,
-        width: '60%',
-        justifyContent: 'space-between'
+        width: '105%',
+        justifyContent: 'space-between',
+        opacity: 0.4
     },
     badgeWrapper: {
-        width: '40%',
+        width: '20%',
         flexDirection: 'row',
         justifyContent: 'flex-end'
     },
@@ -51,7 +51,7 @@ const STYLES = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: 38,
+        width: 41,
         height: 20,
         paddingHorizontal: 7
     },
@@ -89,30 +89,30 @@ type DetailPageHeaderProps = {
 const DetailPageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
 
     function getBadgeTextColor(): string {
-        if(props.quantityUrgent < 0) {
-            return '#991B1B';
-        } else if(props.quantityWarning < 0) {
-            return '#9A3412';
+        if(props.size < props.quantityUrgent) {
+            return BADGETEXTRED;
+        } else if(props.size < props.quantityWarning) {
+            return BADGETEXTORANGE;
         }
-            return '#166534';
+            return BADGETEXTGREEN;
     }
 
     function getBadgeDotColor(): string {
-        if(props.quantityUrgent < 0) {
-            return '#D50000';
-        } else if(props.quantityWarning < 0) {
-            return '#FB923C';
+        if(props.size < props.quantityUrgent) {
+            return BADGEDOTRED;
+        } else if(props.size < props.quantityWarning) {
+            return BADGEDOTORANGE;
         }
-            return '#00C853';
+            return BADGETEXTGREEN;
     }
 
     function getBadgeColor(): string {
-        if(props.quantityUrgent < 0) {
-            return '#FECACA';
-        } else if(props.quantityWarning < 0) {
-            return '#FED7AA';
+        if(props.size < props.quantityUrgent) {
+            return BADGERED;
+        } else if(props.size < props.quantityWarning) {
+            return BADGEORANGE;
         }
-            return '#BBF7D0';
+            return BADGEGREEN;
     }
 
     const [badgeColor] = useState<string>(getBadgeColor());
@@ -125,7 +125,7 @@ const DetailPageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
                 <Text style={STYLES.textStyle}>{props.title1}</Text>
                 <Text style={STYLES.textStyle}>{props.title2}</Text>
                 <Text style={STYLES.textStyle}>{props.title3}</Text>
-                <Text style={[STYLES.textStyle, {marginLeft: 15}]}>Quantité</Text>
+                <Text style={[STYLES.textStyle]}>Quantité</Text>
             </View>
             <View style={STYLES.contentWrapper}>
             <View style={STYLES.textContent}>

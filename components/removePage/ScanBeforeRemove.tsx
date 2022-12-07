@@ -90,7 +90,6 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSuccess = (e: any): void => {
-        console.log(e);
         checkQrCodeData(e.data);
     };
 

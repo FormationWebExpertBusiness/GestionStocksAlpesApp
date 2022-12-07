@@ -4,7 +4,7 @@ import {
     Text
 } from 'react-native';
 import React, {useState} from 'react';
-import {ALMOST_BLACK, CULTURED, DARKBLUEBLACK} from '../../style/colors';
+import {ALMOST_BLACK, BADGEDOTPURPLE, BADGEPURPLE, BADGETEXTPURPLE, CULTURED, DARKBLUEBLACK} from '../../style/colors';
 
 const STYLES = StyleSheet.create({
     componentWrapper: {
@@ -84,9 +84,9 @@ type DetailPageHeaderProps = {
 
 const RemovePageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
 
-    const [badgeColor] = useState<string>('#bfbdfe');
-    const [badgeDotColor] = useState<string>('#6360FA');
-    const [badgeTextColor] = useState<string>('#1e40af');
+    const [badgeColor] = useState<string>(BADGEPURPLE);
+    const [badgeDotColor] = useState<string>(BADGEDOTPURPLE);
+    const [badgeTextColor] = useState<string>(BADGETEXTPURPLE);
 
     return (
         <View style={STYLES.componentWrapper}>

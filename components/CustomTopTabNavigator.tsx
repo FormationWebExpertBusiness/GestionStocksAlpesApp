@@ -4,7 +4,7 @@ import {
 	StyleSheet,
 	Pressable
 } from 'react-native';
-import {CULTURED, BLACK, DARKBLUEBLACK, ALMOST_BLACK} from '../style/colors';
+import {CULTURED, BLACK, DARKBLUEBLACK, ALMOST_BLACK, ALMOST_WHITE} from '../style/colors';
 import React, {useState} from 'react';
 import Modal from 'react-native-modal';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -12,6 +12,7 @@ import {faBars} from '@fortawesome/free-solid-svg-icons/faBars';
 import {faQrcode} from '@fortawesome/free-solid-svg-icons/faQrcode';
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus';
 import {faMinus} from '@fortawesome/free-solid-svg-icons/faMinus';
+import {faArrowRightArrowLeft} from '@fortawesome/free-solid-svg-icons/faArrowRightArrowLeft';
 
 
 const STYLES = StyleSheet.create({
@@ -74,10 +75,17 @@ const STYLES = StyleSheet.create({
 	},
 	menu: {
 		padding: 10,
-		marginLeft: 100,
 		alignItems:'center',
 		justifyContent: 'center',
 		width: 72,
+		height: 72
+	},
+	scan: {
+		padding: 10,
+		width: 72,
+		marginLeft: 30,
+		alignItems:'center',
+		justifyContent: 'center',
 		height: 72
 	}
 });
@@ -94,6 +102,9 @@ const CustomTopTabNavigator = (props: CustomTopTabNavigatorProps): React.ReactEl
 	return (
 		<View style={STYLES.headerWrapper}>
 			<Text style={STYLES.sectionTitle}>Alpes Networks</Text>
+			<Pressable style={STYLES.scan} onPress={(): void => {props.onPressScan(); setIsModalVisible(false);}}>
+				<FontAwesomeIcon color={ALMOST_WHITE} icon={faQrcode} size={20} />
+			</Pressable>
 			<Pressable style={STYLES.menu} onPress={(): void => {setIsModalVisible(true);}}>
 				<FontAwesomeIcon color={CULTURED} icon={faBars} size={20} />
 			</Pressable>
@@ -108,8 +119,8 @@ const CustomTopTabNavigator = (props: CustomTopTabNavigatorProps): React.ReactEl
 			>
 				<View style={STYLES.modalView}>
 					<Pressable style={STYLES.links} onPress={(): void => {props.onPressScan(); setIsModalVisible(false);}}>
-						<FontAwesomeIcon color={ALMOST_BLACK} icon={faQrcode} size={20} />
-						<Text style={STYLES.linksText}>Scanner</Text>
+						<FontAwesomeIcon color={ALMOST_BLACK} icon={faArrowRightArrowLeft} size={20} />
+						<Text style={STYLES.linksText}>Déplacer</Text>
 					</Pressable>
 
 					<View style={STYLES.separator} />

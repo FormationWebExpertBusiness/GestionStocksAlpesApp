@@ -1,28 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
     ScrollView,
-    View,
-    StyleSheet
+    View
 } from 'react-native';
 import React from 'react';
 import ItemLine from './ItemLine';
-import {DARKBLUEBLACK} from '../../style/colors';
-
-const STYLES = StyleSheet.create({
-    wrapper: {
-        marginTop: 20,
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5,
-        shadowColor: DARKBLUEBLACK,
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowOpacity:  0.16,
-        shadowRadius: 1.51,
-        elevation: 2
-    }
-});
+import {TABLESTYLES} from '../../style/tablesStyle';
 
 type ItemTableProps = {
     homeItems: {
@@ -51,6 +34,10 @@ const ItemTable = (props: ItemTableProps): React.ReactElement => {
             ITEMSLINES.push(
                 <ItemLine
                     key={index}
+                    created_at={item.created_at}
+                    model={props.homeItems.model}
+                    brand={props.homeItems.brand}
+                    category={props.homeItems.category}
                     keyI={index}
                     serialNumber={item.serial_number}
                     rackLevel={item.rack_level}
@@ -62,7 +49,7 @@ const ItemTable = (props: ItemTableProps): React.ReactElement => {
     }
 
     return (
-        <View style={STYLES.wrapper}>
+        <View style={TABLESTYLES.wrapper}>
             <ItemLine
                     head={true}
                     serialNumber={'N° série'}

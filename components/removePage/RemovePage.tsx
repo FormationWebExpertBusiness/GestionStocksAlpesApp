@@ -62,7 +62,7 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
 
     const {values} = route.params;
 
-    let items: {id: number; serial_number: string; category: {name: string;}; model: string; created_at: string; comment: string;}[];
+    let items: {id: number; serial_number: string; category: {name: string;}; brand: {name: string;}; model: string; created_at: string; comment: string;}[];
 
     const {loading, error, data} = useQuery(GET_ITEMS, {
         variables: {
@@ -103,7 +103,6 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
         if(loading) return <Text style={STYLES.textStyle}>Loading...</Text>;
         if(error) return <Text style={STYLES.textStyle}>Error : {error.message}</Text>;
         items = data.items;
-        console.log(loading);
         return <ScannedItemTable loading={loading} rack_id={values.rack_id} rack_level={values.rack_level} items={items} remove={true}/>;
     }
 
