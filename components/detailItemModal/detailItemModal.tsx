@@ -131,7 +131,7 @@ const DetailItemModal = (props: DetailItemModalProps): React.ReactElement => {
         if(props.rackName) {
             return props.rackName;
         }
-        return 'Étagère {props.rackLevel}';
+        return `Étagère ${props.rackLevel}`;
     }
 
     return (
