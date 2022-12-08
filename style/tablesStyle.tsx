@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {ALMOST_BLACK, ALMOST_WHITE, DARKBLUEBLACK, REDBACKGROUND, VERY_LIGHT_GREY, VERY_VERY_LIGHT_GREY, WHITE} from './colors';
+import {ALMOST_BLACK, ALMOST_WHITE, DARKBLUEBLACK, MAGNIFYINGLASSBG, REDBACKGROUND, VERY_LIGHT_GREY, VERY_VERY_LIGHT_GREY, WHITE} from './colors';
 
 export const TABLESTYLES = StyleSheet.create({
     wrapper: {
@@ -43,7 +43,7 @@ export const LINESTYLES = StyleSheet.create({
         opacity: 0.7,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#2626262C',
+        backgroundColor: MAGNIFYINGLASSBG,
         borderRadius: 5
     },
     iconDeletion: {

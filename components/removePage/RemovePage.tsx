@@ -11,6 +11,7 @@ import RemovePageHeader from './removePageHeader';
 import {GET_ITEMS} from '../../graphql/query/getItems';
 import {GET_RACK} from '../../graphql/query/getRack';
 import CustomTopTabNavigator from '../CustomTopTabNavigator';
+import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -72,7 +73,10 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
     }
 
     function getResult(): React.ReactElement {
-        if(loading) return <Text style={STYLES.textStyle}>Loading...</Text>;
+        if(loading)
+        return (
+            <TableSkeleton number={6} title1={'Catégorie'} title2={'Modèle'} title3={'N° série'} remove animation='pulse' />
+        );
         if(error) return <Text style={STYLES.textStyle}>Error : {error.message}</Text>;
         items = data.items;
         return <ScannedItemTable loading={loading} rack_id={values.rack_id} rack_level={values.rack_level} items={items} remove={true}/>;

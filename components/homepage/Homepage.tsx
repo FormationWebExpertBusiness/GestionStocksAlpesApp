@@ -12,6 +12,7 @@ import CustomTopTabNavigator from '../../components/CustomTopTabNavigator';
 import {useQuery} from '@apollo/client';
 import {GET_COMMONITEMS} from '../../graphql/query/getCommonItems';
 import {BLACK} from '../../style/colors';
+import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 
 const STYLES = StyleSheet.create({
     wrapper: {
@@ -72,9 +73,9 @@ const HomePage = ({navigation}: any): React.ReactElement => {
 
     function renderTable(): React.ReactElement {
         if(commonItemsData.loading) {
-            return <View>
-                <Text style={STYLES.textStyle}>Loading...</Text>
-                </View>;
+            return (
+                    <TableSkeleton number={6} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} animation='pulse' />
+            );
         } else if(commonItemsData.error) {
             return <View>
                 <Text style={STYLES.textStyle}>Error : {commonItemsData.error.message}</Text>

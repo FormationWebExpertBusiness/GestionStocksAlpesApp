@@ -23,7 +23,7 @@ const STYLES = StyleSheet.create({
     },
     tableWrapper: {
         width: '100%',
-        height: '79%',
+        height: '85%',
         paddingBottom: 50
     },
     headerWrapper: {

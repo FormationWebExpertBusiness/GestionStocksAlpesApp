@@ -128,7 +128,7 @@ const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
             <Pressable
                 style={[LINESTYLES.wrapper, itemStyle]}
                 onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
-                onPressIn={(): void => { setItemStyle(LINESTYLES.activeItem); }}
+                onPressIn={(): void => { if(!props.head)setItemStyle(LINESTYLES.activeItem); }}
                 onPress={(): void => { setIsModalVisible(true); }}
             >
                 {renderContent()}
