@@ -70,4 +70,4 @@ export const BUTTONRED = '#dc2626';
 export const BUTTONGREY = '#d1d5db';
 
 
-
+export const MAGNIFYINGLASSBG = '#2626262C';

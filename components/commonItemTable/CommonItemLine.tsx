@@ -68,9 +68,9 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
     return (
         <Pressable
             style={[LINESTYLES.wrapper, itemStyle]}
-            onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
+            onPressOut={(): void => { if(!props.head)setItemStyle(getWrapperStyle()); }}
             onPress={getOnPressNavigate()}
-            onPressIn={(): void => { setItemStyle(LINESTYLES.activeItem); }}
+            onPressIn={(): void => { if(!props.head)setItemStyle(LINESTYLES.activeItem); }}
         >
             <Text style={LINESTYLES.text} numberOfLines={1}>{props.category}</Text>
             <Text style={LINESTYLES.text} numberOfLines={1}>{props.model}</Text>
