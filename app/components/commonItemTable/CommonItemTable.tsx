@@ -5,39 +5,26 @@ import {
 import React from 'react';
 import CommonItemLine from './CommonItemLine';
 import {TABLESTYLES} from '../../style/tablesStyle';
+import type {CommonItem} from '../../types/commonItemType';
 
-type ItemTableProps = {
-    items: {
-            category: string;
-            model: string;
-            quantity_warning: number;
-            quantity_urgent: number;
-            brand: string;
-            items: {
-                numSerie: string;
-                rackId: number;
-                rackLevel: number;
-                createdAt: string;
-            }[];
-        }[];
+type CommonItemTable = {
+    commonItems: CommonItem[];
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-const commonItemTable = (props: ItemTableProps): React.ReactElement => {
+const commonItemTable = (props: CommonItemTable): React.ReactElement => {
 
     function renderItems(): React.ReactElement[] {
         const ITEMSLINES: React.ReactElement[] = [];
-        props.items.forEach((item, index): void => {
+        props.commonItems.forEach((item, index): void => {
             ITEMSLINES.push(
                 <CommonItemLine
                     key={index}
                     keyI={index}
-                    category={item.category}
+                    id={item.id}
+                    category={item.category.name}
                     model={item.model}
-                    brand={item.brand}
-                    items={item.items}
-                    quantity_warning={item.quantity_warning}
-                    quantity_urgent={item.quantity_urgent}
+                    brand={item.brand.name}
                 />
             );
         });

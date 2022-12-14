@@ -38,6 +38,7 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
     let items: {id: number; serial_number: string; category: {name: string;}; brand: {name: string;}; model: string; created_at: string; comment: string;}[];
 
     const {loading, error, data} = useQuery(GET_ITEMS, {
+        fetchPolicy: 'network-only',
         variables: {
             rack_id: values.rack_id,
             rack_level: values.rack_level
