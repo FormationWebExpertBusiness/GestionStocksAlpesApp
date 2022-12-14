@@ -13,16 +13,6 @@ query GetCommonItems {
         category {
             name
         }
-        items {
-            serial_number
-            rack {
-                id
-                name
-            }
-            rack_level
-            created_at
-            comment
-        }
     }
   }
 `;

@@ -71,3 +71,5 @@ export const BUTTONGREY = '#d1d5db';
 
 
 export const MAGNIFYINGLASSBG = '#2626262C';
+
+export const WASHDARKBG = '#23272F';

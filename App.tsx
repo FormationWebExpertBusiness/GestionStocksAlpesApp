@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import HomePage from './components/homepage/Homepage';
+import HomePage from './app/components/homepage/Homepage';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import ScanPage from './components/scanPage/ScanPage';
-import RemovePage from './components/removePage/RemovePage';
-import AddPage from './components/addPage/AddPage';
-import CommonItemDetailPage from './components/commonItemDetailPage/commonItemDetailPage';
-import ScanBeforeRemove from './components/removePage/ScanBeforeRemove';
+import ScanPage from './app/components/scanPage/ScanPage';
+import RemovePage from './app/components/removePage/RemovePage';
+import AddPage from './app/components/addPage/AddPage';
+import CommonItemDetailPage from './app/components/commonItemDetailPage/commonItemDetailPage';
+import ScanBeforeRemove from './app/components/removePage/ScanBeforeRemove';
 import React from 'react';
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
-import {HELLO_WORLD} from './graphql/query/helloWorld';
+import {HELLO_WORLD} from './app/graphql/query/helloWorld';
 
 const Stack = createNativeStackNavigator();
 

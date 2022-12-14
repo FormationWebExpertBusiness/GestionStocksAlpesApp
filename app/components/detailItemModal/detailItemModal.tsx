@@ -5,9 +5,11 @@ import {
     Pressable
 } from 'react-native';
 import React from 'react';
-import {ALMOST_BLACK, ALMOST_WHITE, BUTTONGREY, BUTTONRED, CULTURED, DARKBLUEBLACK} from '../../style/colors';
+import {ALMOST_BLACK, ALMOST_WHITE, BUTTONGREY, BUTTONRED, CHARCOAL_GREY, CULTURED, DARKBLUEBLACK} from '../../style/colors';
 import Modal from 'react-native-modal/dist/modal';
 import CardModal from './cardModal';
+import {GET_ITEM_MODAL_DATA} from '../../graphql/query/getItemModalData';
+import {useQuery} from '@apollo/client';
 
 const STYLES = StyleSheet.create({
     modalWrapper: {
@@ -88,22 +90,22 @@ const STYLES = StyleSheet.create({
 });
 
 type DetailItemModalProps = {
+    id: number;
     isVisible: boolean;
     onDeletePress?(): void;
     onBackdropPress(): void;
-    created_at: string;
-    model: string;
-    brand: string;
-    rackName?: string;
-    category: string;
-    serialNumber: string;
-    rackLevel: number;
-    rackId?: number;
     remove?: boolean;
 };
 
 
 const DetailItemModal = (props: DetailItemModalProps): React.ReactElement => {
+
+    const itemModalData = useQuery(GET_ITEM_MODAL_DATA, {
+        fetchPolicy: 'network-only',
+        variables: {
+            item_id: props.id
+        }
+    });
 
     function renderButtons(): React.ReactElement {
         if(props.remove) {
@@ -119,7 +121,7 @@ const DetailItemModal = (props: DetailItemModalProps): React.ReactElement => {
                     onPress={(): void => { props.onBackdropPress(); }}
                     style={[STYLES.button, STYLES.buttonCancel]}
                 >
-                    <Text style={[STYLES.buttonText, {color: '#374151', fontWeight: 'bold'}]}>Annuler</Text>
+                    <Text style={[STYLES.buttonText, {color: CHARCOAL_GREY, fontWeight: 'bold'}]}>Annuler</Text>
                 </Pressable>
             </View>
         );
@@ -127,11 +129,48 @@ const DetailItemModal = (props: DetailItemModalProps): React.ReactElement => {
         return <View />;
     }
 
-    function getRackname(): string {
-        if(props.rackName) {
-            return props.rackName;
+    function renderCards(): React.ReactElement {
+
+        if(itemModalData.loading) {
+            return <View />;
+        } else if(itemModalData.error) {
+            return <View />;
         }
-        return `Étagère ${props.rackLevel}`;
+
+        const {serial_number, model, category, brand, rack_level, rack, created_at} = itemModalData.data.item;
+
+        return (
+            <>
+                <CardModal
+                    title1={'N° série'}
+                    title2={'Modèle'}
+                    content1={serial_number}
+                    content2={model}
+                    label={'Produit'}
+                />
+                <CardModal
+                    title1={'Catégorie'}
+                    title2={'Marque'}
+                    content1={category.name}
+                    content2={brand.name}
+                    label={'Type de produit'}
+                />
+                <CardModal
+                    title1={'Étagère'}
+                    title2={'Étage'}
+                    content1={rack.name}
+                    content2={rack_level.toString()}
+                    label={'Position'}
+                />
+                <CardModal
+                    title1={'Date'}
+                    title2={'Heure'}
+                    content1={created_at.split(/(\s+)/)[0]}
+                    content2={created_at.split(/(\s+)/)[2]}
+                    label={'Entrée en stock'}
+                />
+            </>
+        );
     }
 
     return (
@@ -145,34 +184,7 @@ const DetailItemModal = (props: DetailItemModalProps): React.ReactElement => {
             onBackdropPress={props.onBackdropPress}
         >
             <View style={STYLES.modalWrapper}>
-                <CardModal
-                    title1={'N° série'}
-                    title2={'Modèle'}
-                    content1={props.serialNumber}
-                    content2={props.model}
-                    label={'Produit'}
-                />
-                <CardModal
-                    title1={'Catégorie'}
-                    title2={'Marque'}
-                    content1={props.category}
-                    content2={props.brand}
-                    label={'Type de produit'}
-                />
-                <CardModal
-                    title1={'Étagère'}
-                    title2={'Étage'}
-                    content1={getRackname()}
-                    content2={props.rackLevel.toString()}
-                    label={'Position'}
-                />
-                <CardModal
-                    title1={'Date'}
-                    title2={'Heure'}
-                    content1={props.created_at.split(/(\s+)/)[0]}
-                    content2={props.created_at.split(/(\s+)/)[2]}
-                    label={'Entrée en stock'}
-                />
+                {renderCards()}
                 {renderButtons()}
             </View>
         </Modal>

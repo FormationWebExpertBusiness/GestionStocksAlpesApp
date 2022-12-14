@@ -14,18 +14,10 @@ import {LINESTYLES} from '../../style/tablesStyle';
 type ItemLineProps = {
     keyI?: number;
     head?: boolean;
+    id?: number;
     category: string;
     model: string;
-    quantity_warning?: number;
-    quantity_urgent?: number;
     brand: string;
-    items?: {
-        numSerie: string;
-        rackId: number;
-        createdAt: string;
-        rackLevel: number;
-    }[];
-
 };
 
 const commonItemLine = (props: ItemLineProps): React.ReactElement => {
@@ -62,7 +54,7 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             return (): void => {};
         }
-        return (): void => { navigation.navigate('CommonItemDetail', {item: props}); };
+        return (): void => { navigation.navigate('CommonItemDetail', {commonItemId: props.id}); };
     }
 
     return (

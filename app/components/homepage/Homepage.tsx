@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import CommonItemTable from '../commonItemTable/CommonItemTable';
 import CustomTextInput from '../CustomTextInput';
-import CustomTopTabNavigator from '../../components/CustomTopTabNavigator';
+import CustomTopTabNavigator from '../CustomTopTabNavigator';
 import {useQuery} from '@apollo/client';
 import {GET_COMMONITEMS} from '../../graphql/query/getCommonItems';
 import {BLACK} from '../../style/colors';
@@ -32,44 +32,9 @@ const STYLES = StyleSheet.create({
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const HomePage = ({navigation}: any): React.ReactElement => {
 
-  type CommonItem = {
-        category: string;
-        model: string;
-        quantity_warning: number;
-        quantity_urgent: number;
-        brand: string;
-        items: {
-            numSerie: string;
-            rackId: number;
-            rackName: string;
-            rackLevel: number;
-            createdAt: string;
-            comment?: string;
-        }[];
-  };
-
-  let commonItems: CommonItem[] = [];
-
-    const commonItemsData = useQuery(GET_COMMONITEMS);
-
-    function createJsonFromData(data: any): CommonItem[] {
-        const JSONDATA: CommonItem[] = [];
-        data.forEach((commonItem: any): void => {
-            JSONDATA.push({
-                category: commonItem.category.name,
-                model: commonItem.model,
-                quantity_warning: commonItem.quantity_warning,
-                quantity_urgent: commonItem.quantity_urgent,
-                brand: commonItem.brand.name,
-                items: commonItem.items
-            });
-        });
-        return JSONDATA;
-      }
-
-      if(commonItemsData.data !== undefined) {
-        commonItems = createJsonFromData(commonItemsData.data.commonItems);
-      }
+    const commonItemsData = useQuery(GET_COMMONITEMS, {
+        fetchPolicy: 'network-only'
+    });
 
     function renderTable(): React.ReactElement {
         if(commonItemsData.loading) {
@@ -81,7 +46,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
                 <Text style={STYLES.textStyle}>Error : {commonItemsData.error.message}</Text>
                 </View>;
         }
-        return <CommonItemTable items={commonItems}/>;
+        return <CommonItemTable commonItems={commonItemsData.data.commonItems}/>;
     }
 
     return (
@@ -92,10 +57,10 @@ const HomePage = ({navigation}: any): React.ReactElement => {
                 onPressRemove={(): void => {navigation.navigate('RemoveScan');}}
                 onPressAdd={(): void => {navigation.navigate('Add');}}
             />
-                <View style={STYLES.wrapper}>
-                    <CustomTextInput required password={false} placeholder={'Recherche'} />
-                    {renderTable()}
-                </View>
+            <View style={STYLES.wrapper}>
+                <CustomTextInput required password={false} placeholder={'Recherche'} />
+                {renderTable()}
+            </View>
         </SafeAreaView>
     );
 };

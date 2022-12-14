@@ -10,17 +10,19 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 import {LINESTYLES} from '../../style/tablesStyle';
 import DetailItemModal from '../detailItemModal/detailItemModal';
+import type {Item} from '../../types/ItemType';
 
 type ItemLineProps = {
+    id?: number;
     keyI?: number;
     head?: boolean;
-    created_at?: string;
     model?: string;
     brand?: string;
     category?: string;
-    serialNumber: string;
-    rackLevel: number | string;
-    rackName: string;
+    item?: Item;
+    title1?: string;
+    title2?: string;
+    title3?: string;
 };
 
 const ItemLine = (props: ItemLineProps): React.ReactElement => {
@@ -53,19 +55,37 @@ const ItemLine = (props: ItemLineProps): React.ReactElement => {
 
     function renderModal(): React.ReactElement {
         if(!props.head) {
-            return <DetailItemModal
-                created_at={props.created_at!}
-                model={props.model!}
-                brand={props.brand!}
-                category={props.category!}
-                serialNumber={props.serialNumber}
-                rackLevel={Number(props.rackLevel)}
-                rackName={props.rackName}
-                isVisible={isModalVisible}
-                onBackdropPress={(): void => {setIsModalVisible(false);}}
-            />;
+            return (
+                <DetailItemModal
+                    id={props.id!}
+                    isVisible={isModalVisible}
+                    onBackdropPress={(): void => {setIsModalVisible(false);}}
+                />
+            );
         }
         return <View />;
+    }
+
+    function getTextComponents(): React.ReactElement[] {
+        const TEXTS: React.ReactElement[] = [];
+        if(props.head) {
+            TEXTS.push(
+                <>
+                    <Text key={0} style={LINESTYLES.text} numberOfLines={1}>{props.title1}</Text>
+                    <Text key={1} style={LINESTYLES.text} numberOfLines={1}>{props.title2}</Text>
+                    <Text key={2} style={LINESTYLES.text} numberOfLines={1}>{props.title3}</Text>
+                </>
+            );
+        } else {
+            TEXTS.push(
+                <>
+                    <Text key={0} style={LINESTYLES.text} numberOfLines={1}>{props.item?.serial_number}</Text>
+                    <Text key={1} style={LINESTYLES.text} numberOfLines={1}>{props.item?.rack.name}</Text>
+                    <Text key={2} style={LINESTYLES.text} numberOfLines={1}>{props.item?.rack_level}</Text>
+                </>
+            );
+        }
+        return TEXTS;
     }
 
 
@@ -77,9 +97,7 @@ const ItemLine = (props: ItemLineProps): React.ReactElement => {
                 onPressIn={(): void => { if(!props.head)setItemStyle(LINESTYLES.activeItem); } }
                 onPress={(): void => { setIsModalVisible(true); } }
             >
-                <Text style={LINESTYLES.text} numberOfLines={1}>{props.serialNumber}</Text>
-                <Text style={LINESTYLES.text} numberOfLines={1}>{props.rackName}</Text>
-                <Text style={LINESTYLES.text} numberOfLines={1}>{props.rackLevel}</Text>
+                {getTextComponents()}
                 {getIcon()}
             </Pressable>
             {renderModal()}
