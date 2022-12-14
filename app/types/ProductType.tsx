@@ -1,4 +1,4 @@
-export type Item = {
+export type Product = {
     id: number;
     serial_number: string;
     rack: {

@@ -1,8 +1,8 @@
 import {gql} from '@apollo/client';
 
-export const GET_ITEM_MODAL_DATA = gql`
-query Get_Item_Modal_Data($item_id: ID!) {
-    item(id: $item_id) {
+export const GET_PRODUCT_MODAL_DATA = gql`
+query Get_Product_Modal_Data($product_id: ID!) {
+    product(id: $product_id) {
         id
         serial_number
         brand {

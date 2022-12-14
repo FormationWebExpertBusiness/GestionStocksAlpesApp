@@ -6,9 +6,9 @@ import {
 import React from 'react';
 import {BLACK, CULTURED} from '../../style/colors';
 import {useQuery} from '@apollo/client';
-import ScannedItemTable from '../scannedItemTable/ScannedItemTable';
+import ScannedProductTable from '../scannedProductTable/ScannedProductTable';
 import RemovePageHeader from './removePageHeader';
-import {GET_ITEMS} from '../../graphql/query/getItems';
+import {GET_PRODUCTS} from '../../graphql/query/getProducts';
 import {GET_RACK} from '../../graphql/query/getRack';
 import CustomTopTabNavigator from '../CustomTopTabNavigator';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
@@ -35,9 +35,9 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
 
     const {values} = route.params;
 
-    let items: {id: number; serial_number: string; category: {name: string;}; brand: {name: string;}; model: string; created_at: string; comment: string;}[];
+    let products: {id: number; serial_number: string; category: {name: string;}; brand: {name: string;}; model: string; created_at: string; comment: string;}[];
 
-    const {loading, error, data} = useQuery(GET_ITEMS, {
+    const {loading, error, data} = useQuery(GET_PRODUCTS, {
         fetchPolicy: 'network-only',
         variables: {
             rack_id: values.rack_id,
@@ -63,14 +63,14 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
         return rack_name.data.rack.name;
     }
 
-    function getNbItem(): number | null {
+    function getNbProduct(): number | null {
         if(rack_name.loading) {
             return null;
         }
         if(rack_name.error) {
             return null;
         }
-        return rack_name.data.rack.nb_item;
+        return rack_name.data.rack.nb_product;
     }
 
     function getResult(): React.ReactElement {
@@ -79,8 +79,8 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
             <TableSkeleton number={6} title1={'Catégorie'} title2={'Modèle'} title3={'N° série'} remove animation='pulse' />
         );
         if(error) return <Text style={STYLES.textStyle}>Error : {error.message}</Text>;
-        items = data.items;
-        return <ScannedItemTable loading={loading} rack_id={values.rack_id} rack_level={values.rack_level} items={items} remove={true}/>;
+        products = data.products;
+        return <ScannedProductTable loading={loading} rack_id={values.rack_id} rack_level={values.rack_level} products={products} remove={true}/>;
     }
 
     return (
@@ -91,7 +91,7 @@ const RemovePage = ({navigation, route}: any): React.ReactElement => {
             />
             <View style={STYLES.pageWrapper}>
                 <View style={STYLES.pageContent}>
-                    <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={getNbItem()} content1={getRackName()} content2={values.rack_level} />
+                    <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={getNbProduct()} content1={getRackName()} content2={values.rack_level} />
                     {getResult()}
                 </View>
             </View>

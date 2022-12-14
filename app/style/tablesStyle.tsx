@@ -55,7 +55,7 @@ export const LINESTYLES = StyleSheet.create({
     evenWrapper: {
         backgroundColor: ALMOST_WHITE
     },
-    activeItem: {
+    activeProduct: {
         backgroundColor: VERY_VERY_LIGHT_GREY
     },
     headWrapper: {

@@ -1,8 +1,8 @@
 import {gql} from '@apollo/client';
 
-export const GET_COMMONITEM_ITEMS = gql`
-query GetCommonItem_Items($commonItem_id: ID!) {
-    commonItem(id: $commonItem_id) {
+export const GET_COMMONPRODUCT_PRODUCTS = gql`
+query GetCommonProduct_Products($commonProduct_id: ID!) {
+    commonProduct(id: $commonProduct_id) {
         model
         brand {
             name
@@ -10,7 +10,7 @@ query GetCommonItem_Items($commonItem_id: ID!) {
         category {
             name
         }
-        items {
+        products {
             id
             serial_number
             rack {

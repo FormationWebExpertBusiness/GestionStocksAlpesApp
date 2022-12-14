@@ -9,25 +9,23 @@ import {ALMOST_BLACK} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 import {LINESTYLES} from '../../style/tablesStyle';
-import DetailItemModal from '../detailItemModal/detailItemModal';
-import type {Item} from '../../types/ItemType';
+import type {Product} from '../../types/ProductType';
 
-type ItemLineProps = {
+type ProductLineProps = {
     id?: number;
     keyI?: number;
     head?: boolean;
+    onPress?(): void;
     model?: string;
     brand?: string;
     category?: string;
-    item?: Item;
+    product?: Product;
     title1?: string;
     title2?: string;
     title3?: string;
 };
 
-const ItemLine = (props: ItemLineProps): React.ReactElement => {
-
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+const ProductLine = (props: ProductLineProps): React.ReactElement => {
 
     function getWrapperStyle(): object {
         if(props.head) {
@@ -37,7 +35,7 @@ const ItemLine = (props: ItemLineProps): React.ReactElement => {
         return props.keyI! % 2 === 0 ? LINESTYLES.evenWrapper : LINESTYLES.oddWrapper;
     }
 
-    const [itemStyle, setItemStyle] = useState<object>(getWrapperStyle());
+    const [productStyle, setProductStyle] = useState<object>(getWrapperStyle());
 
 
     getWrapperStyle();
@@ -53,19 +51,6 @@ const ItemLine = (props: ItemLineProps): React.ReactElement => {
         );
     }
 
-    function renderModal(): React.ReactElement {
-        if(!props.head) {
-            return (
-                <DetailItemModal
-                    id={props.id!}
-                    isVisible={isModalVisible}
-                    onBackdropPress={(): void => {setIsModalVisible(false);}}
-                />
-            );
-        }
-        return <View />;
-    }
-
     function getTextComponents(): React.ReactElement[] {
         const TEXTS: React.ReactElement[] = [];
         if(props.head) {
@@ -79,9 +64,9 @@ const ItemLine = (props: ItemLineProps): React.ReactElement => {
         } else {
             TEXTS.push(
                 <>
-                    <Text key={0} style={LINESTYLES.text} numberOfLines={1}>{props.item?.serial_number}</Text>
-                    <Text key={1} style={LINESTYLES.text} numberOfLines={1}>{props.item?.rack.name}</Text>
-                    <Text key={2} style={LINESTYLES.text} numberOfLines={1}>{props.item?.rack_level}</Text>
+                    <Text key={0} style={LINESTYLES.text} numberOfLines={1}>{props.product?.serial_number}</Text>
+                    <Text key={1} style={LINESTYLES.text} numberOfLines={1}>{props.product?.rack.name}</Text>
+                    <Text key={2} style={LINESTYLES.text} numberOfLines={1}>{props.product?.rack_level}</Text>
                 </>
             );
         }
@@ -92,18 +77,17 @@ const ItemLine = (props: ItemLineProps): React.ReactElement => {
     return (
         <View>
             <Pressable
-                style={[LINESTYLES.wrapper, itemStyle]}
-                onPressOut={(): void => { setItemStyle(getWrapperStyle()); } }
-                onPressIn={(): void => { if(!props.head)setItemStyle(LINESTYLES.activeItem); } }
-                onPress={(): void => { setIsModalVisible(true); } }
+                style={[LINESTYLES.wrapper, productStyle]}
+                onPressOut={(): void => { setProductStyle(getWrapperStyle()); } }
+                onPressIn={(): void => { if(!props.head)setProductStyle(LINESTYLES.activeProduct); } }
+                onPress={(): void => { props.onPress?.(); } }
             >
                 {getTextComponents()}
                 {getIcon()}
             </Pressable>
-            {renderModal()}
         </View>
     );
 };
 
 
-export default ItemLine;
+export default ProductLine;

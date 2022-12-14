@@ -8,7 +8,7 @@ import React from 'react';
 import {ALMOST_BLACK, ALMOST_WHITE, BUTTONGREY, BUTTONRED, CHARCOAL_GREY, CULTURED, DARKBLUEBLACK} from '../../style/colors';
 import Modal from 'react-native-modal/dist/modal';
 import CardModal from './cardModal';
-import {GET_ITEM_MODAL_DATA} from '../../graphql/query/getItemModalData';
+import {GET_PRODUCT_MODAL_DATA} from '../../graphql/query/getProductModalData';
 import {useQuery} from '@apollo/client';
 
 const STYLES = StyleSheet.create({
@@ -89,7 +89,7 @@ const STYLES = StyleSheet.create({
     }
 });
 
-type DetailItemModalProps = {
+type DetailProductModalProps = {
     id: number;
     isVisible: boolean;
     onDeletePress?(): void;
@@ -98,12 +98,12 @@ type DetailItemModalProps = {
 };
 
 
-const DetailItemModal = (props: DetailItemModalProps): React.ReactElement => {
+const DetailProductModal = (props: DetailProductModalProps): React.ReactElement => {
 
-    const itemModalData = useQuery(GET_ITEM_MODAL_DATA, {
+    const productModalData = useQuery(GET_PRODUCT_MODAL_DATA, {
         fetchPolicy: 'network-only',
         variables: {
-            item_id: props.id
+            product_id: props.id
         }
     });
 
@@ -129,46 +129,92 @@ const DetailItemModal = (props: DetailItemModalProps): React.ReactElement => {
         return <View />;
     }
 
-    function renderCards(): React.ReactElement {
+    function renderContent(type: 'data' | 'skeleton'): React.ReactElement {
 
-        if(itemModalData.loading) {
-            return <View />;
-        } else if(itemModalData.error) {
-            return <View />;
+        if(type === 'data') {
+            const {serial_number, model, category, brand, rack_level, rack, created_at} = productModalData.data.product;
+
+            return (
+                <>
+                    <CardModal
+                        title1={'N° série'}
+                        title2={'Modèle'}
+                        content1={serial_number}
+                        content2={model}
+                        label={'Produit'}
+                    />
+                    <CardModal
+                        title1={'Catégorie'}
+                        title2={'Marque'}
+                        content1={category.name}
+                        content2={brand.name}
+                        label={'Type de produit'}
+                    />
+                    <CardModal
+                        title1={'Étagère'}
+                        title2={'Étage'}
+                        content1={rack.name}
+                        content2={rack_level.toString()}
+                        label={'Position'}
+                    />
+                    <CardModal
+                        title1={'Date'}
+                        title2={'Heure'}
+                        content1={created_at.split(/(\s+)/)[0]}
+                        content2={created_at.split(/(\s+)/)[2]}
+                        label={'Entrée en stock'}
+                    />
+                </>
+            );
         }
-
-        const {serial_number, model, category, brand, rack_level, rack, created_at} = itemModalData.data.item;
-
         return (
             <>
                 <CardModal
                     title1={'N° série'}
                     title2={'Modèle'}
-                    content1={serial_number}
-                    content2={model}
+                    skeleton={true}
                     label={'Produit'}
                 />
                 <CardModal
                     title1={'Catégorie'}
                     title2={'Marque'}
-                    content1={category.name}
-                    content2={brand.name}
+                    skeleton={true}
                     label={'Type de produit'}
                 />
                 <CardModal
                     title1={'Étagère'}
                     title2={'Étage'}
-                    content1={rack.name}
-                    content2={rack_level.toString()}
+                    skeleton={true}
                     label={'Position'}
                 />
                 <CardModal
                     title1={'Date'}
                     title2={'Heure'}
-                    content1={created_at.split(/(\s+)/)[0]}
-                    content2={created_at.split(/(\s+)/)[2]}
+                    skeleton={true}
                     label={'Entrée en stock'}
                 />
+            </>
+        );
+
+    }
+
+    function renderCards(): React.ReactElement {
+
+        if(productModalData.loading) {
+            return (
+                <>
+                    {renderContent('skeleton')}
+                </>
+            );
+        } else if(productModalData.error) {
+            return <View>
+                <Text style={STYLES.textStyle}>{productModalData.error.message}</Text>
+                </View>;
+        }
+
+        return (
+            <>
+                {renderContent('data')}
             </>
         );
     }
@@ -192,4 +238,4 @@ const DetailItemModal = (props: DetailItemModalProps): React.ReactElement => {
 };
 
 
-export default DetailItemModal;
+export default DetailProductModal;

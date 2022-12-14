@@ -5,7 +5,7 @@ query GetRackName($id: ID!, $level: Int!) {
     rack(id: $id, level: $level) {
         id
         name
-        nb_item
+        nb_products
     }
 }
 `;

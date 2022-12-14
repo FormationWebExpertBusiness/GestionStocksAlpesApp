@@ -1,6 +1,6 @@
 import {View} from 'react-native';
 import React from 'react';
-import CommonItemLine from '../../commonItemTable/CommonItemLine';
+import CommonProductLine from '../../commonProductTable/CommonProductLine';
 import {TABLESTYLES} from '../../../style/tablesStyle';
 import LineSkeleton from './lineSkeleton';
 
@@ -31,7 +31,7 @@ const TableSkeleton = (props: TableSkeletonProps): React.ReactElement => {
 
     return (
         <View style={TABLESTYLES.wrapper}>
-            <CommonItemLine
+            <CommonProductLine
                 head={true}
                 category={props.title1}
                 model={props.title2}

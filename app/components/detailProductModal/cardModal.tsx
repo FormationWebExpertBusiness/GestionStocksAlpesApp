@@ -58,13 +58,33 @@ const STYLES = StyleSheet.create({
 type CardModalProps = {
     title1: string;
     title2: string;
-    content1: string;
-    content2: string;
+    content1?: string;
+    content2?: string;
     label: string;
+    skeleton?: boolean;
 };
 
 
 const CardModal = (props: CardModalProps): React.ReactElement => {
+
+    function renderContent(): React.ReactElement {
+        if(props.skeleton) {
+            return (
+                <>
+                    <Text numberOfLines={1} style={[STYLES.text, STYLES.textContent]}>...</Text>
+                    <Text numberOfLines={1} style={[STYLES.text, STYLES.textContent]}>...</Text>
+                </>
+            );
+        }
+        return (
+            <>
+                <Text numberOfLines={1} style={[STYLES.text, STYLES.textContent]}>{props.content2}</Text>
+                <Text numberOfLines={1} style={[STYLES.text, STYLES.textContent]}>{props.content1}</Text>
+            </>
+        );
+
+    }
+
 
         return (
             <View style={STYLES.componentWrapper}>
@@ -75,8 +95,7 @@ const CardModal = (props: CardModalProps): React.ReactElement => {
                         <Text style={STYLES.text}>{props.title2}</Text>
                     </View>
                     <View style={STYLES.contentWrapper}>
-                        <Text numberOfLines={1} style={[STYLES.text, STYLES.textContent]}>{props.content1}</Text>
-                        <Text numberOfLines={1} style={[STYLES.text, STYLES.textContent]}>{props.content2}</Text>
+                        {renderContent()}
                     </View>
                 </View>
             </View>
