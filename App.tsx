@@ -5,7 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ScanPage from './app/components/scanPage/ScanPage';
 import RemovePage from './app/components/removePage/RemovePage';
 import AddPage from './app/components/addPage/AddPage';
-import CommonItemDetailPage from './app/components/commonItemDetailPage/commonItemDetailPage';
+import CommonProductDetailPage from './app/components/commonProductDetailPage/commonProductDetailPage';
 import ScanBeforeRemove from './app/components/removePage/ScanBeforeRemove';
 import React from 'react';
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
@@ -16,7 +16,7 @@ const Stack = createNativeStackNavigator();
 const App = (): React.ReactElement => {
 
 	const client = new ApolloClient({
-		uri: 'http://10.100.10.134/graphql',
+		uri: 'https://e196-185-244-237-236.eu.ngrok.io/graphql',
 		cache: new InMemoryCache({
 			addTypename: false
 		})
@@ -35,7 +35,7 @@ const App = (): React.ReactElement => {
 					<Stack.Screen name="Home" component={HomePage}/>
 					<Stack.Screen name="Scan" component={ScanPage} />
 					<Stack.Screen name="Remove" component={RemovePage} />
-					<Stack.Screen name="CommonItemDetail" component={CommonItemDetailPage} />
+					<Stack.Screen name="CommonProductDetail" component={CommonProductDetailPage} />
 					<Stack.Screen name="Add" component={AddPage} />
 					<Stack.Screen name="RemoveScan" component={ScanBeforeRemove} />
 				</Stack.Navigator>

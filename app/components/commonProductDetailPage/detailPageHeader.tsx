@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
     View,
     StyleSheet,
     Text
 } from 'react-native';
 import React, {useState} from 'react';
-import {ALMOST_BLACK, BADGEDOTORANGE, BADGEDOTRED, BADGEGREEN, BADGEORANGE, BADGERED, BADGETEXTGREEN, BADGETEXTORANGE, BADGETEXTRED, CULTURED, DARKBLUEBLACK} from '../../style/colors';
+import {ALMOST_BLACK, BADGEDOTGREEN, BADGEDOTORANGE, BADGEDOTRED, BADGEGREEN, BADGEORANGE, BADGERED, BADGETEXTGREEN, BADGETEXTORANGE, BADGETEXTRED, CULTURED, DARKBLUEBLACK} from '../../style/colors';
+import {Skeleton} from '@rneui/themed';
 
 const STYLES = StyleSheet.create({
     componentWrapper: {
@@ -76,48 +78,78 @@ const STYLES = StyleSheet.create({
 type DetailPageHeaderProps = {
     title1: string;
     title2: string;
+    skeleton?: boolean;
     title3: string;
-    quantityUrgent: number;
-    quantityWarning: number;
-    size: number;
-    content1: string;
-    content2: string;
-    content3: string;
+    quantityCritical?: number;
+    quantityLow?: number;
+    size?: number;
+    content1?: string;
+    content2?: string;
+    content3?: string;
 };
 
 
 const DetailPageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
 
     function getBadgeTextColor(): string {
-        if(props.size < props.quantityUrgent) {
-            return BADGETEXTRED;
-        } else if(props.size < props.quantityWarning) {
-            return BADGETEXTORANGE;
+        if(!props.skeleton) {
+            if(props.size! < props.quantityCritical!) {
+                return BADGETEXTRED;
+            } else if(props.size! < props.quantityLow!) {
+                return BADGETEXTORANGE;
+            }
+                return BADGETEXTGREEN;
         }
-            return BADGETEXTGREEN;
+        return BADGETEXTGREEN;
     }
 
     function getBadgeDotColor(): string {
-        if(props.size < props.quantityUrgent) {
-            return BADGEDOTRED;
-        } else if(props.size < props.quantityWarning) {
-            return BADGEDOTORANGE;
+        if(!props.skeleton) {
+            if(props.size! < props.quantityCritical!) {
+                return BADGEDOTRED;
+            } else if(props.size! < props.quantityLow!) {
+                return BADGEDOTORANGE;
+            }
+                return BADGEDOTGREEN;
         }
-            return BADGETEXTGREEN;
+        return BADGEDOTGREEN;
     }
 
     function getBadgeColor(): string {
-        if(props.size < props.quantityUrgent) {
-            return BADGERED;
-        } else if(props.size < props.quantityWarning) {
-            return BADGEORANGE;
+        if(!props.skeleton) {
+            if(props.size! < props.quantityCritical!) {
+                return BADGERED;
+            } else if(props.size! < props.quantityLow!) {
+                return BADGEORANGE;
+            }
+                return BADGEGREEN;
         }
-            return BADGEGREEN;
+        return BADGEGREEN;
+
     }
 
     const [badgeColor] = useState<string>(getBadgeColor());
     const [badgeDotColor] = useState<string>(getBadgeDotColor());
     const [badgeTextColor] = useState<string>(getBadgeTextColor());
+
+    function renderContent(): React.ReactElement {
+        if(props.skeleton) {
+            return (
+                <>
+                    <Skeleton width={70} height={20} />
+                    <Skeleton width={70} height={20} />
+                    <Skeleton width={70} height={20} />
+                </>
+            );
+        }
+        return (
+            <>
+                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content1}</Text>
+                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content2}</Text>
+                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content3}</Text>
+            </>
+        );
+    }
 
     return (
         <View style={STYLES.componentWrapper}>
@@ -129,14 +161,12 @@ const DetailPageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
             </View>
             <View style={STYLES.contentWrapper}>
             <View style={STYLES.textContent}>
-                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content1}</Text>
-                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content2}</Text>
-                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content3}</Text>
+                {renderContent()}
             </View>
             <View style={STYLES.badgeWrapper}>
                 <View style={[STYLES.badge, {backgroundColor: badgeColor}]}>
                     <View style={[STYLES.badgeDot, {backgroundColor: badgeDotColor}]} />
-                    <Text style={[STYLES.badgeText, {color: badgeTextColor}]}>{props.size}</Text>
+                    <Text style={[STYLES.badgeText, {color: badgeTextColor}]}>{props.size !== undefined ? props.size : '...'}</Text>
                 </View>
             </View>
             </View>

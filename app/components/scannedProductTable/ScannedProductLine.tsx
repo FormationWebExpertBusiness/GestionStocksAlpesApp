@@ -11,12 +11,12 @@ import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingG
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {useMutation} from '@apollo/client';
 import {LINESTYLES} from '../../style/tablesStyle';
-import DetailItemModal from '../detailItemModal/detailItemModal';
+import DetailProductModal from '../detailProductModal/detailProductModal';
 import {GET_RACK} from '../../graphql/query/getRack';
-import {GET_ITEMS} from '../../graphql/query/getItems';
-import {DELETE_ITEM} from '../../graphql/mutation/deleteItem';
+import {GET_PRODUCTS} from '../../graphql/query/getProducts';
+import {DELETE_PRODUCT} from '../../graphql/mutation/deleteProduct';
 
-type ScannedItemLineProps = {
+type ScannedProductLineProps = {
     id: number;
     keyI?: number;
     head?: boolean;
@@ -30,16 +30,16 @@ type ScannedItemLineProps = {
     remove?: boolean;
 };
 
-const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
+const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [deleteItemMutation, {data, loading, error}] = useMutation(DELETE_ITEM, {
+    const [deleteProductMutation, {data, loading, error}] = useMutation(DELETE_PRODUCT, {
         awaitRefetchQueries: true,
         refetchQueries: [
             {
-                query: GET_ITEMS,
+                query: GET_PRODUCTS,
                 fetchPolicy: 'no-cache',
                 variables: {
                     rack_id: props.rack_id,
@@ -65,7 +65,7 @@ const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
         return props.keyI! % 2 === 0 ? LINESTYLES.evenWrapper : LINESTYLES.oddWrapper;
     }
 
-    const [itemStyle, setItemStyle] = useState<object>(getWrapperStyle());
+    const [productStyle, setProductStyle] = useState<object>(getWrapperStyle());
 
 
     getWrapperStyle();
@@ -90,8 +90,8 @@ const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
 
     function renderModal(): React.ReactElement {
         if(!props.head) {
-            return <DetailItemModal
-                onDeletePress={(): void => { deleteItemMutation({variables: {id: props.id}}); }}
+            return <DetailProductModal
+                onDeletePress={(): void => { deleteProductMutation({variables: {id: props.id}}); }}
                 remove={props.remove}
                 isVisible={isModalVisible}
                 onBackdropPress={(): void => { setIsModalVisible(false); }}
@@ -126,9 +126,9 @@ const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
     return (
         <View>
             <Pressable
-                style={[LINESTYLES.wrapper, itemStyle]}
-                onPressOut={(): void => { setItemStyle(getWrapperStyle()); }}
-                onPressIn={(): void => { if(!props.head)setItemStyle(LINESTYLES.activeItem); }}
+                style={[LINESTYLES.wrapper, productStyle]}
+                onPressOut={(): void => { setProductStyle(getWrapperStyle()); }}
+                onPressIn={(): void => { if(!props.head)setProductStyle(LINESTYLES.activeProduct); }}
                 onPress={(): void => { setIsModalVisible(true); }}
             >
                 {renderContent()}
@@ -139,4 +139,4 @@ const ScannedItemLine = (props: ScannedItemLineProps): React.ReactElement => {
 };
 
 
-export default ScannedItemLine;
+export default ScannedProductLine;

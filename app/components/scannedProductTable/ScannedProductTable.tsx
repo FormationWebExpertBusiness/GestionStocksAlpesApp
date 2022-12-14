@@ -4,14 +4,14 @@ import {
     View
 } from 'react-native';
 import React from 'react';
-import ScannedItemLine from './ScannedItemLine';
 import {TABLESTYLES} from '../../style/tablesStyle';
+import ScannedProductLine from './ScannedProductLine';
 
-type ScannedItemTableProps = {
+type ScannedProductTableProps = {
     loading: boolean;
     rack_id: number;
     rack_level: number;
-    items: {
+    products: {
         id: number;
         serial_number: string;
         brand: {
@@ -28,34 +28,34 @@ type ScannedItemTableProps = {
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-const ScannedItemTable = (props: ScannedItemTableProps): React.ReactElement => {
+const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElement => {
 
-    function renderItems(): React.ReactElement[] {
-        const SCANNEDITEMSLINES: React.ReactElement[] = [];
+    function renderProducts(): React.ReactElement[] {
+        const SCANNEDPRODUCTSLINES: React.ReactElement[] = [];
 
-        props.items.forEach((item, index): void => {
-            SCANNEDITEMSLINES.push(
-                <ScannedItemLine
-                    id={item.id}
+        props.products.forEach((product, index): void => {
+            SCANNEDPRODUCTSLINES.push(
+                <ScannedProductLine
+                    id={product.id}
                     key={index}
-                    brand={item.brand.name}
-                    created_at={item.created_at}
+                    brand={product.brand.name}
+                    created_at={product.created_at}
                     keyI={index}
-                    serialNumber={item.serial_number}
-                    model={item.model}
+                    serialNumber={product.serial_number}
+                    model={product.model}
                     rack_id={props.rack_id}
                     rack_level={props.rack_level}
-                    category={item.category.name}
+                    category={product.category.name}
                     remove={props.remove}
                 />
             );
         });
-        return SCANNEDITEMSLINES;
+        return SCANNEDPRODUCTSLINES;
     }
 
     return (
         <View style={TABLESTYLES.wrapper}>
-            <ScannedItemLine
+            <ScannedProductLine
                     id={0}
                     head={true}
                     category={'Catégorie'}
@@ -63,11 +63,11 @@ const ScannedItemTable = (props: ScannedItemTableProps): React.ReactElement => {
                     serialNumber={'N° série'}
             />
             <ScrollView>
-                {renderItems()}
+                {renderProducts()}
             </ScrollView>
         </View>
     );
 };
 
 
-export default ScannedItemTable;
+export default ScannedProductTable;

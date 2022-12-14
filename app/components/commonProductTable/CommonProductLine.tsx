@@ -11,7 +11,7 @@ import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingG
 import {useNavigation} from '@react-navigation/native';
 import {LINESTYLES} from '../../style/tablesStyle';
 
-type ItemLineProps = {
+type ProductLineProps = {
     keyI?: number;
     head?: boolean;
     id?: number;
@@ -20,7 +20,7 @@ type ItemLineProps = {
     brand: string;
 };
 
-const commonItemLine = (props: ItemLineProps): React.ReactElement => {
+const commonProductLine = (props: ProductLineProps): React.ReactElement => {
     const navigation = useNavigation();
 
 
@@ -33,7 +33,7 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
         return props.keyI! % 2 === 0 ? LINESTYLES.evenWrapper : LINESTYLES.oddWrapper;
     }
 
-    const [itemStyle, setItemStyle] = useState<object>(getWrapperStyle());
+    const [productStyle, setProductStyle] = useState<object>(getWrapperStyle());
 
 
     getWrapperStyle();
@@ -54,15 +54,15 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             return (): void => {};
         }
-        return (): void => { navigation.navigate('CommonItemDetail', {commonItemId: props.id}); };
+        return (): void => { navigation.navigate('CommonProductDetail', {commonProductId: props.id}); };
     }
 
     return (
         <Pressable
-            style={[LINESTYLES.wrapper, itemStyle]}
-            onPressOut={(): void => { if(!props.head)setItemStyle(getWrapperStyle()); }}
+            style={[LINESTYLES.wrapper, productStyle]}
+            onPressOut={(): void => { if(!props.head)setProductStyle(getWrapperStyle()); }}
             onPress={getOnPressNavigate()}
-            onPressIn={(): void => { if(!props.head)setItemStyle(LINESTYLES.activeItem); }}
+            onPressIn={(): void => { if(!props.head)setProductStyle(LINESTYLES.activeProduct); }}
         >
             <Text style={LINESTYLES.text} numberOfLines={1}>{props.category}</Text>
             <Text style={LINESTYLES.text} numberOfLines={1}>{props.model}</Text>
@@ -73,4 +73,4 @@ const commonItemLine = (props: ItemLineProps): React.ReactElement => {
 };
 
 
-export default commonItemLine;
+export default commonProductLine;
