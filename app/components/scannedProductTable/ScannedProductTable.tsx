@@ -48,7 +48,10 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
                         level: props.rack_level
                     }
                 }
-            ]
+            ],
+            onCompleted: (): void => {
+                setIsModalVisible(false);
+            }
         });
 
     function renderModal(): React.ReactElement {
@@ -81,7 +84,6 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
                         setIndexProductQuery(index);
                     }}
                     product={product}
-                    remove={props.remove}
                 />
             );
         });

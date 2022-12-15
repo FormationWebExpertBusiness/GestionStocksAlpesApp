@@ -5,10 +5,9 @@ import {
     Pressable
 } from 'react-native';
 import React, {useState} from 'react';
-import {ALMOST_BLACK, BUTTONRED} from '../../style/colors';
+import {ALMOST_BLACK} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
-import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {LINESTYLES} from '../../style/tablesStyle';
 import type {ScannedProduct} from '../../types/ScannedProductType';
 
@@ -23,7 +22,6 @@ type ScannedProductLineProps = {
     title1?: string;
     title2?: string;
     title3?: string;
-    remove?: boolean;
 };
 
 const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement => {
@@ -44,13 +42,6 @@ const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement 
     function getIcon(): React.ReactElement {
         if(props.head) {
             return <View />;
-        }
-        if(props.remove) {
-            return (
-                <View style={[LINESTYLES.icon, LINESTYLES.iconDeletion]}>
-                    <FontAwesomeIcon color={BUTTONRED} icon={faXmark} size={15} />
-                </View>
-            );
         }
         return (
             <View style={LINESTYLES.icon}>

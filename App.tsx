@@ -14,16 +14,15 @@ const Stack = createNativeStackNavigator();
 const App = (): React.ReactElement => {
 
 	const client = new ApolloClient({
-		uri: 'http://10.100.10.134:5174/graphql',
+		uri: 'http://10.100.10.134/graphql',
 		cache: new InMemoryCache({
 			addTypename: false
 		})
 	});
 
-	client
-  .query({
-    query: HELLO_WORLD
-  })
+	client.query({
+		query: HELLO_WORLD
+	})
   .then((result): void => {console.log(result);});
 
 	return (
