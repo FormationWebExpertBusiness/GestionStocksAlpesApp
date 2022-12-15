@@ -93,6 +93,7 @@ type DetailProductModalProps = {
     id: number;
     isVisible: boolean;
     onDeletePress?(): void;
+    loading?: boolean;
     onBackdropPress(): void;
     remove?: boolean;
 };
@@ -109,22 +110,39 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
 
     function renderButtons(): React.ReactElement {
         if(props.remove) {
-        return (
-            <View style={STYLES.buttonWrapper}>
-                <Pressable
-                    onPress={(): void => { props.onBackdropPress(); props.onDeletePress?.(); }}
-                    style={[STYLES.button, STYLES.buttonDelete]}
-                >
-                    <Text style={[STYLES.buttonText, {color: ALMOST_WHITE, fontWeight: 'bold'}]}>Supprimer</Text>
-                </Pressable>
-                <Pressable
-                    onPress={(): void => { props.onBackdropPress(); }}
-                    style={[STYLES.button, STYLES.buttonCancel]}
-                >
-                    <Text style={[STYLES.buttonText, {color: CHARCOAL_GREY, fontWeight: 'bold'}]}>Annuler</Text>
-                </Pressable>
-            </View>
-        );
+            if(props.loading) {
+                return (
+                    <View style={STYLES.buttonWrapper}>
+                        <Pressable
+                            onPress={(): void => { props.onBackdropPress(); }}
+                            style={[STYLES.button, STYLES.buttonCancel]}
+                        >
+                            <Text style={[STYLES.buttonText, {color: CHARCOAL_GREY, fontWeight: 'bold'}]}>Annuler</Text>
+                        </Pressable>
+                        <View
+                            style={[STYLES.button, STYLES.buttonDelete]}
+                        >
+                            <Text style={[STYLES.buttonText, {color: ALMOST_WHITE, fontWeight: 'bold'}]}>Loading</Text>
+                        </View>
+                    </View>
+                );
+            }
+            return (
+                <View style={STYLES.buttonWrapper}>
+                    <Pressable
+                        onPress={(): void => { props.onBackdropPress(); }}
+                        style={[STYLES.button, STYLES.buttonCancel]}
+                    >
+                        <Text style={[STYLES.buttonText, {color: CHARCOAL_GREY, fontWeight: 'bold'}]}>Annuler</Text>
+                    </Pressable>
+                    <Pressable
+                        onPress={(): void => { props.onDeletePress?.(); }}
+                        style={[STYLES.button, STYLES.buttonDelete]}
+                    >
+                        <Text style={[STYLES.buttonText, {color: ALMOST_WHITE, fontWeight: 'bold'}]}>Supprimer</Text>
+                    </Pressable>
+                </View>
+            );
         }
         return <View />;
     }

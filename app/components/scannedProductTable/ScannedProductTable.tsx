@@ -3,32 +3,66 @@ import {
     ScrollView,
     View
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {TABLESTYLES} from '../../style/tablesStyle';
 import ScannedProductLine from './ScannedProductLine';
+import type {ScannedProduct} from '../../types/ScannedProductType';
+import DetailProductModal from '../detailProductModal/detailProductModal';
+import {GET_PRODUCTS} from '../../graphql/query/getProducts';
+import {GET_RACK} from '../../graphql/query/getRack';
+import {useMutation} from '@apollo/client';
+import {DELETE_PRODUCT} from '../../graphql/mutation/deleteProduct';
 
 type ScannedProductTableProps = {
     loading: boolean;
+    products: ScannedProduct[];
     rack_id: number;
     rack_level: number;
-    products: {
-        id: number;
-        serial_number: string;
-        brand: {
-            name: string;
-        };
-        category: {
-            name: string;
-        };
-        comment: string;
-        created_at: string;
-        model: string;
-    }[];
     remove?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElement => {
+
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [idProductQuery, setIdProductQuery] = useState<number>(-1);
+    const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [deleteProductMutation, {data, loading, error}] = useMutation(DELETE_PRODUCT, {
+            awaitRefetchQueries: true,
+            refetchQueries: [
+                {
+                    query: GET_PRODUCTS,
+                    fetchPolicy: 'no-cache',
+                    variables: {
+                        rack_id: props.rack_id,
+                        rack_level: props.rack_level
+                    }
+                },
+                {
+                    query: GET_RACK,
+                    fetchPolicy: 'no-cache',
+                    variables: {
+                        id: props.rack_id,
+                        level: props.rack_level
+                    }
+                }
+            ]
+        });
+
+    function renderModal(): React.ReactElement {
+            return (
+                <DetailProductModal
+                    id={idProductQuery}
+                    loading={loading}
+                    onDeletePress={(): void => { deleteProductMutation({variables: {id: props.products[indexProductQuery].id}}); }}
+                    isVisible={isModalVisible}
+                    onBackdropPress={(): void => {setIsModalVisible(false);}}
+                    remove
+                />
+            );
+    }
 
     function renderProducts(): React.ReactElement[] {
         const SCANNEDPRODUCTSLINES: React.ReactElement[] = [];
@@ -38,14 +72,15 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
                 <ScannedProductLine
                     id={product.id}
                     key={index}
-                    brand={product.brand.name}
-                    created_at={product.created_at}
                     keyI={index}
-                    serialNumber={product.serial_number}
-                    model={product.model}
                     rack_id={props.rack_id}
                     rack_level={props.rack_level}
-                    category={product.category.name}
+                    onPress={(): void => {
+                        setIdProductQuery(product.id);
+                        setIsModalVisible(true);
+                        setIndexProductQuery(index);
+                    }}
+                    product={product}
                     remove={props.remove}
                 />
             );
@@ -58,13 +93,14 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
             <ScannedProductLine
                     id={0}
                     head={true}
-                    category={'Catégorie'}
-                    model={'Modèle'}
-                    serialNumber={'N° série'}
+                    title1={'Catégorie'}
+                    title2={'Modèle'}
+                    title3={'N° série'}
             />
             <ScrollView>
                 {renderProducts()}
             </ScrollView>
+            {renderModal()}
         </View>
     );
 };

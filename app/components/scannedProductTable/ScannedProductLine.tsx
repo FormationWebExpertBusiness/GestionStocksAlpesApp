@@ -9,53 +9,24 @@ import {ALMOST_BLACK, BUTTONRED} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
-import {useMutation} from '@apollo/client';
 import {LINESTYLES} from '../../style/tablesStyle';
-import DetailProductModal from '../detailProductModal/detailProductModal';
-import {GET_RACK} from '../../graphql/query/getRack';
-import {GET_PRODUCTS} from '../../graphql/query/getProducts';
-import {DELETE_PRODUCT} from '../../graphql/mutation/deleteProduct';
+import type {ScannedProduct} from '../../types/ScannedProductType';
 
 type ScannedProductLineProps = {
     id: number;
     keyI?: number;
     head?: boolean;
-    created_at?: string;
     rack_id?: number;
     rack_level?: number;
-    serialNumber: string;
-    model: string;
-    brand?: string;
-    category: string;
+    product?: ScannedProduct;
+    onPress?(): void;
+    title1?: string;
+    title2?: string;
+    title3?: string;
     remove?: boolean;
 };
 
 const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement => {
-
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [deleteProductMutation, {data, loading, error}] = useMutation(DELETE_PRODUCT, {
-        awaitRefetchQueries: true,
-        refetchQueries: [
-            {
-                query: GET_PRODUCTS,
-                fetchPolicy: 'no-cache',
-                variables: {
-                    rack_id: props.rack_id,
-                    rack_level: props.rack_level
-                }
-            },
-            {
-                query: GET_RACK,
-                fetchPolicy: 'no-cache',
-                variables: {
-                    id: props.rack_id,
-                    level: props.rack_level
-                }
-            }
-        ]
-    });
 
     function getWrapperStyle(): object {
         if(props.head) {
@@ -88,34 +59,35 @@ const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement 
         );
     }
 
-    function renderModal(): React.ReactElement {
-        if(!props.head) {
-            return <DetailProductModal
-                onDeletePress={(): void => { deleteProductMutation({variables: {id: props.id}}); }}
-                remove={props.remove}
-                isVisible={isModalVisible}
-                onBackdropPress={(): void => { setIsModalVisible(false); }}
-                created_at={props.created_at!}
-                serialNumber={props.serialNumber}
-                model={props.model}
-                brand={props.brand!}
-                category={props.category}
-                rackId={props.rack_id!}
-                rackLevel={props.rack_level!}
-            />;
+    function getTextComponents(): React.ReactElement[] {
+        const TEXTS: React.ReactElement[] = [];
+        if(props.head) {
+            TEXTS.push(
+                <>
+                    <Text key={0} style={LINESTYLES.text} numberOfLines={1}>{props.title1}</Text>
+                    <Text key={1} style={LINESTYLES.text} numberOfLines={1}>{props.title2}</Text>
+                    <Text key={2} style={LINESTYLES.text} numberOfLines={1}>{props.title3}</Text>
+                </>
+            );
+        } else {
+            TEXTS.push(
+                <>
+                    <Text key={0} style={LINESTYLES.text} numberOfLines={1}>{props.product?.category.name}</Text>
+                    <Text key={1} style={LINESTYLES.text} numberOfLines={1}>{props.product?.model}</Text>
+                    <Text key={2} style={LINESTYLES.text} numberOfLines={1}>{props.product?.serial_number}</Text>
+                </>
+            );
         }
-        return <View />;
+        return TEXTS;
     }
 
     function renderContent(): React.ReactElement {
-        if(loading) {
-            return <Text style={[LINESTYLES.text, LINESTYLES.textLoading]}>Suppression...</Text>;
-        }
+        // if(loading) {
+        //     return <Text style={[LINESTYLES.text, LINESTYLES.textLoading]}>Suppression...</Text>;
+        // }
         return (
             <>
-                <Text style={LINESTYLES.text} numberOfLines={1}>{props.category}</Text>
-                <Text style={LINESTYLES.text} numberOfLines={1}>{props.model}</Text>
-                <Text style={LINESTYLES.text} numberOfLines={1}>{props.serialNumber}</Text>
+                {getTextComponents()}
                 {getIcon()}
             </>
         );
@@ -129,11 +101,10 @@ const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement 
                 style={[LINESTYLES.wrapper, productStyle]}
                 onPressOut={(): void => { setProductStyle(getWrapperStyle()); }}
                 onPressIn={(): void => { if(!props.head)setProductStyle(LINESTYLES.activeProduct); }}
-                onPress={(): void => { setIsModalVisible(true); }}
+                onPress={(): void => { props.onPress?.(); }}
             >
                 {renderContent()}
             </Pressable>
-            {renderModal()}
         </View>
     );
 };

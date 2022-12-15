@@ -54,8 +54,6 @@ const HomePage = ({navigation}: any): React.ReactElement => {
             <CustomTopTabNavigator
                 mode={'all'}
                 onPressScan={(): void => {navigation.navigate('Scan');}}
-                onPressRemove={(): void => {navigation.navigate('RemoveScan');}}
-                onPressAdd={(): void => {navigation.navigate('Add');}}
             />
             <View style={STYLES.wrapper}>
                 <CustomTextInput required password={false} placeholder={'Recherche'} />
