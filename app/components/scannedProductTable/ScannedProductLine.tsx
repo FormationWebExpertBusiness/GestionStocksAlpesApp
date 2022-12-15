@@ -73,9 +73,6 @@ const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement 
     }
 
     function renderContent(): React.ReactElement {
-        // if(loading) {
-        //     return <Text style={[LINESTYLES.text, LINESTYLES.textLoading]}>Suppression...</Text>;
-        // }
         return (
             <>
                 {getTextComponents()}
