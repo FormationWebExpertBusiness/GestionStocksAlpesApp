@@ -76,9 +76,10 @@ const STYLES = StyleSheet.create({
 type DetailPageHeaderProps = {
     title1: string;
     title2: string;
-    size: number | null;
-    content1: string;
-    content2: number;
+    size?: number | null;
+    content1?: string;
+    content2?: number;
+    skeleton?: boolean;
 };
 
 
@@ -87,6 +88,23 @@ const RemovePageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
     const [badgeColor] = useState<string>(BADGEPURPLE);
     const [badgeDotColor] = useState<string>(BADGEDOTPURPLE);
     const [badgeTextColor] = useState<string>(BADGETEXTPURPLE);
+
+    function renderContent(): React.ReactElement {
+        if(props.skeleton) {
+            return (
+                <>
+                    <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>...</Text>
+                    <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>...</Text>
+                </>
+            );
+        }
+        return (
+            <>
+                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content1}</Text>
+                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content2}</Text>
+            </>
+        );
+    }
 
     return (
         <View style={STYLES.componentWrapper}>
@@ -97,8 +115,7 @@ const RemovePageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
             </View>
             <View style={STYLES.contentWrapper}>
             <View style={STYLES.textContent}>
-                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content1}</Text>
-                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content2}</Text>
+                {renderContent()}
             </View>
             <View style={STYLES.badgeWrapper}>
                 <View style={[STYLES.badge, {backgroundColor: badgeColor}]}>

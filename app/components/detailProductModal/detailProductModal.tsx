@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-require-imports */
 import {
     View,
     StyleSheet,
@@ -5,11 +7,14 @@ import {
     Pressable
 } from 'react-native';
 import React from 'react';
-import {ALMOST_BLACK, ALMOST_WHITE, BUTTONGREY, BUTTONRED, CHARCOAL_GREY, CULTURED, DARKBLUEBLACK} from '../../style/colors';
+import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONPURPLE, BUTTONRED, CULTURED, DARKBLUEBLACK, WHITE} from '../../style/colors';
 import Modal from 'react-native-modal/dist/modal';
 import CardModal from './cardModal';
+import LottieView from 'lottie-react-native';
 import {GET_PRODUCT_MODAL_DATA} from '../../graphql/query/getProductModalData';
 import {useQuery} from '@apollo/client';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 
 const STYLES = StyleSheet.create({
     modalWrapper: {
@@ -65,12 +70,15 @@ const STYLES = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
+        flexWrap: 'wrap',
         justifyContent: 'space-between'
     },
     button: {
         height: 40,
         marginTop: 20,
+        alignItems: 'center',
         width: 100,
+        color: WHITE,
         justifyContent: 'center',
         borderRadius: 5
     },
@@ -78,14 +86,32 @@ const STYLES = StyleSheet.create({
         backgroundColor: BUTTONRED,
         borderWidth: 1,
         borderColor: BUTTONRED
+
+    },
+    buttonDeplace: {
+        backgroundColor: BUTTONPURPLE,
+        borderWidth: 1,
+        borderColor: BUTTONPURPLE
     },
     buttonCancel: {
-        borderColor: BUTTONGREY,
-        borderWidth: 1
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 40
     },
     buttonText: {
-        color: ALMOST_BLACK,
+        color: ALMOST_WHITE,
+        fontWeight: 'bold',
         textAlign: 'center'
+    },
+    lottie: {
+        height: 70,
+        width: 70,
+        fontSize: 40
+
     }
 });
 
@@ -93,10 +119,10 @@ type DetailProductModalProps = {
     id: number;
     isVisible: boolean;
     onDeletePress?(): void;
+    loading?: boolean;
     onBackdropPress(): void;
     remove?: boolean;
 };
-
 
 const DetailProductModal = (props: DetailProductModalProps): React.ReactElement => {
 
@@ -109,22 +135,44 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
 
     function renderButtons(): React.ReactElement {
         if(props.remove) {
-        return (
-            <View style={STYLES.buttonWrapper}>
-                <Pressable
-                    onPress={(): void => { props.onBackdropPress(); props.onDeletePress?.(); }}
-                    style={[STYLES.button, STYLES.buttonDelete]}
-                >
-                    <Text style={[STYLES.buttonText, {color: ALMOST_WHITE, fontWeight: 'bold'}]}>Supprimer</Text>
-                </Pressable>
-                <Pressable
-                    onPress={(): void => { props.onBackdropPress(); }}
-                    style={[STYLES.button, STYLES.buttonCancel]}
-                >
-                    <Text style={[STYLES.buttonText, {color: CHARCOAL_GREY, fontWeight: 'bold'}]}>Annuler</Text>
-                </Pressable>
-            </View>
-        );
+            if(props.loading) {
+                return (
+                    <View style={STYLES.buttonWrapper}>
+                    <Pressable
+                        style={[STYLES.button, STYLES.buttonDeplace]}
+                    >
+                        <Text style={STYLES.buttonText}>Déplacer</Text>
+                    </Pressable>
+                        <View
+                            style={[STYLES.button, STYLES.buttonDelete]}
+                        >
+                            <LottieView
+                                style={STYLES.lottie}
+                                source={require('../../assets/loading_6.json')}
+                                autoPlay
+                                autoSize
+                                loop
+                            />
+                        </View>
+                    </View>
+                );
+            }
+            return (
+                <View style={STYLES.buttonWrapper}>
+                    <Pressable
+                        onPress={(): void => { props.onBackdropPress(); }}
+                        style={[STYLES.button, STYLES.buttonDeplace]}
+                    >
+                        <Text style={STYLES.buttonText}>Déplacer</Text>
+                    </Pressable>
+                    <Pressable
+                        onPress={(): void => { props.onDeletePress?.(); }}
+                        style={[STYLES.button, STYLES.buttonDelete]}
+                    >
+                        <Text style={STYLES.buttonText}>Supprimer</Text>
+                    </Pressable>
+                </View>
+            );
         }
         return <View />;
     }
@@ -227,9 +275,16 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
             animationInTiming={10}
             animationOutTiming={10}
             animationOut="fadeOut"
-            onBackdropPress={props.onBackdropPress}
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onBackdropPress={!props.loading ? props.onBackdropPress : (): void => {}}
         >
             <View style={STYLES.modalWrapper}>
+                <Pressable
+                    onPress={props.onBackdropPress}
+                    style={STYLES.buttonCancel}
+                >
+                    <FontAwesomeIcon color={AVERAGE_GREY} icon={faXmark} size={17} />
+                </Pressable>
                 {renderCards()}
                 {renderButtons()}
             </View>
