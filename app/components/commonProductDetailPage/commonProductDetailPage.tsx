@@ -95,7 +95,7 @@ const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement =
         const commonProduct: CommonProduct = commonProductProductsData.data.commonProduct;
 
         return (
-            <ProductTable commonProduct={commonProduct} />
+            <ProductTable commonProductId={commonProductId} commonProduct={commonProduct} />
         );
     }
 

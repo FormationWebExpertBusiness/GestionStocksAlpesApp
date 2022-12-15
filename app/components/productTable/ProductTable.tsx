@@ -7,22 +7,55 @@ import ProductLine from './ProductLine';
 import {TABLESTYLES} from '../../style/tablesStyle';
 import type {CommonProduct} from '../../types/commonProductType';
 import DetailProductModal from '../detailProductModal/detailProductModal';
+import {useMutation} from '@apollo/client';
+import {DELETE_PRODUCT} from '../../graphql/mutation/deleteProduct';
+import {GET_COMMONPRODUCT_QUANTITY} from '../../graphql/query/getCommonProductQuantity';
+import {GET_COMMONPRODUCT_PRODUCTS} from '../../graphql/query/getCommonProductProducts';
 
 type commonProductTable = {
     commonProduct: CommonProduct;
+    commonProductId: number;
 };
 
 const ProductTable = (props: commonProductTable): React.ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [idProductQuery, setIdProductQuery] = useState<number>(0);
+    const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [deleteProductMutation, {data, loading, error}] = useMutation(DELETE_PRODUCT, {
+        awaitRefetchQueries: true,
+        refetchQueries: [
+            {
+                query: GET_COMMONPRODUCT_QUANTITY,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    commonProduct_id: props.commonProductId
+                }
+            },
+            {
+                query: GET_COMMONPRODUCT_PRODUCTS,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    commonProduct_id: props.commonProductId
+                }
+            }
+        ],
+        onCompleted: (): void => {
+            setIsModalVisible(false);
+        }
+    });
 
     function renderModal(): React.ReactElement {
             return (
                 <DetailProductModal
                     id={idProductQuery}
+                    loading={loading}
+                    onDeletePress={(): void => { deleteProductMutation({variables: {id: props.commonProduct.products[indexProductQuery].id, user_id: 0}}); }}
                     isVisible={isModalVisible}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
+                    remove
                 />
             );
     }
@@ -41,6 +74,7 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
                     onPress={(): void => {
                         setIdProductQuery(product.id);
                         setIsModalVisible(true);
+                        setIndexProductQuery(index);
                     }}
                     model={commonProduct.model}
                     brand={commonProduct.brand.name}
