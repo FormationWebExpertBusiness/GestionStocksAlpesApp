@@ -59,7 +59,7 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
                 <DetailProductModal
                     id={idProductQuery}
                     loading={loading}
-                    onDeletePress={(): void => { deleteProductMutation({variables: {id: props.products[indexProductQuery].id}}); }}
+                    onDeletePress={(): void => { deleteProductMutation({variables: {id: props.products[indexProductQuery].id, user_id: 0}}); }}
                     isVisible={isModalVisible}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
                     remove
