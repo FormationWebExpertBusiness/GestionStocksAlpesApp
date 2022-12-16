@@ -67,7 +67,7 @@ export const BADGEPURPLE = '#bfbdfe';
 
 export const BUTTONRED = '#dc2626';
 
-export const BUTTONGREY = '#d1d5db';
+export const BUTTONGREY = '#AEB2B8';
 
 export const BUTTONPURPLE = '#4338CA';
 

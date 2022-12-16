@@ -14,6 +14,7 @@ import {useQuery} from '@apollo/client';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import LoadingAnimation from '../../assets/loading_6.json';
+import ConfirmationModal from './confirmationModal';
 
 const STYLES = StyleSheet.create({
     modalWrapper: {
@@ -109,7 +110,6 @@ const STYLES = StyleSheet.create({
         height: 70,
         width: 70,
         fontSize: 40
-
     }
 });
 
@@ -119,6 +119,10 @@ type DetailProductModalProps = {
     onDeletePress?(): void;
     loading?: boolean;
     onBackdropPress(): void;
+    commentValue: string;
+    setCommentValue(value: string): void;
+    confirmationModal: boolean;
+    setConfirmationModal(arg0: boolean): void;
     remove?: boolean;
 };
 
@@ -164,7 +168,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
                         <Text style={STYLES.buttonText}>Déplacer</Text>
                     </Pressable>
                     <Pressable
-                        onPress={(): void => { props.onDeletePress?.(); }}
+                        onPress={(): void => { props.setConfirmationModal(true); }}
                         style={[STYLES.button, STYLES.buttonDelete]}
                     >
                         <Text style={STYLES.buttonText}>Supprimer</Text>
@@ -285,6 +289,18 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
                 {renderCards()}
                 {renderButtons()}
             </View>
+            <ConfirmationModal
+                isVisible={props.confirmationModal}
+                commentValue={props.commentValue}
+                setCommentValue={props.setCommentValue}
+                onCancelPress={(): void => {props.setConfirmationModal(false);}}
+                onConfirmPress={(): void => {props.onDeletePress?.();}}
+                category={productModalData.data?.product.category.name}
+                brand={productModalData.data?.product.brand.name}
+                loading={props.loading}
+                model={productModalData.data?.product.model}
+                serial_number={productModalData.data?.product.serial_number}
+            />
         </Modal>
     );
 };

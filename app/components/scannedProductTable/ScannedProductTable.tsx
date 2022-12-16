@@ -23,8 +23,11 @@ type ScannedProductTableProps = {
 const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [commentValue, setCommentValue] = useState<string>('');
     const [idProductQuery, setIdProductQuery] = useState<number>(-1);
     const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
+    const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false);
+
 
         const [deleteProductMutation, {loading}] = useMutation(DELETE_PRODUCT, {
             awaitRefetchQueries: true,
@@ -47,6 +50,7 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
                 }
             ],
             onCompleted: (): void => {
+                setConfirmationModal(false);
                 setIsModalVisible(false);
             }
         });
@@ -56,7 +60,11 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
                 <DetailProductModal
                     id={idProductQuery}
                     loading={loading}
-                    onDeletePress={(): void => { deleteProductMutation({variables: {id: props.products[indexProductQuery].id, user_id: 0}}); }}
+                    commentValue={commentValue}
+                    setCommentValue={setCommentValue}
+                    confirmationModal={confirmationModal}
+                    setConfirmationModal={setConfirmationModal}
+                    onDeletePress={(): void => { deleteProductMutation({variables: {id: props.products[indexProductQuery].id, comment: commentValue, user_id: 0}}); }}
                     isVisible={isModalVisible}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
                     remove

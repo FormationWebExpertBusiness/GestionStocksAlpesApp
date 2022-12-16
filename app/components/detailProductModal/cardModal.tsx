@@ -51,8 +51,6 @@ const STYLES = StyleSheet.create({
     textContent: {
         fontWeight: 'bold'
     }
-
-
 });
 
 type CardModalProps = {
