@@ -108,15 +108,15 @@ type AddFormProps = {
 
 const AddForm = (props: AddFormProps): React.ReactElement => {
 
-    const inputRef = useRef<any>(null);
-    const inputRef2 = useRef<any>(null);
-    const inputRef3 = useRef<any>(null);
-    const inputRef0 = useRef<any>(null);
+    const serialNumberRef = useRef<any>(null);
+    const priceRef = useRef<any>(null);
+    const commentRef = useRef<any>(null);
+    const commonIdRef = useRef<any>(null);
 
-    const [serial_number, setSerialNumber] = useState('');
-    const [price, setPrice] = useState('');
-    const [comment, setComment] = useState('');
-    const [common_id, setCommonId] = useState('');
+    const [serial_number, setSerialNumber] = useState<string>('');
+    const [price, setPrice] = useState<string>('');
+    const [comment, setComment] = useState<string>('');
+    const [common_id, setCommonId] = useState<string>('');
 
     function resetInputs(): void {
         setCommonId('');
@@ -152,10 +152,10 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     });
 
     function handleFocus(): void {
-        inputRef.current.blur();
-        inputRef2.current.blur();
-        inputRef3.current.blur();
-        inputRef0.current.blur();
+        serialNumberRef.current.blur();
+        priceRef.current.blur();
+        commentRef.current.blur();
+        commonIdRef.current.blur();
     }
 
     function renderButtons(): React.ReactElement {
@@ -216,16 +216,16 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
             </View>
             <View style={STYLES.inputs}>
                 <View style={STYLES.input}>
-                    <CustomTextInput value={common_id} onValueChange={(text): void => {setCommonId(text);}} innerRef={inputRef0} placeholder='ID Type de produit' required={true} password={false}/>
+                    <CustomTextInput value={common_id} onValueChange={(text): void => {setCommonId(text);}} innerRef={commonIdRef} placeholder='ID Type de produit' required={true} password={false}/>
                 </View>
                 <View style={STYLES.input}>
-                    <CustomTextInput value={serial_number} onValueChange={(text): void => {setSerialNumber(text);}} innerRef={inputRef} placeholder='N° de série' required={true} password={false}/>
+                    <CustomTextInput value={serial_number} onValueChange={(text): void => {setSerialNumber(text);}} innerRef={serialNumberRef} placeholder='N° de série' required={true} password={false}/>
                 </View>
                 <View style={STYLES.input}>
-                    <CustomTextInput value={price} onValueChange={(text): void => {setPrice(text);}} innerRef={inputRef2} placeholder='Prix' required={true} password={false}/>
+                    <CustomTextInput value={price} onValueChange={(text): void => {setPrice(text);}} innerRef={priceRef} placeholder='Prix' required={true} password={false}/>
                 </View>
                 <View style={STYLES.input}>
-                    <CustomTextInput value={comment} onValueChange={(text): void => {setComment(text);}} innerRef={inputRef3} placeholder='Commentaire' required={false} password={false}/>
+                    <CustomTextInput value={comment} onValueChange={(text): void => {setComment(text);}} innerRef={commentRef} placeholder='Commentaire' required={false} password={false}/>
                 </View>
             </View>
             <View style={STYLES.buttonWrapper}>
