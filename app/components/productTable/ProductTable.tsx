@@ -21,6 +21,8 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [idProductQuery, setIdProductQuery] = useState<number>(0);
+    const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false);
+    const [commentValue, setCommentValue] = useState<string>('');
     const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
 
     const [deleteProductMutation, {loading}] = useMutation(DELETE_PRODUCT, {
@@ -51,6 +53,10 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
                 <DetailProductModal
                     id={idProductQuery}
                     loading={loading}
+                    commentValue={commentValue}
+                    confirmationModal={confirmationModal}
+                    setCommentValue={setCommentValue}
+                    setConfirmationModal={setConfirmationModal}
                     onDeletePress={(): void => { deleteProductMutation({variables: {id: props.commonProduct.products[indexProductQuery].id, user_id: 0}}); }}
                     isVisible={isModalVisible}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
