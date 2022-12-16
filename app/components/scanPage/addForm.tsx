@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, StyleSheet, Pressable, Keyboard} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Modal from 'react-native-modal/dist/modal';
 import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREEN, CULTURED, DARKBLUEBLACK, WHITE} from '../../style/colors';
 import CustomTextInput from '../CustomTextInput';
@@ -113,8 +113,6 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     const inputRef3 = useRef<any>(null);
     const inputRef0 = useRef<any>(null);
 
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
     const [serial_number, setSerialNumber] = useState('');
     const [price, setPrice] = useState('');
     const [comment, setComment] = useState('');
@@ -160,17 +158,6 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
         inputRef0.current.blur();
     }
 
-    useEffect((): void => {
-        Keyboard.addListener('keyboardDidShow', (): void => {
-            setKeyboardVisible(true);
-        }
-        );
-        Keyboard.addListener('keyboardDidHide', (): void => {
-            setKeyboardVisible(false);
-        }
-        );
-    }, []);
-
     function renderButtons(): React.ReactElement {
         if(loading) {
             return (
@@ -206,13 +193,6 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
         );
     }
 
-    function getModalHeight(): number {
-        if(isKeyboardVisible) {
-            return 70;
-        }
-        return 0;
-    }
-
     return (
         <Modal
         isVisible={props.isVisible}
@@ -223,7 +203,7 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
         animationOutTiming={10}
         animationOut="fadeOut"
     >
-        <Pressable onPress={(): void => {handleFocus();}} style={[STYLES.modalWrapper, {marginTop: getModalHeight()}]}>
+        <Pressable onPress={(): void => {handleFocus();}} style={[STYLES.modalWrapper, {marginTop: 70}]}>
             <Pressable
                 onPress={(): void => {props.onBackdropPress(); resetInputs(); }}
                 style={STYLES.buttonCancel}

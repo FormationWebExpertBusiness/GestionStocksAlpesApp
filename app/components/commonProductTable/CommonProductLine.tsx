@@ -9,6 +9,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 import {useNavigation} from '@react-navigation/native';
 import {LINESTYLES} from '../../style/tablesStyle';
+import type {RootStackParamList} from '../../types/rootStackParamList';
 
 type ProductLineProps = {
     keyI?: number;
@@ -20,7 +21,7 @@ type ProductLineProps = {
 };
 
 const commonProductLine = (props: ProductLineProps): React.ReactElement => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<RootStackParamList>();
 
 
     function getWrapperStyle(): object {
@@ -53,7 +54,9 @@ const commonProductLine = (props: ProductLineProps): React.ReactElement => {
             return (): void => {null;};
         }
 
-        return (): void => { navigation.navigate('CommonProductDetail', {commonProductId: props.id});};
+        return (): void => {
+            navigation.navigate('CommonProductDetail', {commonProductId: props.id});
+        };
 
     }
 

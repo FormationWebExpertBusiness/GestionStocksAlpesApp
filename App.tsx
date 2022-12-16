@@ -7,15 +7,7 @@ import React from 'react';
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import {HELLO_WORLD} from './app/graphql/query/helloWorld';
 import ScannedProductsPage from './app/components/scanPage/scannedProductsPage';
-
-type RootStackParamList = {
-	Home: undefined;
-	Scan: undefined;
-	ScannedProducts: undefined;
-	CommonProductDetail: {
-		commonProductId: number | undefined;
-	};
-};
+import type {RootStackParamList} from './app/types/rootStackParamList';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
