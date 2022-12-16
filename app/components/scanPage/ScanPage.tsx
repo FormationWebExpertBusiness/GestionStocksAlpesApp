@@ -13,6 +13,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faLightbulb as faLightbulbOn} from '@fortawesome/free-solid-svg-icons/faLightbulb';
 import {faLightbulb as faLightbulbOff} from '@fortawesome/free-regular-svg-icons/faLightbulb';
 import Toast from 'react-native-root-toast';
+import qrCodeScannerImg from '../../assets/qrCodeScannerImg.png';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -69,7 +70,7 @@ const STYLES = StyleSheet.create({
 
 });
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
     const [isLightOn, setIsLightOn] = React.useState(RNCamera.Constants.FlashMode.off);
     const [lightIcon, setLightIcon] = React.useState(faLightbulbOff);
@@ -138,8 +139,7 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
                         <View style={STYLES.imgWrapper}>
                             <Image
                                 style={{height: 250, width: 250}}
-                                // eslint-disable-next-line @typescript-eslint/no-require-imports, no-undef
-                                source={require('../../assets/qrCodeScannerImg.png')}
+                                source={qrCodeScannerImg}
                             />
                         </View>
                     <Pressable onPressOut={(): void => {setLightFeedback('#00000000');}} onPressIn={(): void => {setLightFeedback('#000000');}} onPress={(): void => {switchLight();}} style={[STYLES.iconWrapper, {backgroundColor: lightFeedback}]}>

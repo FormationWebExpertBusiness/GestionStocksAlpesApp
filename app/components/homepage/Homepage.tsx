@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     View,
     Text,
@@ -29,7 +28,7 @@ const STYLES = StyleSheet.create({
     }
 });
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const HomePage = ({navigation}: any): React.ReactElement => {
 
     const commonProductsData = useQuery(GET_COMMONPRODUCTS, {
@@ -56,7 +55,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
                 onPressScan={(): void => {navigation.navigate('Scan');}}
             />
             <View style={STYLES.wrapper}>
-                <CustomTextInput required password={false} placeholder={'Recherche'} />
+                <CustomTextInput required={false} password={false} placeholder={'Recherche'} />
                 {renderTable()}
             </View>
         </SafeAreaView>

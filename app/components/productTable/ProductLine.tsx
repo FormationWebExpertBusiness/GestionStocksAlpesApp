@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
     View,
     Text,
@@ -30,9 +29,10 @@ const ProductLine = (props: ProductLineProps): React.ReactElement => {
     function getWrapperStyle(): object {
         if(props.head) {
             return LINESTYLES.headWrapper;
+        } else if(props.keyI !== undefined && props.keyI % 2 === 0) {
+            return LINESTYLES.evenWrapper;
         }
-
-        return props.keyI! % 2 === 0 ? LINESTYLES.evenWrapper : LINESTYLES.oddWrapper;
+        return LINESTYLES.oddWrapper;
     }
 
     const [productStyle, setProductStyle] = useState<object>(getWrapperStyle());

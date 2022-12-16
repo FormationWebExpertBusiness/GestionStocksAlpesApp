@@ -52,8 +52,8 @@ type TextInputProps = {
     value?: string | null;
 };
 
-const customTextInput = (props: TextInputProps): React.ReactElement => {
-    const PLACEHOLDERVALUE = props.required === false ? `${props.placeholder}*` : props.placeholder;
+const CustomTextInput = (props: TextInputProps): React.ReactElement => {
+    const PLACEHOLDERVALUE = props.required !== false ? `${props.placeholder} *` : props.placeholder;
     const [STYLEINPUT, setStyleInput] = React.useState(STYLES.notActive);
     const [ERROR, setError] = React.useState(0);
     const [DISPLAYSTATE, setDisplayState] = React.useState<'flex' | 'none' | undefined>(props.value ? 'flex' : 'none');
@@ -121,4 +121,4 @@ const customTextInput = (props: TextInputProps): React.ReactElement => {
     );
 };
 
-export default customTextInput;
+export default CustomTextInput;

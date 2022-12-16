@@ -23,20 +23,19 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
     const [idProductQuery, setIdProductQuery] = useState<number>(0);
     const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [deleteProductMutation, {data, loading, error}] = useMutation(DELETE_PRODUCT, {
+    const [deleteProductMutation, {loading}] = useMutation(DELETE_PRODUCT, {
         awaitRefetchQueries: true,
         refetchQueries: [
             {
                 query: GET_COMMONPRODUCT_QUANTITY,
-                fetchPolicy: 'no-cache',
+                fetchPolicy: 'network-only',
                 variables: {
                     commonProduct_id: props.commonProductId
                 }
             },
             {
                 query: GET_COMMONPRODUCT_PRODUCTS,
-                fetchPolicy: 'no-cache',
+                fetchPolicy: 'network-only',
                 variables: {
                     commonProduct_id: props.commonProductId
                 }

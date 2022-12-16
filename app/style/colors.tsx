@@ -71,6 +71,8 @@ export const BUTTONGREY = '#d1d5db';
 
 export const BUTTONPURPLE = '#4338CA';
 
+export const BUTTONGREEN = '#059669';
+
 
 export const MAGNIFYINGLASSBG = '#2626262C';
 

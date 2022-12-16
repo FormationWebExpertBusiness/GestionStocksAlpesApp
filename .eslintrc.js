@@ -56,15 +56,6 @@ module.exports = {
 			}
 		],
 		'@typescript-eslint/explicit-member-accessibility': [2, { accessibility: 'explicit' }],
-		'@typescript-eslint/explicit-module-boundary-types': [
-			2,
-			{
-				allowArgumentsExplicitlyTypedAsAny: false,
-				allowDirectConstAssertionInArrowFunctions: false,
-				allowHigherOrderFunctions: false,
-				allowTypedFunctionExpressions: false
-			}
-		],
 		'@typescript-eslint/func-call-spacing': [2, 'never'],
 		'@typescript-eslint/keyword-spacing': [
 			2,

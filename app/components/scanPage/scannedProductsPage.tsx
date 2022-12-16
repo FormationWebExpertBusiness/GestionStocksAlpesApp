@@ -8,6 +8,7 @@ import RemovePageHeader from './scanPageHeader';
 import CustomTopTabNavigator from '../CustomTopTabNavigator';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 import ScannedProductTable from '../scannedProductTable/ScannedProductTable';
+import AddForm from './addForm';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -20,13 +21,16 @@ const STYLES = StyleSheet.create({
         color: BLACK
     },
     pageContent: {
-        height: '92%',
+        height: '88%',
         paddingBottom: 150,
         marginTop: 20
     }
 });
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
+
+    const [isFormModal, setIsFormModal] = React.useState<boolean>(false);
 
     const {values} = route.params;
 
@@ -45,6 +49,21 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
             level: values.rack_level
         }
     });
+
+    function renderFormModal(): React.ReactElement {
+        if(rackData.loading) {
+            return (
+                <View />
+            );
+        } else if(rackData.error) {
+            return (
+                <View />
+            );
+        }
+        return (
+            <AddForm rackId={values.rack_id} onBackdropPress={(): void => {setIsFormModal(false);}} isVisible={isFormModal} rackName={rackData.data.rack.name} rackLevel={values.rack_level} />
+        );
+    }
 
     function renderHeader(): React.ReactElement {
         if(rackData.loading) {
@@ -86,8 +105,9 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
     return (
         <>
             <CustomTopTabNavigator
-                mode={'back'}
+                mode={'plus'}
                 onPressBack={(): void => { navigation.goBack(); } }
+                onPressPlus={(): void => { setIsFormModal(true); } }
             />
             <View style={STYLES.pageWrapper}>
                 <View style={STYLES.pageContent}>
@@ -95,6 +115,7 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
                     {renderResults()}
                 </View>
             </View>
+            {renderFormModal()}
         </>
     );
 };

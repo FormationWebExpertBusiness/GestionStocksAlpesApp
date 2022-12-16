@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import HomePage from './app/components/homepage/Homepage';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -9,12 +8,21 @@ import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import {HELLO_WORLD} from './app/graphql/query/helloWorld';
 import ScannedProductsPage from './app/components/scanPage/scannedProductsPage';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+	Home: undefined;
+	Scan: undefined;
+	ScannedProducts: undefined;
+	CommonProductDetail: {
+		commonProductId: number | undefined;
+	};
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = (): React.ReactElement => {
 
 	const client = new ApolloClient({
-		uri: 'https://c3ed-185-244-237-236.eu.ngrok.io/graphql',
+		uri: 'https://ebfa-185-244-237-236.eu.ngrok.io/graphql',
 		cache: new InMemoryCache({
 			addTypename: false
 		})
