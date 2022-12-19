@@ -164,13 +164,11 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
         const commonProductsItems: {label: string; value: number;}[] = [];
         if(commonProductsData.data !== undefined) {
             commonProductsData.data.commonProducts.forEach((commonProduct: any): void => {
-                let category = '';
-                let model = '';
-                if(commonProduct.category.name !== undefined) category = `${commonProduct.category.name} `;
-                if(commonProduct.model !== undefined) model = commonProduct.model;
+                const category = commonProduct.category.name;
+                const model = commonProduct.model;
 
                 commonProductsItems.push({
-                    label: `${category}${model}`,
+                    label: `${category} ${model}`,
                     value: commonProduct.id
                 });
             });
