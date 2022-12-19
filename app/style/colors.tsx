@@ -25,6 +25,8 @@ export const CHARCOAL_GREY = '#3E5377';
 
 export const ALMOST_WHITE = '#f9fafb';
 
+export const MEDIUM_LIGHT_GREY = '#9DABBA';
+
 export const VERY_VERY_LIGHT_GREY = '#EFF0F5';
 
 export const VERY_LIGHT_GREY = '#EEEFF4';
@@ -67,7 +69,9 @@ export const BADGEPURPLE = '#bfbdfe';
 
 export const BUTTONRED = '#dc2626';
 
-export const BUTTONGREY = '#AEB2B8';
+export const BUTTONGREY = '#D1D5DB';
+
+export const TEXTBUTTONGREY = '#374151';
 
 export const BUTTONPURPLE = '#4338CA';
 

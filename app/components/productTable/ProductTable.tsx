@@ -45,6 +45,8 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
         ],
         onCompleted: (): void => {
             setIsModalVisible(false);
+            setConfirmationModal(false);
+            setCommentValue('');
         }
     });
 

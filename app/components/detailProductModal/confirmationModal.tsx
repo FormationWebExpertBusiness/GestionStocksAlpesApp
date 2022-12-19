@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Pressable, Text} from 'react-native';
-import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREY, BUTTONRED, CULTURED} from '../../style/colors';
+import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREY, BUTTONRED, CULTURED, TEXTBUTTONGREY, WHITE} from '../../style/colors';
 import Modal from 'react-native-modal/dist/modal';
 import LottieView from 'lottie-react-native';
 import LoadingAnimation from '../../assets/loading_6.json';
@@ -39,15 +39,18 @@ const STYLES = StyleSheet.create({
         height: 40,
         marginTop: 10,
         alignItems: 'center',
+        borderWidth: 1,
+        borderColor: BUTTONGREY,
         width: 100,
         justifyContent: 'center',
         borderRadius: 5
     },
     buttonDelete: {
-        backgroundColor: BUTTONRED
+        backgroundColor: BUTTONRED,
+        borderColor: BUTTONRED
     },
     buttonCancel: {
-        backgroundColor: BUTTONGREY
+        backgroundColor: WHITE
     },
     crossCancel: {
         position: 'absolute',
@@ -59,8 +62,8 @@ const STYLES = StyleSheet.create({
         width: 40
     },
     buttonText: {
-        color: ALMOST_WHITE,
         fontWeight: 'bold',
+        color: ALMOST_WHITE,
         textAlign: 'center'
     },
     textStyle: {
@@ -117,7 +120,7 @@ const ConfirmationModal = (props: ConfirmationModalProps): React.ReactElement =>
             return (
                 <View style={STYLES.buttonWrapper}>
                     <View style={[STYLES.button, STYLES.buttonCancel]}>
-                        <Text style={STYLES.buttonText}>Annuler</Text>
+                        <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
                     </View>
                     <View style={[STYLES.button, STYLES.buttonDelete]}>
                         <LottieView
@@ -134,10 +137,10 @@ const ConfirmationModal = (props: ConfirmationModalProps): React.ReactElement =>
         return (
             <View style={STYLES.buttonWrapper}>
                 <Pressable
-                    onPress={(): void => { props.onCancelPress(); }}
+                    onPress={(): void => { props.onCancelPress(); props.setCommentValue(''); }}
                     style={[STYLES.button, STYLES.buttonCancel]}
                 >
-                    <Text style={STYLES.buttonText}>Annuler</Text>
+                    <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
                 </Pressable>
                 <Pressable
                     onPress={(): void => { props.onConfirmPress(); }}
@@ -161,7 +164,7 @@ const ConfirmationModal = (props: ConfirmationModalProps): React.ReactElement =>
     >
         <View style={STYLES.modalWrapper}>
             <Pressable
-                onPress={!props.loading ? props.onCancelPress : (): void => {null;}}
+                onPress={!props.loading ? (): void => {props.onCancelPress(); props.setCommentValue('');} : (): void => {null;}}
                 style={STYLES.crossCancel}
             >
                 <FontAwesomeIcon color={AVERAGE_GREY} icon={faXmark} size={17} />
