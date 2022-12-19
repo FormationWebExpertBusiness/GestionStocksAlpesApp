@@ -56,15 +56,6 @@ module.exports = {
 			}
 		],
 		'@typescript-eslint/explicit-member-accessibility': [2, { accessibility: 'explicit' }],
-		'@typescript-eslint/explicit-module-boundary-types': [
-			2,
-			{
-				allowArgumentsExplicitlyTypedAsAny: false,
-				allowDirectConstAssertionInArrowFunctions: false,
-				allowHigherOrderFunctions: false,
-				allowTypedFunctionExpressions: false
-			}
-		],
 		'@typescript-eslint/func-call-spacing': [2, 'never'],
 		'@typescript-eslint/keyword-spacing': [
 			2,
@@ -143,10 +134,6 @@ module.exports = {
 		'@typescript-eslint/require-array-sort-compare': [2, { ignoreStringArrays: true }],
 		'@typescript-eslint/require-await': 2,
 		'@typescript-eslint/restrict-plus-operands': [2, { checkCompoundAssignments: true }],
-		'@typescript-eslint/restrict-template-expressions': [
-			2,
-			{ allowNumber: true, allowBoolean: true, allowAny: false, allowNullish: false }
-		],
 		'@typescript-eslint/return-await': [2, 'always'],
 		'@typescript-eslint/semi': [2, 'always'],
 		'@typescript-eslint/sort-type-union-intersection-members': [2, { checkIntersections: true, checkUnions: true }],
@@ -219,7 +206,6 @@ module.exports = {
 		'implicit-arrow-linebreak': [2, 'beside'],
 		'init-declarations': 0,
 		'keyword-spacing': 0,
-		'linebreak-style': [2, 'unix'],
 		'lines-around-comment': [
 			2,
 			{
@@ -328,7 +314,6 @@ module.exports = {
 		'no-loss-of-precision': 0,
 		'no-magic-numbers': 0,
 		'no-misleading-character-class': 2,
-		'no-mixed-operators': 2,
 		'no-mixed-spaces-and-tabs': 2,
 		'no-multi-spaces': 2,
 		'no-nested-ternary': 2,

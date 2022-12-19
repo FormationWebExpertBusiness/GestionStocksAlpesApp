@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable @typescript-eslint/no-require-imports */
 import {
     View,
     StyleSheet,
@@ -15,6 +13,7 @@ import {GET_PRODUCT_MODAL_DATA} from '../../graphql/query/getProductModalData';
 import {useQuery} from '@apollo/client';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
+import LoadingAnimation from '../../assets/loading_6.json';
 import ConfirmationModal from './confirmationModal';
 
 const STYLES = StyleSheet.create({
@@ -87,7 +86,6 @@ const STYLES = StyleSheet.create({
         backgroundColor: BUTTONRED,
         borderWidth: 1,
         borderColor: BUTTONRED
-
     },
     buttonDeplace: {
         backgroundColor: BUTTONPURPLE,
@@ -152,7 +150,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
                         >
                             <LottieView
                                 style={STYLES.lottie}
-                                source={require('../../assets/loading_6.json')}
+                                source={LoadingAnimation}
                                 autoPlay
                                 autoSize
                                 loop
@@ -212,8 +210,8 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
                     <CardModal
                         title1={'Date'}
                         title2={'Heure'}
-                        content1={created_at.split(/(\s+)/)[0]}
-                        content2={created_at.split(/(\s+)/)[2]}
+                        content1={created_at.split(/(\s+)/)[2]}
+                        content2={created_at.split(/(\s+)/)[0]}
                         label={'Entrée en stock'}
                     />
                 </>
@@ -279,15 +277,14 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
             animationInTiming={10}
             animationOutTiming={10}
             animationOut="fadeOut"
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            onBackdropPress={!props.loading ? props.onBackdropPress : (): void => {}}
+            onBackdropPress={!props.loading ? props.onBackdropPress : (): void => {null;}}
         >
             <View style={STYLES.modalWrapper}>
                 <Pressable
                     onPress={props.onBackdropPress}
                     style={STYLES.buttonCancel}
                 >
-                    <FontAwesomeIcon color={AVERAGE_GREY} icon={faXmark} size={17} />
+                    <FontAwesomeIcon color={AVERAGE_GREY} icon={faXmark} size={20} />
                 </Pressable>
                 {renderCards()}
                 {renderButtons()}

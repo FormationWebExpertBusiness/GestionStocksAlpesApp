@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
     ScrollView,
     View
@@ -21,7 +20,6 @@ type ScannedProductTableProps = {
     remove?: boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -31,13 +29,12 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
     const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false);
 
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const [deleteProductMutation, {data, loading, error}] = useMutation(DELETE_PRODUCT, {
+        const [deleteProductMutation, {loading}] = useMutation(DELETE_PRODUCT, {
             awaitRefetchQueries: true,
             refetchQueries: [
                 {
                     query: GET_PRODUCTS,
-                    fetchPolicy: 'no-cache',
+                    fetchPolicy: 'network-only',
                     variables: {
                         rack_id: props.rack_id,
                         rack_level: props.rack_level
@@ -45,7 +42,7 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
                 },
                 {
                     query: GET_RACK,
-                    fetchPolicy: 'no-cache',
+                    fetchPolicy: 'network-only',
                     variables: {
                         id: props.rack_id,
                         level: props.rack_level

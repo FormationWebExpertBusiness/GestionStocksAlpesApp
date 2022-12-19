@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
     View,
     Text,
@@ -10,6 +9,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
 import {useNavigation} from '@react-navigation/native';
 import {LINESTYLES} from '../../style/tablesStyle';
+import type {RootStackParamList} from '../../types/rootStackParamList';
 
 type ProductLineProps = {
     keyI?: number;
@@ -21,16 +21,16 @@ type ProductLineProps = {
 };
 
 const commonProductLine = (props: ProductLineProps): React.ReactElement => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<RootStackParamList>();
 
 
     function getWrapperStyle(): object {
         if(props.head) {
             return LINESTYLES.headWrapper;
+        } else if(props.keyI !== undefined && props.keyI % 2 === 0) {
+            return LINESTYLES.evenWrapper;
         }
-
-
-        return props.keyI! % 2 === 0 ? LINESTYLES.evenWrapper : LINESTYLES.oddWrapper;
+        return LINESTYLES.oddWrapper;
     }
 
     const [productStyle, setProductStyle] = useState<object>(getWrapperStyle());
@@ -51,10 +51,13 @@ const commonProductLine = (props: ProductLineProps): React.ReactElement => {
 
     function getOnPressNavigate(): () => void {
         if(props.head) {
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            return (): void => {};
+            return (): void => {null;};
         }
-        return (): void => { navigation.navigate('CommonProductDetail', {commonProductId: props.id}); };
+
+        return (): void => {
+            navigation.navigate('CommonProductDetail', {commonProductId: props.id});
+        };
+
     }
 
     return (

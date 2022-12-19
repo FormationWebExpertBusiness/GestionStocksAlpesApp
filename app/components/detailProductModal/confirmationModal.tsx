@@ -168,8 +168,8 @@ const ConfirmationModal = (props: ConfirmationModalProps): React.ReactElement =>
             </Pressable>
             <Text style={STYLES.label}>Êtes-vous sur de vouloir supprimer {'\n'} le produit :</Text>
             <View style={STYLES.productWrapper}>
-                <CardConfirmModal content1={props.category} content2={props.brand} title1={'Catégorie'} title2={'Marque'} />
                 <CardConfirmModal content2={props.model} content1={props.serial_number} title2={'Modèle'} title1={'N° de série'} />
+                <CardConfirmModal content2={props.category} content1={props.brand} title2={'Catégorie'} title1={'Marque'} />
             </View>
             <View style={STYLES.input}>
                 <CustomTextInput value={props.commentValue} onValueChange={(text): void => {props.setCommentValue(text);}} placeholder='Commentaire' required={false} password={false}/>
