@@ -210,8 +210,8 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
                     <CardModal
                         title1={'Date'}
                         title2={'Heure'}
-                        content1={created_at.split(/(\s+)/)[0]}
-                        content2={created_at.split(/(\s+)/)[2]}
+                        content1={created_at.split(/(\s+)/)[2]}
+                        content2={created_at.split(/(\s+)/)[0]}
                         label={'Entrée en stock'}
                     />
                 </>

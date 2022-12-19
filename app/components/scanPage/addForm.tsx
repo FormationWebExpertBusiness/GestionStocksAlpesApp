@@ -8,10 +8,12 @@ import CustomTextInput from '../CustomTextInput';
 import LottieView from 'lottie-react-native';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {ADD_PRODUCT} from '../../graphql/mutation/addProduct';
-import {useMutation} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/client';
 import {GET_PRODUCTS} from '../../graphql/query/getProducts';
 import {GET_RACK} from '../../graphql/query/getRack';
 import LoadingAnimation from '../../assets/loading_6.json';
+import {CustomDropdownPicker} from '../CustomDropdownPicker';
+import {GET_COMMONPRODUCTS_ADD} from '../../graphql/query/getCommonProductAdd';
 
 const STYLES = StyleSheet.create({
     titles: {
@@ -111,19 +113,21 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     const serialNumberRef = useRef<any>(null);
     const priceRef = useRef<any>(null);
     const commentRef = useRef<any>(null);
-    const commonIdRef = useRef<any>(null);
 
     const [serial_number, setSerialNumber] = useState<string>('');
     const [price, setPrice] = useState<string>('');
     const [comment, setComment] = useState<string>('');
-    const [common_id, setCommonId] = useState<string>('');
+    const [common_id, setCommonId] = useState<any>();
 
     function resetInputs(): void {
-        setCommonId('');
         setSerialNumber('');
         setPrice('');
         setComment('');
     }
+
+    const commonProductsData = useQuery(GET_COMMONPRODUCTS_ADD, {
+        fetchPolicy: 'network-only'
+    });
 
     const [addProductMutation, {loading}] = useMutation(ADD_PRODUCT, {
         awaitRefetchQueries: true,
@@ -151,11 +155,33 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
         }
     });
 
+    function formatCommonProductData(): {label: string; value: number;}[] {
+        const commonProductsItems: {label: string; value: number;}[] = [];
+        if(commonProductsData.data !== undefined) {
+            commonProductsData.data.commonProducts.forEach((commonProduct: any): void => {
+                let category = '';
+                let model = '';
+                if(commonProduct.category.name !== 'Non défini') category = `${commonProduct.category.name} `;
+                if(commonProduct.model !== 'Non défini') model = commonProduct.model;
+
+                commonProductsItems.push({
+                    label: `${category}${model}`,
+                    value: commonProduct.id
+                });
+            });
+        } else if(commonProductsData.loading) {
+            commonProductsItems.push({label: 'Loading...', value: 0});
+        } else if(commonProductsData.error) {
+            commonProductsItems.push({label: 'No data', value: 0});
+        }
+        return commonProductsItems;
+    }
+
+
     function handleFocus(): void {
         serialNumberRef.current.blur();
         priceRef.current.blur();
         commentRef.current.blur();
-        commonIdRef.current.blur();
     }
 
     function renderButtons(): React.ReactElement {
@@ -216,7 +242,8 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
             </View>
             <View style={STYLES.inputs}>
                 <View style={STYLES.input}>
-                    <CustomTextInput value={common_id} onValueChange={(text): void => {setCommonId(text);}} innerRef={commonIdRef} placeholder='ID Type de produit' required={true} password={false}/>
+                    {/* <CustomTextInput value={common_id} onValueChange={(text): void => {setCommonId(text);}} innerRef={commonIdRef} placeholder='ID Type de produit' required={true} password={false}/> */}
+                    <CustomDropdownPicker onValueChange={(v): void => {setCommonId(v);}} multiple={false} placeholder={'Type de produit'} required={true} zindex={1} item={formatCommonProductData()}/>
                 </View>
                 <View style={STYLES.input}>
                     <CustomTextInput value={serial_number} onValueChange={(text): void => {setSerialNumber(text);}} innerRef={serialNumberRef} placeholder='N° de série' required={true} password={false}/>

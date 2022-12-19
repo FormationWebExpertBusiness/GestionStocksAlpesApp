@@ -50,26 +50,23 @@ const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement 
         );
     }
 
-    function getTextComponents(): React.ReactElement[] {
-        const TEXTS: React.ReactElement[] = [];
+    function getTextComponents(): React.ReactElement {
         if(props.head) {
-            TEXTS.push(
+            return (
                 <>
                     <Text key={0} style={LINESTYLES.text} numberOfLines={1}>{props.title1}</Text>
                     <Text key={1} style={LINESTYLES.text} numberOfLines={1}>{props.title2}</Text>
                     <Text key={2} style={LINESTYLES.text} numberOfLines={1}>{props.title3}</Text>
                 </>
             );
-        } else {
-            TEXTS.push(
-                <>
-                    <Text key={0} style={LINESTYLES.text} numberOfLines={1}>{props.product?.category.name}</Text>
-                    <Text key={1} style={LINESTYLES.text} numberOfLines={1}>{props.product?.model}</Text>
-                    <Text key={2} style={LINESTYLES.text} numberOfLines={1}>{props.product?.serial_number}</Text>
-                </>
-            );
         }
-        return TEXTS;
+        return (
+            <>
+                <Text key={0} style={LINESTYLES.text} numberOfLines={1}>{props.product?.category.name}</Text>
+                <Text key={1} style={LINESTYLES.text} numberOfLines={1}>{props.product?.model}</Text>
+                <Text key={2} style={LINESTYLES.text} numberOfLines={1}>{props.product?.serial_number}</Text>
+            </>
+        );
     }
 
     function renderContent(): React.ReactElement {
