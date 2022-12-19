@@ -144,6 +144,7 @@ export const CustomDropdownPicker = (props: DropdownProps): React.ReactElement =
                         multiple={true}
                         dropDownDirection="BOTTOM"
                         value={VALUEMULTIPLE}
+                        customItemContainerStyle={STYLES.label}
                         labelStyle={STYLES.label}
 
                         /* 5000 because there is already a zIndex 5000 in the lib */

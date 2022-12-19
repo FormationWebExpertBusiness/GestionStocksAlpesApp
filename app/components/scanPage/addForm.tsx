@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useRef, useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Modal from 'react-native-modal/dist/modal';
-import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREEN, CULTURED, DARKBLUEBLACK, WHITE} from '../../style/colors';
+import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREEN, BUTTONGREY, CULTURED, DARKBLUEBLACK, TEXTBUTTONGREY, WHITE} from '../../style/colors';
 import CustomTextInput from '../CustomTextInput';
 import LottieView from 'lottie-react-native';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
@@ -14,6 +14,7 @@ import {GET_RACK} from '../../graphql/query/getRack';
 import LoadingAnimation from '../../assets/loading_6.json';
 import {CustomDropdownPicker} from '../CustomDropdownPicker';
 import {GET_COMMONPRODUCTS_ADD} from '../../graphql/query/getCommonProductAdd';
+import {APPSTYLES} from '../../style/appStyle';
 
 const STYLES = StyleSheet.create({
     titles: {
@@ -42,7 +43,7 @@ const STYLES = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around',
         paddingTop: 15,
-        width: '90%',
+        width: '98%',
         paddingHorizontal: 20,
         borderRadius: 10,
         backgroundColor: CULTURED
@@ -54,16 +55,17 @@ const STYLES = StyleSheet.create({
         height: 40,
         alignItems: 'center',
         width: 100,
+        borderWidth: 1,
+        borderColor: BUTTONGREY,
         color: WHITE,
         justifyContent: 'center',
         borderRadius: 5
     },
     buttonAdd: {
         backgroundColor: BUTTONGREEN,
-        borderWidth: 1,
         borderColor: BUTTONGREEN
     },
-    buttonCancel: {
+    crossCancel: {
         position: 'absolute',
         top: 0,
         right: 0,
@@ -71,6 +73,9 @@ const STYLES = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: 40
+    },
+    buttonCancel: {
+        backgroundColor: WHITE
     },
     buttonText: {
         color: ALMOST_WHITE,
@@ -87,7 +92,7 @@ const STYLES = StyleSheet.create({
         paddingVertical: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
         width: '100%'
     },
     inputs: {
@@ -117,7 +122,7 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     const [serial_number, setSerialNumber] = useState<string>('');
     const [price, setPrice] = useState<string>('');
     const [comment, setComment] = useState<string>('');
-    const [common_id, setCommonId] = useState<any>();
+    const [common_id, setCommonId] = useState<number>();
 
     function resetInputs(): void {
         setSerialNumber('');
@@ -161,8 +166,8 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
             commonProductsData.data.commonProducts.forEach((commonProduct: any): void => {
                 let category = '';
                 let model = '';
-                if(commonProduct.category.name !== 'Non défini') category = `${commonProduct.category.name} `;
-                if(commonProduct.model !== 'Non défini') model = commonProduct.model;
+                if(commonProduct.category.name !== undefined) category = `${commonProduct.category.name} `;
+                if(commonProduct.model !== undefined) model = commonProduct.model;
 
                 commonProductsItems.push({
                     label: `${category}${model}`,
@@ -187,35 +192,48 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     function renderButtons(): React.ReactElement {
         if(loading) {
             return (
-                <View style={[STYLES.button, STYLES.buttonAdd]}>
-                    <LottieView
-                        style={STYLES.lottie}
-                        source={LoadingAnimation}
-                        autoPlay
-                        autoSize
-                        loop
-                    />
+                <View style={STYLES.buttonWrapper}>
+                    <View style={[STYLES.button, STYLES.buttonCancel]}>
+                        <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
+                    </View>
+                    <View style={[STYLES.button, STYLES.buttonAdd]}>
+                        <LottieView
+                            style={STYLES.lottie}
+                            source={LoadingAnimation}
+                            autoPlay
+                            autoSize
+                            loop
+                        />
+                    </View>
                 </View>
             );
         }
         return (
-            <Pressable
-                onPress={(): void => {
-                    handleFocus();
-                    addProductMutation({variables: {
-                        common_id,
-                        user_id: 0,
-                        rack_id: props.rackId,
-                        rack_level: props.rackLevel,
-                        serial_number,
-                        price: parseFloat(price),
-                        comment
-                    }});
-                }}
-                style={[STYLES.button, STYLES.buttonAdd]}
-            >
-                <Text style={STYLES.buttonText}>Ajouter</Text>
-            </Pressable>
+            <View style={STYLES.buttonWrapper}>
+                <Pressable
+                    onPress={(): void => { props.onBackdropPress(); }}
+                    style={[STYLES.button, STYLES.buttonCancel]}
+                >
+                    <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
+                </Pressable>
+                <Pressable
+                    onPress={(): void => {
+                        handleFocus();
+                        addProductMutation({variables: {
+                            common_id,
+                            user_id: 0,
+                            rack_id: props.rackId,
+                            rack_level: props.rackLevel,
+                            serial_number,
+                            price: parseFloat(price),
+                            comment
+                        }});
+                    }}
+                    style={[STYLES.button, STYLES.buttonAdd]}
+                >
+                    <Text style={STYLES.buttonText}>Ajouter</Text>
+                </Pressable>
+            </View>
         );
     }
 
@@ -232,10 +250,11 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
         <Pressable onPress={(): void => {handleFocus();}} style={[STYLES.modalWrapper, {marginTop: 70}]}>
             <Pressable
                 onPress={(): void => {props.onBackdropPress(); resetInputs(); }}
-                style={STYLES.buttonCancel}
+                style={STYLES.crossCancel}
             >
                 <FontAwesomeIcon color={AVERAGE_GREY} icon={faXmark} size={20} />
             </Pressable>
+            <Text style={APPSTYLES.title}>Ajouter un produit</Text>
             <View style={STYLES.titles}>
                 <Text style={STYLES.firstTitle}>{props.rackName}</Text>
                 <Text style={STYLES.secondTitle}>Étage {props.rackLevel}</Text>
@@ -243,7 +262,7 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
             <View style={STYLES.inputs}>
                 <View style={STYLES.input}>
                     {/* <CustomTextInput value={common_id} onValueChange={(text): void => {setCommonId(text);}} innerRef={commonIdRef} placeholder='ID Type de produit' required={true} password={false}/> */}
-                    <CustomDropdownPicker onValueChange={(v): void => {setCommonId(v);}} multiple={false} placeholder={'Type de produit'} required={true} zindex={1} item={formatCommonProductData()}/>
+                    <CustomDropdownPicker onValueChange={(v: number): void => {setCommonId(v);}} multiple={false} placeholder={'Type de produit'} required={true} zindex={1} item={formatCommonProductData()}/>
                 </View>
                 <View style={STYLES.input}>
                     <CustomTextInput value={serial_number} onValueChange={(text): void => {setSerialNumber(text);}} innerRef={serialNumberRef} placeholder='N° de série' required={true} password={false}/>
