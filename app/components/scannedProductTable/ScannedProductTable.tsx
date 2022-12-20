@@ -91,8 +91,9 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
                     commentValue={commentValue}
                     setCommentValue={setCommentValue}
                     confirmationModal={confirmationModal}
+                    productId={idProductQuery}
                     setConfirmationModal={setConfirmationModal}
-                    onMovePress={(): void => { moveProductMutation({variables: {id: props.products[indexProductQuery].id, rack_id: 2, rack_level: 2, user_id: 0}}); }}
+                    onMovePress={moveProductMutation}
                     onDeletePress={(): void => { deleteProductMutation({variables: {id: props.products[indexProductQuery].id, comment: commentValue, user_id: 0}}); }}
                     isVisible={isModalVisible}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
