@@ -70,7 +70,7 @@ const STYLES = StyleSheet.create({
     }
 });
 
-const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
+const ScanPage = ({navigation}: any): React.ReactElement => {
     const [isLightOn, setIsLightOn] = React.useState(RNCamera.Constants.FlashMode.off);
     const [lightIcon, setLightIcon] = React.useState(faLightbulbOff);
     const [errorStatus, setErrorStatus] = React.useState(false);
@@ -150,4 +150,4 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
 };
 
 
-export default ScanBeforeRemove;
+export default ScanPage;

@@ -40,6 +40,7 @@ type DetailProductModalProps = {
     setCommentValue(value: string): void;
     confirmationModal: boolean;
     setConfirmationModal(arg0: boolean): void;
+    closeModal(): void;
     remove?: boolean;
 };
 
@@ -295,6 +296,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         <Modal
             isVisible={props.isVisible}
             style={{alignItems: 'center'}}
+            onBackButtonPress={!props.loading ? (): void => {if(isScanner === 'flex') setIsScanner('none'); else props.onBackdropPress();} : (): void => {null;}}
             animationIn="fadeIn"
             animationInTiming={10}
             animationOutTiming={10}

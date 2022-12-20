@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     ScrollView,
     View
@@ -28,7 +29,6 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
     const [idProductQuery, setIdProductQuery] = useState<number>(-1);
     const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
     const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false);
-
 
         const [deleteProductMutation, {loading}] = useMutation(DELETE_PRODUCT, {
             awaitRefetchQueries: true,

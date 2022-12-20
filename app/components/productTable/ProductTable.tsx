@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     ScrollView,
     View
@@ -99,6 +100,7 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
                     productId={props.commonProduct.products[indexProductQuery].id}
                     onDeletePress={(): void => {deleteProductMutation({variables: {id: props.commonProduct.products[indexProductQuery].id, user_id: 0}}); }}
                     isVisible={isModalVisible}
+                    closeModal={(): void => {setIsModalVisible(false);}}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
                     remove
                 />
