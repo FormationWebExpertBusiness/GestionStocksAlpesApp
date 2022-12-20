@@ -2,7 +2,8 @@ import {
     AVERAGE_GREY,
     BLACK,
     WHITE,
-    VERY_LIGHT_GREY
+    VERY_LIGHT_GREY,
+    RED
 } from '../style/colors';
 
 import React, {
@@ -10,6 +11,10 @@ import React, {
     useState
 } from 'react';
 
+import type {
+    StyleProp,
+    ViewStyle
+} from 'react-native';
 import {
     StyleSheet,
     Text
@@ -32,6 +37,7 @@ DropDownPicker.setLanguage('FR');
 const STYLES = StyleSheet.create({
     active: {
         backgroundColor: WHITE,
+        borderColor: WHITE,
         elevation: 5,
         shadowColor: BLACK,
         shadowOffset: {
@@ -66,6 +72,7 @@ const STYLES = StyleSheet.create({
     },
     notActive: {
         backgroundColor: VERY_LIGHT_GREY,
+        borderColor: VERY_LIGHT_GREY,
         elevation: 0,
         shadowColor: BLACK,
         shadowOffset: {
@@ -81,10 +88,27 @@ const STYLES = StyleSheet.create({
         fontSize: 18
     },
     wrapper: {
-        borderWidth: 0,
+        borderWidth: 2,
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         whiteSpace: 'nowrap'
+    },
+    error: {
+        backgroundColor: WHITE,
+        borderColor: RED
+    },
+    dropDownWrapperError: {
+        borderWidth: 2,
+        borderColor: RED,
+        elevation: 5,
+        overflow: 'visible',
+        shadowColor: BLACK,
+        shadowOffset: {
+            height: 2,
+            width: 0
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84
     }
 });
 
@@ -94,6 +118,7 @@ type ItemType = {
 };
 
 type DropdownProps = {
+    error?: number;
     initialValue?: number[] | number | string | null;
     item: ItemType[];
     multiple: boolean;
@@ -109,10 +134,24 @@ export const CustomDropdownPicker = (props: DropdownProps): React.ReactElement =
     const [OBJECT, setObject] = useState<number | string | null>(null);
     const [VALUEMULTIPLE, setValueMultiple] = useState<number[]>([]);
     const [DISPLAYSTATE, setDisplayState] = React.useState<'flex' | 'none' | undefined>(props.initialValue ? 'flex' : 'none');
-    const [STYLEINPUT, setStyleInput] = React.useState(STYLES.notActive);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [STYLEINPUT, setStyleInput] = React.useState<any>(STYLES.notActive);
     const [ITEMS, setItems] = useState<ItemType[]>(props.item);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [ERROR, setError] = React.useState(0);
 
     useEffect((): void => {
+        if(props.error === undefined) {
+            setError(0);
+        } else if(props.error === 0) {
+            setStyleInput(STYLES.notActive);
+            setError(0);
+        } else if(props.error === 1) {
+            setStyleInput(STYLES.error);
+            setError(1);
+        } else {
+            setError(2);
+        }
         if(props.initialValue && props.multiple && Array.isArray(props.initialValue)) {
             setValueMultiple(props.initialValue);
             setDisplayState('flex');
@@ -122,7 +161,12 @@ export const CustomDropdownPicker = (props: DropdownProps): React.ReactElement =
             setObject(props.initialValue);
             setDisplayState('flex');
         }
-    }, []);
+    }, [props.error, props.initialValue, props.multiple]);
+
+    function getDropdownWrapperStyle(): StyleProp<ViewStyle> {
+        if(props.error) return STYLES.dropDownWrapperError;
+        return STYLES.dropdownWrapper;
+    }
 
     function simpleOrMultipleRenderer(): React.ReactElement {
         if(props.multiple) {
@@ -134,8 +178,8 @@ export const CustomDropdownPicker = (props: DropdownProps): React.ReactElement =
                             }
                         }}
                         closeOnBackPressed={true}
-                        onOpen={(): void => {setStyleInput(STYLES.active);}}
-                        onClose={(): void => {setStyleInput(STYLES.notActive);}}
+                        onOpen={(): void => {if(props.error) setStyleInput(STYLES.error); else setStyleInput(STYLES.active);}}
+                        onClose={(): void => {if(props.error) setStyleInput(STYLES.error); else setStyleInput(STYLES.notActive);}}
                         placeholder={PLACEHOLDERVALUE}
                         placeholderStyle={{color: AVERAGE_GREY}}
                         open={isOpen}
@@ -167,8 +211,8 @@ export const CustomDropdownPicker = (props: DropdownProps): React.ReactElement =
                                 props.onValueChange(value);
                             }
                         }}
-                        onOpen={(): void => {setStyleInput(STYLES.active);}}
-                        onClose={(): void => {setStyleInput(STYLES.notActive);}}
+                        onOpen={(): void => {if(props.error) setStyleInput(STYLES.error); else setStyleInput(STYLES.active);}}
+                        onClose={(): void => {if(props.error) setStyleInput(STYLES.error); else setStyleInput(STYLES.notActive);}}
                         placeholder={PLACEHOLDERVALUE}
                         placeholderStyle={{color: AVERAGE_GREY}}
                         open={isOpen}
@@ -183,7 +227,7 @@ export const CustomDropdownPicker = (props: DropdownProps): React.ReactElement =
                         zIndex={5000 + props.zindex}
                         showTickIcon={props.multiple}
                         style={[STYLEINPUT, STYLES.wrapper]}
-                        dropDownContainerStyle={STYLES.dropdownWrapper}
+                        dropDownContainerStyle={getDropdownWrapperStyle()}
                         items={ITEMS}
                         textStyle={STYLES.texts}
                         setOpen={setIsOpen}

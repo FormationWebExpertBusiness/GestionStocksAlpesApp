@@ -129,6 +129,7 @@ const ScanPage = ({navigation}: any): React.ReactElement => {
                             visible={errorStatus}
                             backgroundColor={RED}
                             position={50}
+                            duration={Toast.durations.LONG}
                             shadow={false}
                             animation={false}
                         >

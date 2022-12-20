@@ -34,7 +34,7 @@ type DetailProductModalProps = {
     onMovePress?(data: dataMoveMutation): void;
     moveLoading?: boolean;
     loading?: boolean;
-    productId: number;
+    productId: number | null;
     onBackdropPress(): void;
     commentValue: string;
     setCommentValue(value: string): void;
@@ -129,7 +129,8 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         try {
             resData = JSON.parse(data);
             setIsScanner('none');
-            props.onMovePress?.({variables: {id: props.productId, rack_id: resData.rack_id, rack_level: resData.rack_level, user_id: 0}});
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            props.onMovePress?.({variables: {id: props.productId!, rack_id: resData.rack_id, rack_level: resData.rack_level, user_id: 0}});
             setErrorStatus(false);
         } catch (error) {
             setErrorStatus(true);

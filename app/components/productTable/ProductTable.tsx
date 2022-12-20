@@ -23,10 +23,10 @@ type commonProductTable = {
 const ProductTable = (props: commonProductTable): React.ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-    const [idProductQuery, setIdProductQuery] = useState<number>(0);
+    const [idProductQuery, setIdProductQuery] = useState<number>(1);
     const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false);
     const [commentValue, setCommentValue] = useState<string>('');
-    const [indexProductQuery, setIndexProductQuery] = useState<number>(1);
+    const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
 
     const [deleteProductMutation, {loading}] = useMutation(DELETE_PRODUCT, {
         awaitRefetchQueries: true,
@@ -86,6 +86,16 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
         }
     });
 
+    function getIndexProductQuery(): number {
+        if(indexProductQuery !== -1) return indexProductQuery;
+        return 0;
+    }
+
+    function getProductId(): number | null {
+        if(props.commonProduct.products.length > 0) return getIndexProductQuery();
+        return null;
+    }
+
     function renderModal(): React.ReactElement {
             return (
                 <DetailProductModal
@@ -97,8 +107,8 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
                     setConfirmationModal={setConfirmationModal}
                     moveLoading={moveProductStatus.loading}
                     onMovePress={moveProductMutation}
-                    productId={props.commonProduct.products[indexProductQuery].id}
-                    onDeletePress={(): void => {deleteProductMutation({variables: {id: props.commonProduct.products[indexProductQuery].id, comment: commentValue, user_id: 0}}); }}
+                    productId={getProductId()}
+                    onDeletePress={(): void => {deleteProductMutation({variables: {id: props.commonProduct.products[getIndexProductQuery()].id, comment: commentValue, user_id: 0}}); }}
                     isVisible={isModalVisible}
                     closeModal={(): void => {setIsModalVisible(false);}}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
