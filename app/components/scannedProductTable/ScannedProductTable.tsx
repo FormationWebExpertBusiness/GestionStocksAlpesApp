@@ -11,6 +11,7 @@ import {GET_PRODUCTS} from '../../graphql/query/getProducts';
 import {GET_RACK} from '../../graphql/query/getRack';
 import {useMutation} from '@apollo/client';
 import {DELETE_PRODUCT} from '../../graphql/mutation/deleteProduct';
+import {MOVE_PRODUCT} from '../../graphql/mutation/moveProduct';
 
 type ScannedProductTableProps = {
     loading: boolean;
@@ -55,15 +56,43 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
             }
         });
 
+    const [moveProductMutation, moveProductStatus] = useMutation(MOVE_PRODUCT, {
+        awaitRefetchQueries: true,
+        refetchQueries: [
+            {
+                query: GET_PRODUCTS,
+                fetchPolicy: 'network-only',
+                variables: {
+                    rack_id: props.rack_id,
+                    rack_level: props.rack_level
+                }
+            },
+            {
+                query: GET_RACK,
+                fetchPolicy: 'network-only',
+                variables: {
+                    id: props.rack_id,
+                    level: props.rack_level
+                }
+            }
+        ],
+        onCompleted: (): void => {
+            setConfirmationModal(false);
+            setIsModalVisible(false);
+        }
+    });
+
     function renderModal(): React.ReactElement {
             return (
                 <DetailProductModal
                     id={idProductQuery}
                     loading={loading}
+                    moveLoading={moveProductStatus.loading}
                     commentValue={commentValue}
                     setCommentValue={setCommentValue}
                     confirmationModal={confirmationModal}
                     setConfirmationModal={setConfirmationModal}
+                    onMovePress={(): void => { moveProductMutation({variables: {id: props.products[indexProductQuery].id, rack_id: 2, rack_level: 2, user_id: 0}}); }}
                     onDeletePress={(): void => { deleteProductMutation({variables: {id: props.products[indexProductQuery].id, comment: commentValue, user_id: 0}}); }}
                     isVisible={isModalVisible}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
