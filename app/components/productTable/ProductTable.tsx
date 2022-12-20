@@ -98,7 +98,7 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
                     moveLoading={moveProductStatus.loading}
                     onMovePress={moveProductMutation}
                     productId={props.commonProduct.products[indexProductQuery].id}
-                    onDeletePress={(): void => {deleteProductMutation({variables: {id: props.commonProduct.products[indexProductQuery].id, user_id: 0}}); }}
+                    onDeletePress={(): void => {deleteProductMutation({variables: {id: props.commonProduct.products[indexProductQuery].id, comment: commentValue, user_id: 0}}); }}
                     isVisible={isModalVisible}
                     closeModal={(): void => {setIsModalVisible(false);}}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
