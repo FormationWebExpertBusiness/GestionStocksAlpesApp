@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     View,
     StyleSheet,
@@ -67,10 +68,8 @@ const STYLES = StyleSheet.create({
         height: 250,
         width: 250
     }
-
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
     const [isLightOn, setIsLightOn] = React.useState(RNCamera.Constants.FlashMode.off);
     const [lightIcon, setLightIcon] = React.useState(faLightbulbOff);
@@ -89,7 +88,6 @@ const ScanBeforeRemove = ({navigation}: any): React.ReactElement => {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSuccess = (e: any): void => {
         checkQrCodeData(e.data);
     };

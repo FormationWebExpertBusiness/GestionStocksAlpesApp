@@ -1,11 +1,6 @@
-import {
-    View,
-    StyleSheet,
-    Text,
-    Pressable
-} from 'react-native';
+import {View, Text, Pressable, Image} from 'react-native';
 import React from 'react';
-import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONPURPLE, BUTTONRED, CULTURED, DARKBLUEBLACK, WHITE} from '../../style/colors';
+import {AVERAGE_GREY, CULTURED, RED, WHITE} from '../../style/colors';
 import Modal from 'react-native-modal/dist/modal';
 import CardModal from './cardModal';
 import LottieView from 'lottie-react-native';
@@ -15,109 +10,31 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import LoadingAnimation from '../../assets/loading_6.json';
 import ConfirmationModal from './confirmationModal';
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import qrCodeScannerImg from '../../assets/qrCodeScannerImg.png';
+import {faLightbulb as faLightbulbOn} from '@fortawesome/free-solid-svg-icons/faLightbulb';
+import {faLightbulb as faLightbulbOff} from '@fortawesome/free-regular-svg-icons/faLightbulb';
+import {RNCamera} from 'react-native-camera';
+import Toast from 'react-native-root-toast';
+import {DETAIL_MODAL_STYLES, QRCODE_STYLES} from '../../style/detailProductModalStyle';
 
-const STYLES = StyleSheet.create({
-    modalWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        height: '70%',
-        width: '90%',
-        paddingTop: 0,
-        paddingBottom: 10,
-        paddingHorizontal: 20,
-        borderRadius: 5,
-        backgroundColor: CULTURED
-    },
-    textStyle: {
-        width: '50%',
-        color: ALMOST_BLACK,
-        textAlign: 'center'
-    },
-    componentWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        padding: 10,
-        borderRadius: 5,
-        backgroundColor: CULTURED,
-        shadowColor: DARKBLUEBLACK,
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowOpacity: 0.16,
-        shadowRadius: 1.51,
-        elevation: 2
-    },
-    textContent: {
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-between'
-    },
-    headerWrapper: {
-        flexDirection: 'row',
-        opacity: 0.4,
-        width: '100%',
-        justifyContent: 'space-between'
-    },
-    contentWrapper: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    buttonWrapper: {
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between'
-    },
-    button: {
-        height: 40,
-        marginTop: 20,
-        alignItems: 'center',
-        width: 100,
-        color: WHITE,
-        justifyContent: 'center',
-        borderRadius: 5
-    },
-    buttonDelete: {
-        backgroundColor: BUTTONRED,
-        borderWidth: 1,
-        borderColor: BUTTONRED
-    },
-    buttonDeplace: {
-        backgroundColor: BUTTONPURPLE,
-        borderWidth: 1,
-        borderColor: BUTTONPURPLE
-    },
-    buttonCancel: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        height: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 40
-    },
-    buttonText: {
-        color: ALMOST_WHITE,
-        fontWeight: 'bold',
-        textAlign: 'center'
-    },
-    lottie: {
-        height: 70,
-        width: 70,
-        fontSize: 40
-    }
-});
+type dataMoveMutation = {
+    variables: {
+        id: number;
+        rack_id: number;
+        rack_level: number;
+        user_id: number;
+    };
+};
 
 type DetailProductModalProps = {
     id: number;
     isVisible: boolean;
     onDeletePress?(): void;
+    onMovePress?(data: dataMoveMutation): void;
+    moveLoading?: boolean;
     loading?: boolean;
+    productId: number;
     onBackdropPress(): void;
     commentValue: string;
     setCommentValue(value: string): void;
@@ -127,6 +44,12 @@ type DetailProductModalProps = {
 };
 
 const DetailProductModal = (props: DetailProductModalProps): React.ReactElement => {
+
+    const [isLightOn, setIsLightOn] = React.useState(RNCamera.Constants.FlashMode.off);
+    const [lightIcon, setLightIcon] = React.useState(faLightbulbOff);
+    const [errorStatus, setErrorStatus] = React.useState(false);
+    const [lightFeedback, setLightFeedback] = React.useState('#00000000');
+    const [isScanner, setIsScanner] = React.useState<'flex' | 'none'>('none');
 
     const productModalData = useQuery(GET_PRODUCT_MODAL_DATA, {
         fetchPolicy: 'network-only',
@@ -139,17 +62,17 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         if(props.remove) {
             if(props.loading) {
                 return (
-                    <View style={STYLES.buttonWrapper}>
-                    <Pressable
-                        style={[STYLES.button, STYLES.buttonDeplace]}
-                    >
-                        <Text style={STYLES.buttonText}>Déplacer</Text>
-                    </Pressable>
+                    <View style={DETAIL_MODAL_STYLES.buttonWrapper}>
                         <View
-                            style={[STYLES.button, STYLES.buttonDelete]}
+                            style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDeplace]}
+                        >
+                            <Text style={DETAIL_MODAL_STYLES.buttonText}>Déplacer</Text>
+                        </View>
+                        <View
+                            style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDelete]}
                         >
                             <LottieView
-                                style={STYLES.lottie}
+                                style={DETAIL_MODAL_STYLES.lottie}
                                 source={LoadingAnimation}
                                 autoPlay
                                 autoSize
@@ -158,25 +81,124 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
                         </View>
                     </View>
                 );
+            } else if(props.moveLoading) {
+                return (
+                    <View style={DETAIL_MODAL_STYLES.buttonWrapper}>
+                        <View
+                            style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDeplace]}
+                        >
+                            <LottieView
+                                style={DETAIL_MODAL_STYLES.lottie}
+                                source={LoadingAnimation}
+                                autoPlay
+                                autoSize
+                                loop
+                            />
+                        </View>
+                        <View
+                            style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDelete]}
+                        >
+                            <Text style={DETAIL_MODAL_STYLES.buttonText}>Supprimer</Text>
+                        </View>
+                    </View>
+                );
             }
             return (
-                <View style={STYLES.buttonWrapper}>
+                <View style={DETAIL_MODAL_STYLES.buttonWrapper}>
                     <Pressable
-                        onPress={(): void => { props.onBackdropPress(); }}
-                        style={[STYLES.button, STYLES.buttonDeplace]}
+                        onPress={(): void => { setIsScanner('flex'); }}
+                        style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDeplace]}
                     >
-                        <Text style={STYLES.buttonText}>Déplacer</Text>
+                        <Text style={DETAIL_MODAL_STYLES.buttonText}>Déplacer</Text>
                     </Pressable>
                     <Pressable
                         onPress={(): void => { props.setConfirmationModal(true); }}
-                        style={[STYLES.button, STYLES.buttonDelete]}
+                        style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDelete]}
                     >
-                        <Text style={STYLES.buttonText}>Supprimer</Text>
+                        <Text style={DETAIL_MODAL_STYLES.buttonText}>Supprimer</Text>
                     </Pressable>
                 </View>
             );
         }
         return <View />;
+    }
+
+    function checkQrCodeData(data: string): void {
+        let resData: {rack_id: number; rack_level: number;};
+        try {
+            resData = JSON.parse(data);
+            setIsScanner('none');
+            props.onMovePress?.({variables: {id: props.productId, rack_id: resData.rack_id, rack_level: resData.rack_level, user_id: 0}});
+            setErrorStatus(false);
+        } catch (error) {
+            setErrorStatus(true);
+            console.error(error);
+        }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const onSuccess = (e: any): void => {
+        checkQrCodeData(e.data);
+    };
+
+    function switchLightMode(): void {
+        setIsLightOn(isLightOn === RNCamera.Constants.FlashMode.off ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off);
+    }
+
+
+
+    function switchLightIcon(): void {
+        if(isLightOn === RNCamera.Constants.FlashMode.off) {
+            setLightIcon(faLightbulbOn);
+        } else {
+            setLightIcon(faLightbulbOff);
+        }
+    }
+
+    function switchLight(): void {
+        switchLightIcon();
+        switchLightMode();
+    }
+
+    function renderQrCodeScanner(): React.ReactElement {
+        return (
+            <View style={{display: isScanner}}>
+                <QRCodeScanner
+                    showMarker={false}
+                    reactivate={true}
+                    vibrate={true}
+                    reactivateTimeout={3000}
+                    onRead={onSuccess}
+                    flashMode={isLightOn}
+                    markerStyle={{borderColor: CULTURED, borderRadius: 15, borderWidth: 10, height: 200, width: 200}}
+                    containerStyle={QRCODE_STYLES.pageWrapper}
+                    cameraStyle={{height: '100%'}}
+                    bottomContent={
+                        <View style={QRCODE_STYLES.bottomWrapper}>
+                            <Toast
+                                    hideOnPress={false}
+                                    visible={errorStatus}
+                                    backgroundColor={RED}
+                                    position={50}
+                                    shadow={false}
+                                    animation={false}
+                                >
+                                    <Text>Le QR code n'est pas valide</Text>
+                                </Toast>
+                                <View style={QRCODE_STYLES.imgWrapper}>
+                                    <Image
+                                        style={{height: 250, width: 250}}
+                                        source={qrCodeScannerImg}
+                                    />
+                                </View>
+                            <Pressable onPressOut={(): void => {setLightFeedback('#00000000');}} onPressIn={(): void => {setLightFeedback('#000000');}} onPress={(): void => {switchLight();}} style={[QRCODE_STYLES.iconWrapper, {backgroundColor: lightFeedback}]}>
+                                <FontAwesomeIcon icon={lightIcon} size={30} color={WHITE} />
+                            </Pressable>
+                        </View>
+                    }
+                />
+            </View>
+        );
     }
 
     function renderContent(type: 'data' | 'skeleton'): React.ReactElement {
@@ -203,8 +225,8 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
                     <CardModal
                         title1={'Étagère'}
                         title2={'Étage'}
-                        content1={rack.name}
-                        content2={rack_level.toString()}
+                        content2={rack.name}
+                        content1={rack_level.toString()}
                         label={'Position'}
                     />
                     <CardModal
@@ -258,7 +280,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
             );
         } else if(productModalData.error) {
             return <View>
-                <Text style={STYLES.textStyle}>{productModalData.error.message}</Text>
+                <Text style={DETAIL_MODAL_STYLES.textStyle}>{productModalData.error.message}</Text>
                 </View>;
         }
 
@@ -279,10 +301,10 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
             animationOut="fadeOut"
             onBackdropPress={!props.loading ? props.onBackdropPress : (): void => {null;}}
         >
-            <View style={STYLES.modalWrapper}>
+            <View style={DETAIL_MODAL_STYLES.modalWrapper}>
                 <Pressable
                     onPress={props.onBackdropPress}
-                    style={STYLES.buttonCancel}
+                    style={DETAIL_MODAL_STYLES.buttonCancel}
                 >
                     <FontAwesomeIcon color={AVERAGE_GREY} icon={faXmark} size={20} />
                 </Pressable>
@@ -301,6 +323,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
                 model={productModalData.data?.product.model}
                 serial_number={productModalData.data?.product.serial_number}
             />
+            {renderQrCodeScanner()}
         </Modal>
     );
 };

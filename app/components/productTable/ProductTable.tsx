@@ -11,6 +11,8 @@ import {useMutation} from '@apollo/client';
 import {DELETE_PRODUCT} from '../../graphql/mutation/deleteProduct';
 import {GET_COMMONPRODUCT_QUANTITY} from '../../graphql/query/getCommonProductQuantity';
 import {GET_COMMONPRODUCT_PRODUCTS} from '../../graphql/query/getCommonProductProducts';
+import {MOVE_PRODUCT} from '../../graphql/mutation/moveProduct';
+import {GET_PRODUCT_MODAL_DATA} from '../../graphql/query/getProductModalData';
 
 type commonProductTable = {
     commonProduct: CommonProduct;
@@ -23,7 +25,7 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
     const [idProductQuery, setIdProductQuery] = useState<number>(0);
     const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false);
     const [commentValue, setCommentValue] = useState<string>('');
-    const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
+    const [indexProductQuery, setIndexProductQuery] = useState<number>(1);
 
     const [deleteProductMutation, {loading}] = useMutation(DELETE_PRODUCT, {
         awaitRefetchQueries: true,
@@ -50,6 +52,39 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
         }
     });
 
+
+    const [moveProductMutation, moveProductStatus] = useMutation(MOVE_PRODUCT, {
+        awaitRefetchQueries: true,
+        refetchQueries: [
+            {
+                query: GET_COMMONPRODUCT_QUANTITY,
+                fetchPolicy: 'network-only',
+                variables: {
+                    commonProduct_id: props.commonProductId
+                }
+            },
+            {
+                query: GET_COMMONPRODUCT_PRODUCTS,
+                fetchPolicy: 'network-only',
+                variables: {
+                    commonProduct_id: props.commonProductId
+                }
+            },
+            {
+                query: GET_PRODUCT_MODAL_DATA,
+                fetchPolicy: 'network-only',
+                variables: {
+                    product_id: idProductQuery
+                }
+            }
+        ],
+        onCompleted: (): void => {
+            setIsModalVisible(false);
+            setConfirmationModal(false);
+            setCommentValue('');
+        }
+    });
+
     function renderModal(): React.ReactElement {
             return (
                 <DetailProductModal
@@ -59,7 +94,10 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
                     confirmationModal={confirmationModal}
                     setCommentValue={setCommentValue}
                     setConfirmationModal={setConfirmationModal}
-                    onDeletePress={(): void => { deleteProductMutation({variables: {id: props.commonProduct.products[indexProductQuery].id, user_id: 0}}); }}
+                    moveLoading={moveProductStatus.loading}
+                    onMovePress={moveProductMutation}
+                    productId={props.commonProduct.products[indexProductQuery].id}
+                    onDeletePress={(): void => {deleteProductMutation({variables: {id: props.commonProduct.products[indexProductQuery].id, user_id: 0}}); }}
                     isVisible={isModalVisible}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
                     remove
@@ -97,8 +135,8 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
             <ProductLine
                     head={true}
                     title1={'N° série'}
-                    title2={'Étage'}
-                    title3={'Étagère'}
+                    title2={'Étagère'}
+                    title3={'Étage'}
             />
             <ScrollView>
                 {renderProducts()}
