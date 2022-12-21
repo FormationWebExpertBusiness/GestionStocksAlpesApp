@@ -159,8 +159,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         try {
             resData = JSON.parse(data);
             setIsScanner('none');
-            console.log(resData);
-            console.log(props.productId);
+
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             props.onMovePress?.({variables: {id: props.productId!, rack_id: resData.rack_id, rack_level: resData.rack_level, user_id: 0}});
             setErrorStatus(false);
