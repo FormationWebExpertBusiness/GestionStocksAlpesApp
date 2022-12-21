@@ -3,8 +3,8 @@ import {
     StyleSheet,
     Text
 } from 'react-native';
-import React from 'react';
-import {BLACK, CULTURED} from '../../style/colors';
+import React, {useState} from 'react';
+import {BLACK, CULTURED, ERROR, WHITE} from '../../style/colors';
 import ProductTable from '../productTable/ProductTable';
 import DetailPageHeader from './detailPageHeader';
 import CustomTopTabNavigator from '../CustomTopTabNavigator';
@@ -13,6 +13,7 @@ import {GET_COMMONPRODUCT_PRODUCTS} from '../../graphql/query/getCommonProductPr
 import type {CommonProduct} from '../../types/commonProductType';
 import {GET_COMMONPRODUCT_QUANTITY} from '../../graphql/query/getCommonProductQuantity';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
+import Toast from 'react-native-root-toast';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -45,10 +46,22 @@ const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement =
 
     const {commonProductId} = route.params;
 
+    const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
+    const [isToastText, setIsToastText] = useState<string>('');
+    const [isToastColor, setToastColor] = useState<string>('');
+
     const commonProductQuantityData = useQuery(GET_COMMONPRODUCT_QUANTITY, {
         fetchPolicy: 'network-only',
         variables: {
             commonProduct_id: commonProductId
+        },
+        onError: (): void => {
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Une erreur est survenue');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
         }
     });
 
@@ -56,8 +69,35 @@ const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement =
         fetchPolicy: 'network-only',
         variables: {
             commonProduct_id: commonProductId
+        },
+        onError: (): void => {
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Une erreur est survenue');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
         }
     });
+
+    function renderToast(): React.ReactElement {
+        return (
+            <Toast
+                visible={isToastVisible}
+                hideOnPress={true}
+                opacity={1}
+                containerStyle={{borderRadius: 5}}
+                backgroundColor={isToastColor}
+                position={40}
+                duration={200}
+                shadow={false}
+            >
+                <Text style={{color: WHITE, fontWeight: 'bold'}}>
+                    {isToastText}
+                </Text>
+            </Toast>
+        );
+    }
 
     function renderHeader(): React.ReactElement {
         if(commonProductQuantityData.loading) {
@@ -111,6 +151,7 @@ const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement =
                         {renderProductTable()}
                     </View>
                 </View>
+                {renderToast()}
         </>
     );
 };

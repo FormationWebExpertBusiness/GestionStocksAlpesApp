@@ -26,16 +26,17 @@ const STYLES = StyleSheet.create({
         color: BLACK,
         fontFamily: 'Barlow-Regular',
         fontSize: 18,
+        borderWidth: 2,
         padding: 15,
         width: '100%'
     },
     error: {
         backgroundColor: WHITE,
-        borderColor: RED,
-        borderWidth: 2
+        borderColor: RED
     },
     notActive: {
-        backgroundColor: VERY_LIGHT_GREY
+        backgroundColor: VERY_LIGHT_GREY,
+        borderColor: VERY_LIGHT_GREY
     },
     wrapper: {
     }
@@ -61,6 +62,10 @@ const CustomTextInput = (props: TextInputProps): React.ReactElement => {
 
     useEffect((): void => {
         if(props.error === undefined) {
+            setError(0);
+        } else if(props.error === 0) {
+            setStyleInput(STYLES.notActive);
+            setLittlePlaceholercolor(AVERAGE_GREY);
             setError(0);
         } else if(props.error === 1) {
             setStyleInput(STYLES.error);

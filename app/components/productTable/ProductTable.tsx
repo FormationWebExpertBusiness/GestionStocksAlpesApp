@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     ScrollView,
+    Text,
     View
 } from 'react-native';
 import React, {useState} from 'react';
@@ -13,6 +15,8 @@ import {GET_COMMONPRODUCT_QUANTITY} from '../../graphql/query/getCommonProductQu
 import {GET_COMMONPRODUCT_PRODUCTS} from '../../graphql/query/getCommonProductProducts';
 import {MOVE_PRODUCT} from '../../graphql/mutation/moveProduct';
 import {GET_PRODUCT_MODAL_DATA} from '../../graphql/query/getProductModalData';
+import Toast from 'react-native-root-toast';
+import {ERROR, SUCCESS, WHITE} from '../../style/colors';
 
 type commonProductTable = {
     commonProduct: CommonProduct;
@@ -22,10 +26,13 @@ type commonProductTable = {
 const ProductTable = (props: commonProductTable): React.ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-    const [idProductQuery, setIdProductQuery] = useState<number>(0);
+    const [idProductQuery, setIdProductQuery] = useState<number>(1);
     const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false);
     const [commentValue, setCommentValue] = useState<string>('');
-    const [indexProductQuery, setIndexProductQuery] = useState<number>(1);
+    const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
+    const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
+    const [isToastText, setIsToastText] = useState<string>('');
+    const [isToastColor, setToastColor] = useState<string>('');
 
     const [deleteProductMutation, {loading}] = useMutation(DELETE_PRODUCT, {
         awaitRefetchQueries: true,
@@ -49,6 +56,23 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
             setIsModalVisible(false);
             setConfirmationModal(false);
             setCommentValue('');
+            setIsToastVisible(true);
+            setToastColor(SUCCESS);
+            setIsToastText('Produit supprimé');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
+        },
+        onError: (): void => {
+            setIsModalVisible(false);
+            setConfirmationModal(false);
+            setCommentValue('');
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Error lors de la suppression du produit');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
         }
     });
 
@@ -82,8 +106,49 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
             setIsModalVisible(false);
             setConfirmationModal(false);
             setCommentValue('');
+            setIsToastVisible(true);
+            setToastColor(SUCCESS);
+            setIsToastText('Produit déplacé');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
+        },
+        onError: (): void => {
+            setIsModalVisible(false);
+            setConfirmationModal(false);
+            setCommentValue('');
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Error lors du déplacement du produit');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
         }
     });
+
+    function renderToast(): React.ReactElement {
+        return (
+            <Toast
+                visible={isToastVisible}
+                hideOnPress={true}
+                opacity={1}
+                containerStyle={{borderRadius: 5}}
+                backgroundColor={isToastColor}
+                position={40}
+                duration={200}
+                shadow={false}
+            >
+                <Text style={{color: WHITE, fontWeight: 'bold'}}>
+                    {isToastText}
+                </Text>
+            </Toast>
+        );
+    }
+
+    function getIndexProductQuery(): number {
+        if(indexProductQuery !== -1) return indexProductQuery;
+        return 0;
+    }
 
     function renderModal(): React.ReactElement {
             return (
@@ -96,9 +161,10 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
                     setConfirmationModal={setConfirmationModal}
                     moveLoading={moveProductStatus.loading}
                     onMovePress={moveProductMutation}
-                    productId={props.commonProduct.products[indexProductQuery].id}
-                    onDeletePress={(): void => {deleteProductMutation({variables: {id: props.commonProduct.products[indexProductQuery].id, user_id: 0}}); }}
+                    productId={idProductQuery}
+                    onDeletePress={(): void => {deleteProductMutation({variables: {id: props.commonProduct.products[getIndexProductQuery()].id, comment: commentValue, user_id: 0}}); }}
                     isVisible={isModalVisible}
+                    closeModal={(): void => {setIsModalVisible(false);}}
                     onBackdropPress={(): void => {setIsModalVisible(false);}}
                     remove
                 />
@@ -142,6 +208,7 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
                 {renderProducts()}
             </ScrollView>
             {renderModal()}
+            {renderToast()}
         </View>
     );
 };

@@ -1,6 +1,6 @@
 import {View, Text, Pressable, Image} from 'react-native';
-import React from 'react';
-import {AVERAGE_GREY, CULTURED, RED, WHITE} from '../../style/colors';
+import React, {useState} from 'react';
+import {AVERAGE_GREY, CULTURED, ERROR, RED, WHITE} from '../../style/colors';
 import Modal from 'react-native-modal/dist/modal';
 import CardModal from './cardModal';
 import LottieView from 'lottie-react-native';
@@ -34,27 +34,39 @@ type DetailProductModalProps = {
     onMovePress?(data: dataMoveMutation): void;
     moveLoading?: boolean;
     loading?: boolean;
-    productId: number;
+    productId: number | null;
     onBackdropPress(): void;
     commentValue: string;
     setCommentValue(value: string): void;
     confirmationModal: boolean;
     setConfirmationModal(arg0: boolean): void;
+    closeModal(): void;
     remove?: boolean;
 };
 
 const DetailProductModal = (props: DetailProductModalProps): React.ReactElement => {
 
-    const [isLightOn, setIsLightOn] = React.useState(RNCamera.Constants.FlashMode.off);
-    const [lightIcon, setLightIcon] = React.useState(faLightbulbOff);
-    const [errorStatus, setErrorStatus] = React.useState(false);
-    const [lightFeedback, setLightFeedback] = React.useState('#00000000');
-    const [isScanner, setIsScanner] = React.useState<'flex' | 'none'>('none');
+    const [isLightOn, setIsLightOn] = useState(RNCamera.Constants.FlashMode.off);
+    const [lightIcon, setLightIcon] = useState(faLightbulbOff);
+    const [errorStatus, setErrorStatus] = useState(false);
+    const [lightFeedback, setLightFeedback] = useState('#00000000');
+    const [isScanner, setIsScanner] = useState<'flex' | 'none'>('none');
+    const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
+    const [isToastText, setIsToastText] = useState<string>('');
+    const [isToastColor, setToastColor] = useState<string>('');
 
     const productModalData = useQuery(GET_PRODUCT_MODAL_DATA, {
         fetchPolicy: 'network-only',
         variables: {
             product_id: props.id
+        },
+        onError: (): void => {
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Une erreur est survenue');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
         }
     });
 
@@ -123,16 +135,36 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         return <View />;
     }
 
+    function renderToast(): React.ReactElement {
+        return (
+            <Toast
+                visible={isToastVisible}
+                hideOnPress={true}
+                opacity={1}
+                containerStyle={{borderRadius: 5}}
+                backgroundColor={isToastColor}
+                position={40}
+                duration={200}
+                shadow={false}
+            >
+                <Text style={{color: WHITE, fontWeight: 'bold'}}>
+                    {isToastText}
+                </Text>
+            </Toast>
+        );
+    }
+
     function checkQrCodeData(data: string): void {
         let resData: {rack_id: number; rack_level: number;};
         try {
             resData = JSON.parse(data);
             setIsScanner('none');
-            props.onMovePress?.({variables: {id: props.productId, rack_id: resData.rack_id, rack_level: resData.rack_level, user_id: 0}});
+
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            props.onMovePress?.({variables: {id: props.productId!, rack_id: resData.rack_id, rack_level: resData.rack_level, user_id: 0}});
             setErrorStatus(false);
         } catch (error) {
             setErrorStatus(true);
-            console.error(error);
         }
     }
 
@@ -295,6 +327,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         <Modal
             isVisible={props.isVisible}
             style={{alignItems: 'center'}}
+            onBackButtonPress={!props.loading ? (): void => {if(isScanner === 'flex') setIsScanner('none'); else props.onBackdropPress();} : (): void => {null;}}
             animationIn="fadeIn"
             animationInTiming={10}
             animationOutTiming={10}
@@ -324,6 +357,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
                 serial_number={productModalData.data?.product.serial_number}
             />
             {renderQrCodeScanner()}
+            {renderToast()}
         </Modal>
     );
 };

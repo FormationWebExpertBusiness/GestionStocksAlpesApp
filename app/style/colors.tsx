@@ -17,7 +17,13 @@ export const PURPLE = '#8D6EFF';
 
 export const BRIGHT_TURQUOISE = '#33F2F3';
 
-export const GOOD = '#4CDBA5';
+export const SUCCESS = '#51a351';
+
+export const WARNING = '#f89406';
+
+export const ERROR = '#FF0050';
+
+export const INFO = '#2f96b4';
 
 export const GREEN = '#1DDA91';
 
@@ -47,6 +53,7 @@ export const BADGETEXTGREEN = '#166534';
 
 export const BADGETEXTPURPLE = '#1e40af';
 
+
 // Dot Badge colors
 export const BADGEDOTRED = '#D50000';
 
@@ -55,6 +62,7 @@ export const BADGEDOTORANGE = '#FB923C';
 export const BADGEDOTGREEN = '#00C853';
 
 export const BADGEDOTPURPLE = '#6360FA';
+
 
 // Badge colors
 export const BADGERED = '#FECACA';
@@ -65,8 +73,8 @@ export const BADGEGREEN = '#BBF7D0';
 
 export const BADGEPURPLE = '#bfbdfe';
 
-// Button colors
 
+// Button colors
 export const BUTTONRED = '#dc2626';
 
 export const BUTTONGREY = '#D1D5DB';
@@ -77,7 +85,10 @@ export const BUTTONPURPLE = '#4338CA';
 
 export const BUTTONGREEN = '#059669';
 
+export const BUTTONGREENDISABLED = '#0596694D';
 
 export const MAGNIFYINGLASSBG = '#2626262C';
 
 export const WASHDARKBG = '#23272F';
+
+export const BUTTONTEXTDISABLED = '#F9FAFBD8';
