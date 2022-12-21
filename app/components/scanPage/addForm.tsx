@@ -3,19 +3,16 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Modal from 'react-native-modal/dist/modal';
-import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREEN, BUTTONGREENDISABLED, BUTTONGREY, BUTTONTEXTDISABLED, DARKBLUEBLACK, RED, TEXTBUTTONGREY, WHITE} from '../../style/colors';
+import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREEN, BUTTONGREENDISABLED, BUTTONGREY, BUTTONTEXTDISABLED, DARKBLUEBLACK, ERROR, RED, TEXTBUTTONGREY, WHITE} from '../../style/colors';
 import CustomTextInput from '../CustomTextInput';
 import LottieView from 'lottie-react-native';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
-import {ADD_PRODUCT} from '../../graphql/mutation/addProduct';
-import {useMutation, useQuery} from '@apollo/client';
-import {GET_PRODUCTS} from '../../graphql/query/getProducts';
-import {GET_RACK} from '../../graphql/query/getRack';
 import LoadingAnimation from '../../assets/loading_6.json';
 import {CustomDropdownPicker} from '../CustomDropdownPicker';
 import {GET_COMMONPRODUCTS_ADD} from '../../graphql/query/getCommonProductAdd';
 import {APPSTYLES} from '../../style/appStyle';
 import Toast from 'react-native-root-toast';
+import {useQuery} from '@apollo/client';
 
 const STYLES = StyleSheet.create({
     titles: {
@@ -129,6 +126,9 @@ type AddFormProps = {
     onBackdropPress(): void;
     isVisible: boolean;
     rackName: string;
+    complete: boolean;
+    onAddPress(variables: any): void;
+    loading: boolean;
     rackId: number;
     rackLevel: number;
 };
@@ -152,15 +152,32 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     const [serialNb_error2, setSerialNb_error2] = useState<number>(1);
     const [price_error2, setPrice_error2] = useState<number>(1);
     const [commonId_error2, setCommonId_error2] = useState<number>(1);
+    const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
+    const [isToastText, setIsToastText] = useState<string>('');
+    const [isToastColor, setToastColor] = useState<string>('');
 
 
     function isValidFloat(str: string): boolean {
         return /^[+-]?\d+(\.\d+)?$/.test(str);
-      }
+    }
 
     function isAlphaNumeric(str: string): boolean {
         return /^[a-zA-Z0-9]+$/.test(str);
-      }
+    }
+
+    function resetInputs(): void {
+        setSerialNumber('');
+        setPrice('');
+        setComment('');
+        setSerialNbActive(false);
+        setPriceActive(false);
+        setCommonIdActive(false);
+        setPrice_error(0);
+        setSerialNb_error(0);
+        setCommonId_error(0);
+        setPrice_error2(1);
+        setSerialNb_error2(1);
+    }
 
     useEffect((): void => {
         if(common_id !== -1) {
@@ -196,21 +213,8 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
                 setSerialNb_error(1);
             }
         }
-    }, [price, serial_number, priceActive, serialNbActive, common_id, commonIdActive]);
-
-    function resetInputs(): void {
-        setSerialNumber('');
-        setPrice('');
-        setComment('');
-        setSerialNbActive(false);
-        setPriceActive(false);
-        setCommonIdActive(false);
-        setPrice_error(0);
-        setSerialNb_error(0);
-        setCommonId_error(0);
-        setPrice_error2(1);
-        setSerialNb_error2(1);
-    }
+        if(props.complete === true) resetInputs(); props.complete = false;
+    }, [price, serial_number, priceActive, serialNbActive, common_id, commonIdActive, props.complete]);
 
     function getErrorMsg(): string {
         if(serialNb_error === 1 && price_error === 1) {
@@ -243,34 +247,35 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     }
 
     const commonProductsData = useQuery(GET_COMMONPRODUCTS_ADD, {
-        fetchPolicy: 'network-only'
-    });
-
-    const [addProductMutation, {loading}] = useMutation(ADD_PRODUCT, {
-        awaitRefetchQueries: true,
-        refetchQueries: [
-            {
-                query: GET_PRODUCTS,
-                fetchPolicy: 'network-only',
-                variables: {
-                    rack_id: props.rackId,
-                    rack_level: props.rackLevel
-                }
-            },
-            {
-                query: GET_RACK,
-                fetchPolicy: 'network-only',
-                variables: {
-                    id: props.rackId,
-                    level: props.rackLevel
-                }
-            }
-        ],
-        onCompleted: (): void => {
-            props.onBackdropPress();
-            resetInputs();
+        fetchPolicy: 'network-only',
+        onError: (): void => {
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Une erreur est survenue');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
         }
     });
+
+    function renderErrorToast(): React.ReactElement {
+        return (
+            <Toast
+                visible={isToastVisible}
+                hideOnPress={true}
+                opacity={1}
+                containerStyle={{borderRadius: 5}}
+                backgroundColor={isToastColor}
+                position={40}
+                duration={200}
+                shadow={false}
+            >
+                <Text style={{color: WHITE, fontWeight: 'bold'}}>
+                    {isToastText}
+                </Text>
+            </Toast>
+        );
+    }
 
     function formatCommonProductData(): {label: string; value: number;}[] {
         const commonProductsItems: {label: string; value: number;}[] = [];
@@ -300,7 +305,7 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     }
 
     function renderButtons(): React.ReactElement {
-        if(loading) {
+        if(props.loading) {
             return (
                 <View style={STYLES.buttonWrapper}>
                     <View style={[STYLES.button, STYLES.buttonCancel]}>
@@ -346,7 +351,7 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
                 <Pressable
                     onPress={(): void => {
                         handleFocus();
-                        addProductMutation({variables: {
+                        props.onAddPress({variables: {
                             common_id,
                             user_id: 0,
                             rack_id: props.rackId,
@@ -406,6 +411,7 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
             </View>
         </Pressable>
         {renderToast()}
+        {renderErrorToast()}
     </Modal>
     );
 };

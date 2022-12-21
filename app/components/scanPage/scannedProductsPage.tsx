@@ -1,14 +1,16 @@
-import {useQuery} from '@apollo/client';
-import React from 'react';
+import {useMutation, useQuery} from '@apollo/client';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {GET_PRODUCTS} from '../../graphql/query/getProducts';
 import {GET_RACK} from '../../graphql/query/getRack';
-import {BLACK, CULTURED} from '../../style/colors';
+import {BLACK, CULTURED, ERROR, SUCCESS, WHITE} from '../../style/colors';
 import RemovePageHeader from './scanPageHeader';
 import CustomTopTabNavigator from '../CustomTopTabNavigator';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 import ScannedProductTable from '../scannedProductTable/ScannedProductTable';
 import AddForm from './addForm';
+import {ADD_PRODUCT} from '../../graphql/mutation/addProduct';
+import Toast from 'react-native-root-toast';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -30,15 +32,70 @@ const STYLES = StyleSheet.create({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
 
-    const [isFormModal, setIsFormModal] = React.useState<boolean>(false);
+    const [isFormModal, setIsFormModal] = useState<boolean>(false);
+    const [isComplete, setIsComplete] = useState<boolean>(false);
+    const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
+    const [isToastText, setIsToastText] = useState<string>('');
+    const [isToastColor, setToastColor] = useState<string>('');
 
     const {values} = route.params;
+
+    const [addProductMutation, addProductStatus] = useMutation(ADD_PRODUCT, {
+        awaitRefetchQueries: true,
+        refetchQueries: [
+            {
+                query: GET_PRODUCTS,
+                fetchPolicy: 'network-only',
+                variables: {
+                    rack_id: values.rack_id,
+                    rack_level: values.rack_level
+                }
+            },
+            {
+                query: GET_RACK,
+                fetchPolicy: 'network-only',
+                variables: {
+                    id: values.rack_id,
+                    level: values.rack_level
+                }
+            }
+        ],
+        onCompleted: (): void => {
+            setIsFormModal(false);
+            setIsComplete(true);
+            setIsToastVisible(true);
+            setIsToastText('Produit ajouté !');
+            setToastColor(SUCCESS);
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
+        },
+        onError: (): void => {
+            setIsFormModal(false);
+            setIsComplete(true);
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Erreur lors de l\'ajout du produit');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
+        }
+    });
+
 
     const {loading, error, data} = useQuery(GET_PRODUCTS, {
         fetchPolicy: 'network-only',
         variables: {
             rack_id: values.rack_id,
             rack_level: values.rack_level
+        },
+        onError: (): void => {
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Une erreur est survenue');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
         }
     });
 
@@ -47,8 +104,35 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
         variables: {
             id: values.rack_id,
             level: values.rack_level
+        },
+        onError: (): void => {
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Une erreur est survenue');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
         }
     });
+
+    function renderToast(): React.ReactElement {
+        return (
+            <Toast
+                visible={isToastVisible}
+                hideOnPress={true}
+                opacity={1}
+                containerStyle={{borderRadius: 5}}
+                backgroundColor={isToastColor}
+                position={40}
+                duration={200}
+                shadow={false}
+            >
+                <Text style={{color: WHITE, fontWeight: 'bold'}}>
+                    {isToastText}
+                </Text>
+            </Toast>
+        );
+    }
 
     function renderFormModal(): React.ReactElement {
         if(rackData.loading) {
@@ -61,7 +145,16 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
             );
         }
         return (
-            <AddForm rackId={values.rack_id} onBackdropPress={(): void => {setIsFormModal(false);}} isVisible={isFormModal} rackName={rackData.data.rack.name} rackLevel={values.rack_level} />
+            <AddForm
+                rackId={values.rack_id}
+                complete={isComplete}
+                onAddPress={addProductMutation}
+                loading={addProductStatus.loading}
+                onBackdropPress={(): void => {setIsFormModal(false);}}
+                isVisible={isFormModal}
+                rackName={rackData.data.rack.name}
+                rackLevel={values.rack_level}
+            />
         );
     }
 
@@ -116,6 +209,7 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
                 </View>
             </View>
             {renderFormModal()}
+            {renderToast()}
         </>
     );
 };

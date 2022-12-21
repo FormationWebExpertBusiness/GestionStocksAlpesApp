@@ -4,14 +4,15 @@ import {
     SafeAreaView,
     StyleSheet
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import CommonProductTable from '../commonProductTable/CommonProductTable';
 import CustomTextInput from '../CustomTextInput';
 import CustomTopTabNavigator from '../CustomTopTabNavigator';
 import {useQuery} from '@apollo/client';
 import {GET_COMMONPRODUCTS} from '../../graphql/query/getCommonProducts';
-import {BLACK} from '../../style/colors';
+import {BLACK, ERROR, WHITE} from '../../style/colors';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
+import Toast from 'react-native-root-toast';
 
 const STYLES = StyleSheet.create({
     wrapper: {
@@ -31,8 +32,20 @@ const STYLES = StyleSheet.create({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const HomePage = ({navigation}: any): React.ReactElement => {
 
+    const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
+    const [isToastText, setIsToastText] = useState<string>('');
+    const [isToastColor, setToastColor] = useState<string>('');
+
     const commonProductsData = useQuery(GET_COMMONPRODUCTS, {
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
+        onError: (): void => {
+            setIsToastVisible(true);
+            setToastColor(ERROR);
+            setIsToastText('Une erreur est survenue');
+            setTimeout((): void => {
+                setIsToastVisible(false);
+            }, 2000);
+        }
     });
 
     function renderTable(): React.ReactElement {
@@ -48,6 +61,25 @@ const HomePage = ({navigation}: any): React.ReactElement => {
         return <CommonProductTable commonProducts={commonProductsData.data.commonProducts}/>;
     }
 
+    function renderToast(): React.ReactElement {
+        return (
+            <Toast
+                visible={isToastVisible}
+                hideOnPress={true}
+                opacity={1}
+                containerStyle={{borderRadius: 5}}
+                backgroundColor={isToastColor}
+                position={40}
+                duration={200}
+                shadow={false}
+            >
+                <Text style={{color: WHITE, fontWeight: 'bold'}}>
+                    {isToastText}
+                </Text>
+            </Toast>
+        );
+    }
+
     return (
         <SafeAreaView>
             <CustomTopTabNavigator
@@ -58,6 +90,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
                 <CustomTextInput required={false} password={false} placeholder={'Recherche'} />
                 {renderTable()}
             </View>
+            {renderToast()}
         </SafeAreaView>
     );
 };
