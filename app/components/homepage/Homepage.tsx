@@ -13,6 +13,8 @@ import {GET_COMMONPRODUCTS} from '../../graphql/query/getCommonProducts';
 import {BLACK, ERROR, WHITE} from '../../style/colors';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 import Toast from 'react-native-root-toast';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../../types/rootStackParamList';
 
 const STYLES = StyleSheet.create({
     wrapper: {
@@ -29,8 +31,9 @@ const STYLES = StyleSheet.create({
     }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const HomePage = ({navigation}: any): React.ReactElement => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+const HomePage = ({navigation}: Props): React.ReactElement => {
 
     const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
     const [isToastText, setIsToastText] = useState<string>('');

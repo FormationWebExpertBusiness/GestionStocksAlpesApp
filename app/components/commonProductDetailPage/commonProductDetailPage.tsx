@@ -14,6 +14,8 @@ import type {CommonProduct} from '../../types/commonProductType';
 import {GET_COMMONPRODUCT_QUANTITY} from '../../graphql/query/getCommonProductQuantity';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 import Toast from 'react-native-root-toast';
+import type {RootStackParamList} from '../../types/rootStackParamList';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -41,8 +43,9 @@ const STYLES = StyleSheet.create({
     }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement => {
+type Props = NativeStackScreenProps<RootStackParamList, 'CommonProductDetail'>;
+
+const CommonProductDetailPage = ({navigation, route}: Props): React.ReactElement => {
 
     const {commonProductId} = route.params;
 
@@ -135,7 +138,8 @@ const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement =
         const commonProduct: CommonProduct = commonProductProductsData.data.commonProduct;
 
         return (
-            <ProductTable commonProductId={commonProductId} commonProduct={commonProduct} />
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            <ProductTable commonProductId={commonProductId!} commonProduct={commonProduct} />
         );
     }
 

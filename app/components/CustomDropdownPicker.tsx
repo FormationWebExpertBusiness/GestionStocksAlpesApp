@@ -134,8 +134,7 @@ export const CustomDropdownPicker = (props: DropdownProps): React.ReactElement =
     const [OBJECT, setObject] = useState<number | string | null>(null);
     const [VALUEMULTIPLE, setValueMultiple] = useState<number[]>([]);
     const [DISPLAYSTATE, setDisplayState] = React.useState<'flex' | 'none' | undefined>(props.initialValue ? 'flex' : 'none');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [STYLEINPUT, setStyleInput] = React.useState<any>(STYLES.notActive);
+    const [STYLEINPUT, setStyleInput] = React.useState<StyleProp<ViewStyle>>(STYLES.notActive);
     const [ITEMS, setItems] = useState<ItemType[]>(props.item);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [ERROR, setError] = React.useState(0);

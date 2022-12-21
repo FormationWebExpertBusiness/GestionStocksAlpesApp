@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
@@ -13,6 +12,7 @@ import {GET_COMMONPRODUCTS_ADD} from '../../graphql/query/getCommonProductAdd';
 import {APPSTYLES} from '../../style/appStyle';
 import Toast from 'react-native-root-toast';
 import {useQuery} from '@apollo/client';
+import type {CommonProduct} from '../../types/commonProductType';
 
 const STYLES = StyleSheet.create({
     titles: {
@@ -122,12 +122,24 @@ const STYLES = StyleSheet.create({
     }
 });
 
+type AddMutationType = {
+    variables: {
+        common_id: number;
+        user_id: number;
+        rack_id: number;
+        rack_level: number;
+        serial_number: string;
+        price: number;
+        comment: string;
+    };
+};
+
 type AddFormProps = {
     onBackdropPress(): void;
     isVisible: boolean;
     rackName: string;
     complete: boolean;
-    onAddPress(variables: any): void;
+    onAddPress(variables: AddMutationType): void;
     loading: boolean;
     rackId: number;
     rackLevel: number;
@@ -135,9 +147,11 @@ type AddFormProps = {
 
 const AddForm = (props: AddFormProps): React.ReactElement => {
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const serialNumberRef = useRef<any>(null);
     const priceRef = useRef<any>(null);
     const commentRef = useRef<any>(null);
+    /* eslint-enable @typescript-eslint/no-explicit-any */
 
     const [serial_number, setSerialNumber] = useState<string>('');
     const [price, setPrice] = useState<string>('');
@@ -280,7 +294,7 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     function formatCommonProductData(): {label: string; value: number;}[] {
         const commonProductsItems: {label: string; value: number;}[] = [];
         if(commonProductsData.data !== undefined) {
-            commonProductsData.data.commonProducts.forEach((commonProduct: any): void => {
+            commonProductsData.data.commonProducts.forEach((commonProduct: CommonProduct): void => {
                 const category = commonProduct.category.name;
                 const model = commonProduct.model;
 

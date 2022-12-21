@@ -11,6 +11,8 @@ import ScannedProductTable from '../scannedProductTable/ScannedProductTable';
 import AddForm from './addForm';
 import {ADD_PRODUCT} from '../../graphql/mutation/addProduct';
 import Toast from 'react-native-root-toast';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../../types/rootStackParamList';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -29,8 +31,9 @@ const STYLES = StyleSheet.create({
     }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
+type Props = NativeStackScreenProps<RootStackParamList, 'ScannedProducts'>;
+
+const ScannedProductsPage = ({navigation, route}: Props): React.ReactElement => {
 
     const [isFormModal, setIsFormModal] = useState<boolean>(false);
     const [isComplete, setIsComplete] = useState<boolean>(false);
@@ -38,7 +41,8 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
     const [isToastText, setIsToastText] = useState<string>('');
     const [isToastColor, setToastColor] = useState<string>('');
 
-    const {values} = route.params;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const routeData: {values: {rack_id: number; rack_level: number;};} = route.params!;
 
     const [addProductMutation, addProductStatus] = useMutation(ADD_PRODUCT, {
         awaitRefetchQueries: true,
@@ -47,16 +51,16 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
                 query: GET_PRODUCTS,
                 fetchPolicy: 'network-only',
                 variables: {
-                    rack_id: values.rack_id,
-                    rack_level: values.rack_level
+                    rack_id: routeData.values.rack_id,
+                    rack_level: routeData.values.rack_level
                 }
             },
             {
                 query: GET_RACK,
                 fetchPolicy: 'network-only',
                 variables: {
-                    id: values.rack_id,
-                    level: values.rack_level
+                    id: routeData.values.rack_id,
+                    level: routeData.values.rack_level
                 }
             }
         ],
@@ -86,8 +90,8 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
     const {loading, error, data} = useQuery(GET_PRODUCTS, {
         fetchPolicy: 'network-only',
         variables: {
-            rack_id: values.rack_id,
-            rack_level: values.rack_level
+            rack_id: routeData.values.rack_id,
+            rack_level: routeData.values.rack_level
         },
         onError: (): void => {
             setIsToastVisible(true);
@@ -102,8 +106,8 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
     const rackData = useQuery(GET_RACK, {
         fetchPolicy: 'network-only',
         variables: {
-            id: values.rack_id,
-            level: values.rack_level
+            id: routeData.values.rack_id,
+            level: routeData.values.rack_level
         },
         onError: (): void => {
             setIsToastVisible(true);
@@ -146,14 +150,14 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
         }
         return (
             <AddForm
-                rackId={values.rack_id}
+                rackId={routeData.values.rack_id}
                 complete={isComplete}
                 onAddPress={addProductMutation}
                 loading={addProductStatus.loading}
                 onBackdropPress={(): void => {setIsFormModal(false);}}
                 isVisible={isFormModal}
                 rackName={rackData.data.rack.name}
-                rackLevel={values.rack_level}
+                rackLevel={routeData.values.rack_level}
             />
         );
     }
@@ -172,7 +176,7 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
         }
 
         return (
-            <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={rackData.data.rack.nb_products} content1={rackData.data.rack.name} content2={values.rack_level} />
+            <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={rackData.data.rack.nb_products} content1={rackData.data.rack.name} content2={routeData.values.rack_level} />
         );
     }
 
@@ -190,7 +194,7 @@ const ScannedProductsPage = ({navigation, route}: any): React.ReactElement => {
         }
 
         return (
-            <ScannedProductTable loading={loading} rack_id={values.rack_id} rack_level={values.rack_level} products={data.products} remove={true}/>
+            <ScannedProductTable loading={loading} rack_id={routeData.values.rack_id} rack_level={routeData.values.rack_level} products={data.products} remove={true}/>
         );
     }
 
