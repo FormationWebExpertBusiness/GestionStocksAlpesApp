@@ -1,7 +1,7 @@
 import type {ReactElement} from 'react';
 import React from 'react';
 import {View, StyleSheet, Pressable, Text} from 'react-native';
-import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREY, BUTTONRED, CULTURED, TEXTBUTTONGREY, WHITE} from '../../style/colors';
+import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREY, BUTTONRED, BUTTONREDPRESSED, BUTTONWHITEDISABLED, BUTTONWHITEPRESSED, CULTURED, TEXTBUTTONGREY, WHITE} from '../../style/colors';
 import Modal from 'react-native-modal/dist/modal';
 import LottieView from 'lottie-react-native';
 import LoadingAnimation from '../../assets/loading_6.json';
@@ -45,13 +45,6 @@ const STYLES = StyleSheet.create({
         width: 100,
         justifyContent: 'center',
         borderRadius: 5
-    },
-    buttonDelete: {
-        backgroundColor: BUTTONRED,
-        borderColor: BUTTONRED
-    },
-    buttonCancel: {
-        backgroundColor: WHITE
     },
     crossCancel: {
         position: 'absolute',
@@ -116,14 +109,17 @@ const STYLES = StyleSheet.create({
 
 const ConfirmationModal = (props: ConfirmationModalProps): ReactElement => {
 
+    const [cancelButtonColor, setCancelButtonColor] = React.useState<string>(WHITE);
+    const [deleteButtonColor, setDeleteButtonColor] = React.useState<string>(BUTTONRED);
+
     function renderButtons(): ReactElement {
         if(props.loading) {
             return (
                 <View style={STYLES.buttonWrapper}>
-                    <View style={[STYLES.button, STYLES.buttonCancel]}>
+                    <View style={[STYLES.button, {backgroundColor: BUTTONWHITEDISABLED}]}>
                         <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
                     </View>
-                    <View style={[STYLES.button, STYLES.buttonDelete]}>
+                    <View style={[STYLES.button, {backgroundColor: BUTTONRED}]}>
                         <LottieView
                             style={STYLES.lottie}
                             source={LoadingAnimation}
@@ -139,13 +135,17 @@ const ConfirmationModal = (props: ConfirmationModalProps): ReactElement => {
             <View style={STYLES.buttonWrapper}>
                 <Pressable
                     onPress={(): void => { props.onCancelPress(); props.setCommentValue(''); }}
-                    style={[STYLES.button, STYLES.buttonCancel]}
+                    style={[STYLES.button, {backgroundColor: cancelButtonColor}]}
+                    onPressIn={(): void => { setCancelButtonColor(BUTTONWHITEPRESSED); }}
+                    onPressOut={(): void => { setCancelButtonColor(WHITE); }}
                 >
                     <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
                 </Pressable>
                 <Pressable
                     onPress={(): void => { props.onConfirmPress(); }}
-                    style={[STYLES.button, STYLES.buttonDelete]}
+                    style={[STYLES.button, {backgroundColor: deleteButtonColor, borderColor: deleteButtonColor}]}
+                    onPressIn={(): void => { setDeleteButtonColor(BUTTONREDPRESSED); }}
+                    onPressOut={(): void => { setDeleteButtonColor(BUTTONRED); }}
                 >
                     <Text style={STYLES.buttonText}>Supprimer</Text>
                 </Pressable>

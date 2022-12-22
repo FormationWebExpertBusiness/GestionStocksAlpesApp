@@ -1,7 +1,7 @@
 import {View, Text, Pressable, Image} from 'react-native';
 import type {ReactElement} from 'react';
 import React, {useState} from 'react';
-import {AVERAGE_GREY, CULTURED, ERROR, RED, WHITE} from '../../style/colors';
+import {AVERAGE_GREY, BLACK, BUTTONPURPLE, BUTTONPURPLEDISABLED, BUTTONPURPLEPRESSED, BUTTONRED, BUTTONREDDISABLED, BUTTONREDPRESSED, CULTURED, ERROR, RED, WHITE} from '../../style/colors';
 import Modal from 'react-native-modal/dist/modal';
 import CardModal from './cardModal';
 import LottieView from 'lottie-react-native';
@@ -50,11 +50,13 @@ const DetailProductModal = (props: DetailProductModalProps): ReactElement => {
     const [isLightOn, setIsLightOn] = useState(RNCamera.Constants.FlashMode.off);
     const [lightIcon, setLightIcon] = useState(faLightbulbOff);
     const [errorStatus, setErrorStatus] = useState(false);
-    const [lightFeedback, setLightFeedback] = useState('#00000000');
+    const [lightFeedback, setLightFeedback] = useState(`${BLACK}00`);
     const [isScanner, setIsScanner] = useState<'flex' | 'none'>('none');
     const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
     const [isToastText, setIsToastText] = useState<string>('');
     const [isToastColor, setToastColor] = useState<string>('');
+    const [moveButtonColor, setMoveButtonColor] = useState<string>(BUTTONPURPLE);
+    const [removeButtonColor, setRemoveButtonColor] = useState<string>(BUTTONRED);
 
     const productModalData = useQuery(GET_PRODUCT_MODAL_DATA, {
         fetchPolicy: 'network-only',
@@ -77,12 +79,12 @@ const DetailProductModal = (props: DetailProductModalProps): ReactElement => {
                 return (
                     <View style={DETAIL_MODAL_STYLES.buttonWrapper}>
                         <View
-                            style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDeplace]}
+                            style={[DETAIL_MODAL_STYLES.button, {backgroundColor: BUTTONPURPLEDISABLED, borderColor: BUTTONPURPLEDISABLED}]}
                         >
                             <Text style={DETAIL_MODAL_STYLES.buttonText}>Déplacer</Text>
                         </View>
                         <View
-                            style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDelete]}
+                            style={[DETAIL_MODAL_STYLES.button, {backgroundColor: BUTTONRED, borderColor: BUTTONRED}]}
                         >
                             <LottieView
                                 style={DETAIL_MODAL_STYLES.lottie}
@@ -98,7 +100,7 @@ const DetailProductModal = (props: DetailProductModalProps): ReactElement => {
                 return (
                     <View style={DETAIL_MODAL_STYLES.buttonWrapper}>
                         <View
-                            style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDeplace]}
+                            style={[DETAIL_MODAL_STYLES.button, {backgroundColor: BUTTONPURPLE, borderColor: BUTTONPURPLE}]}
                         >
                             <LottieView
                                 style={DETAIL_MODAL_STYLES.lottie}
@@ -109,7 +111,7 @@ const DetailProductModal = (props: DetailProductModalProps): ReactElement => {
                             />
                         </View>
                         <View
-                            style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDelete]}
+                            style={[DETAIL_MODAL_STYLES.button, {backgroundColor: BUTTONREDDISABLED, borderColor: BUTTONREDDISABLED}]}
                         >
                             <Text style={DETAIL_MODAL_STYLES.buttonText}>Supprimer</Text>
                         </View>
@@ -120,13 +122,17 @@ const DetailProductModal = (props: DetailProductModalProps): ReactElement => {
                 <View style={DETAIL_MODAL_STYLES.buttonWrapper}>
                     <Pressable
                         onPress={(): void => { setIsScanner('flex'); }}
-                        style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDeplace]}
+                        style={[DETAIL_MODAL_STYLES.button, {backgroundColor: moveButtonColor, borderColor: moveButtonColor}]}
+                        onPressIn={(): void => { setMoveButtonColor(BUTTONPURPLEPRESSED); }}
+                        onPressOut={(): void => { setMoveButtonColor(BUTTONPURPLE); }}
                     >
                         <Text style={DETAIL_MODAL_STYLES.buttonText}>Déplacer</Text>
                     </Pressable>
                     <Pressable
                         onPress={(): void => { props.setConfirmationModal(true); }}
-                        style={[DETAIL_MODAL_STYLES.button, DETAIL_MODAL_STYLES.buttonDelete]}
+                        style={[DETAIL_MODAL_STYLES.button, {backgroundColor: removeButtonColor, borderColor: removeButtonColor}]}
+                        onPressIn={(): void => { setRemoveButtonColor(BUTTONREDPRESSED); }}
+                        onPressOut={(): void => { setRemoveButtonColor(BUTTONRED); }}
                     >
                         <Text style={DETAIL_MODAL_STYLES.buttonText}>Supprimer</Text>
                     </Pressable>
@@ -224,7 +230,7 @@ const DetailProductModal = (props: DetailProductModalProps): ReactElement => {
                                         source={qrCodeScannerImg}
                                     />
                                 </View>
-                            <Pressable onPressOut={(): void => {setLightFeedback('#00000000');}} onPressIn={(): void => {setLightFeedback('#000000');}} onPress={(): void => {switchLight();}} style={[QRCODE_STYLES.iconWrapper, {backgroundColor: lightFeedback}]}>
+                            <Pressable onPressOut={(): void => {setLightFeedback(`${BLACK}00`);}} onPressIn={(): void => {setLightFeedback(BLACK);}} onPress={(): void => {switchLight();}} style={[QRCODE_STYLES.iconWrapper, {backgroundColor: lightFeedback}]}>
                                 <FontAwesomeIcon icon={lightIcon} size={30} color={WHITE} />
                             </Pressable>
                         </View>

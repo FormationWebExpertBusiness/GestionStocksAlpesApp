@@ -3,7 +3,7 @@ import type {ReactElement} from 'react';
 import {useRef, useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Modal from 'react-native-modal/dist/modal';
-import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREEN, BUTTONGREY, DARKBLUEBLACK, ERROR, TEXTBUTTONGREY, WHITE} from '../../style/colors';
+import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREEN, BUTTONGREENPRESSED, BUTTONGREY, BUTTONWHITEDISABLED, BUTTONWHITEPRESSED, DARKBLUEBLACK, ERROR, TEXTBUTTONGREY, WHITE} from '../../style/colors';
 import CustomTextInput from '../CustomTextInput';
 import LottieView from 'lottie-react-native';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
@@ -70,10 +70,6 @@ const STYLES = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 5
     },
-    buttonAdd: {
-        backgroundColor: BUTTONGREEN,
-        borderColor: BUTTONGREEN
-    },
     crossCancel: {
         position: 'absolute',
         top: 0,
@@ -82,9 +78,6 @@ const STYLES = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: 40
-    },
-    buttonCancel: {
-        backgroundColor: WHITE
     },
     buttonText: {
         color: ALMOST_WHITE,
@@ -150,6 +143,8 @@ const AddForm = (props: AddFormProps): ReactElement => {
     const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
     const [isToastText, setIsToastText] = useState<string>('');
     const [isToastColor, setToastColor] = useState<string>('');
+    const [buttonAddColor, setButtonAddColor] = useState<string>(BUTTONGREEN);
+    const [buttonCancelColor, setButtonCancelColor] = useState<string>(WHITE);
 
         /* eslint-disable @typescript-eslint/no-explicit-any */
         const serialNumberRef = useRef<any>(null);
@@ -247,10 +242,10 @@ const AddForm = (props: AddFormProps): ReactElement => {
         if(props.loading) {
             return (
                 <View style={STYLES.buttonWrapper}>
-                    <View style={[STYLES.button, STYLES.buttonCancel]}>
+                    <View style={[STYLES.button, {backgroundColor: BUTTONWHITEDISABLED}]}>
                         <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
                     </View>
-                    <View style={[STYLES.button, STYLES.buttonAdd]}>
+                    <View style={[STYLES.button, {backgroundColor: BUTTONGREEN, borderColor: BUTTONGREEN}]}>
                         <LottieView
                             style={STYLES.lottie}
                             source={LoadingAnimation}
@@ -266,13 +261,17 @@ const AddForm = (props: AddFormProps): ReactElement => {
             <View style={STYLES.buttonWrapper}>
                 <Pressable
                     onPress={(): void => { props.onBackdropPress(); }}
-                    style={[STYLES.button, STYLES.buttonCancel]}
+                    style={[STYLES.button, {backgroundColor: buttonCancelColor}]}
+                    onPressIn={(): void => { setButtonCancelColor(BUTTONWHITEPRESSED); }}
+                    onPressOut={(): void => { setButtonCancelColor(WHITE); }}
                 >
                     <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
                 </Pressable>
                 <Pressable
                     onPress={handleSubmit(onSubmit)}
-                    style={[STYLES.button, STYLES.buttonAdd]}
+                    style={[STYLES.button, {backgroundColor: buttonAddColor, borderColor: buttonAddColor}]}
+                    onPressIn={(): void => { setButtonAddColor(BUTTONGREENPRESSED); }}
+                    onPressOut={(): void => { setButtonAddColor(BUTTONGREEN); }}
                 >
                     <Text style={[STYLES.buttonText, {color: WHITE}]}>Ajouter</Text>
                 </Pressable>

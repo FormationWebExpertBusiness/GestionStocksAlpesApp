@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import type {ReactElement} from 'react';
 import React, {useState} from 'react';
-import {ALMOST_BLACK, BLACK, CULTURED, RED, WHITE} from '../../style/colors';
+import {ALMOST_BLACK, BLACK, CULTURED, DARK_BLACK, RED, WHITE} from '../../style/colors';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -47,7 +47,7 @@ const STYLES = StyleSheet.create({
         position: 'absolute',
         top: -150,
         paddingBottom: 10,
-        backgroundColor: '#000000C4',
+        backgroundColor: DARK_BLACK,
         borderRadius: 40,
         height: 75,
         width: 75,
@@ -75,7 +75,7 @@ const ScanPage = ({navigation}: any): ReactElement => {
     const [isLightOn, setIsLightOn] = useState(RNCamera.Constants.FlashMode.off);
     const [lightIcon, setLightIcon] = useState(faLightbulbOff);
     const [errorStatus, setErrorStatus] = useState(false);
-    const [lightFeedback, setLightFeedback] = useState('#00000000');
+    const [lightFeedback, setLightFeedback] = useState(`${BLACK}00`);
 
     function checkQrCodeData(data: string): void {
         let resData: unknown = {};
@@ -142,7 +142,7 @@ const ScanPage = ({navigation}: any): ReactElement => {
                                 source={qrCodeScannerImg}
                             />
                         </View>
-                    <Pressable onPressOut={(): void => {setLightFeedback('#00000000');}} onPressIn={(): void => {setLightFeedback('#000000');}} onPress={(): void => {switchLight();}} style={[STYLES.iconWrapper, {backgroundColor: lightFeedback}]}>
+                    <Pressable onPressOut={(): void => {setLightFeedback(`${BLACK}00`);}} onPressIn={(): void => {setLightFeedback(BLACK);}} onPress={(): void => {switchLight();}} style={[STYLES.iconWrapper, {backgroundColor: lightFeedback}]}>
                         <FontAwesomeIcon icon={lightIcon} size={30} color={WHITE} />
                     </Pressable>
                 </View>
