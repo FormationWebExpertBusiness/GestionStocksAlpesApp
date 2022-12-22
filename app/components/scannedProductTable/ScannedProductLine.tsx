@@ -3,6 +3,7 @@ import {
     Text,
     Pressable
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import {ALMOST_BLACK} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -23,7 +24,7 @@ type ScannedProductLineProps = {
     title3?: string;
 };
 
-const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement => {
+const ScannedProductLine = (props: ScannedProductLineProps): ReactElement => {
 
     function getWrapperStyle(): object {
         if(props.head) {
@@ -39,7 +40,7 @@ const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement 
 
     getWrapperStyle();
 
-    function getIcon(): React.ReactElement {
+    function getIcon(): ReactElement {
         if(props.head) {
             return <View />;
         }
@@ -50,7 +51,7 @@ const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement 
         );
     }
 
-    function getTextComponents(): React.ReactElement {
+    function getTextComponents(): ReactElement {
         if(props.head) {
             return (
                 <>
@@ -69,7 +70,7 @@ const ScannedProductLine = (props: ScannedProductLineProps): React.ReactElement 
         );
     }
 
-    function renderContent(): React.ReactElement {
+    function renderContent(): ReactElement {
         return (
             <>
                 {getTextComponents()}

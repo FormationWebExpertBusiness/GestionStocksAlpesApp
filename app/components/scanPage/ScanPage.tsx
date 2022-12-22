@@ -6,7 +6,8 @@ import {
     Text,
     Pressable
 } from 'react-native';
-import React from 'react';
+import type {ReactElement} from 'react';
+import React, {useState} from 'react';
 import {ALMOST_BLACK, BLACK, CULTURED, RED, WHITE} from '../../style/colors';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
@@ -70,11 +71,11 @@ const STYLES = StyleSheet.create({
     }
 });
 
-const ScanPage = ({navigation}: any): React.ReactElement => {
-    const [isLightOn, setIsLightOn] = React.useState(RNCamera.Constants.FlashMode.off);
-    const [lightIcon, setLightIcon] = React.useState(faLightbulbOff);
-    const [errorStatus, setErrorStatus] = React.useState(false);
-    const [lightFeedback, setLightFeedback] = React.useState('#00000000');
+const ScanPage = ({navigation}: any): ReactElement => {
+    const [isLightOn, setIsLightOn] = useState(RNCamera.Constants.FlashMode.off);
+    const [lightIcon, setLightIcon] = useState(faLightbulbOff);
+    const [errorStatus, setErrorStatus] = useState(false);
+    const [lightFeedback, setLightFeedback] = useState('#00000000');
 
     function checkQrCodeData(data: string): void {
         let resData: unknown = {};

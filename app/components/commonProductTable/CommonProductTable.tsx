@@ -2,6 +2,7 @@ import {
     ScrollView,
     View
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React from 'react';
 import CommonProductLine from './CommonProductLine';
 import {TABLESTYLES} from '../../style/tablesStyle';
@@ -11,10 +12,10 @@ type CommonProductTable = {
     commonProducts: CommonProduct[];
 };
 
-const commonProductTable = (props: CommonProductTable): React.ReactElement => {
+const commonProductTable = (props: CommonProductTable): ReactElement => {
 
-    function renderProducts(): React.ReactElement[] {
-        const PRODUCTSLINES: React.ReactElement[] = [];
+    function renderProducts(): ReactElement[] {
+        const PRODUCTSLINES: ReactElement[] = [];
         props.commonProducts.forEach((product, index): void => {
             PRODUCTSLINES.push(
                 <CommonProductLine

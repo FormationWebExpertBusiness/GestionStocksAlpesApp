@@ -5,6 +5,7 @@ import {
 	Pressable
 } from 'react-native';
 import {CULTURED, BLACK, ALMOST_WHITE} from '../style/colors';
+import type {ReactElement} from 'react';
 import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faQrcode} from '@fortawesome/free-solid-svg-icons/faQrcode';
@@ -80,9 +81,8 @@ type CustomTopTabNavigatorProps = {
 	onPressPlus?(): void;
 };
 
-const CustomTopTabNavigator = (props: CustomTopTabNavigatorProps): React.ReactElement => {
-
-	function renderContent(): React.ReactElement {
+const CustomTopTabNavigator = (props: CustomTopTabNavigatorProps): ReactElement => {
+	function renderContent(): ReactElement {
 		if(props.mode === 'all') {
 			return (
 				<>

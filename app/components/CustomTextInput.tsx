@@ -1,8 +1,11 @@
 import {AVERAGE_GREY, RED, BLACK, WHITE, VERY_LIGHT_GREY, ALMOST_BLACK} from '../style/colors';
 
+import type {
+    ReactElement} from 'react';
 import React, {
     type LegacyRef,
-    useEffect
+    useEffect,
+    useState
 } from 'react';
 
 import {StyleSheet, Text, TextInput, View} from 'react-native';
@@ -53,12 +56,12 @@ type TextInputProps = {
     value?: string | null;
 };
 
-const CustomTextInput = (props: TextInputProps): React.ReactElement => {
+const CustomTextInput = (props: TextInputProps): ReactElement => {
     const PLACEHOLDERVALUE = props.required !== false ? `${props.placeholder} *` : props.placeholder;
-    const [STYLEINPUT, setStyleInput] = React.useState(STYLES.notActive);
-    const [ERROR, setError] = React.useState(0);
-    const [DISPLAYSTATE, setDisplayState] = React.useState<'flex' | 'none' | undefined>(props.value ? 'flex' : 'none');
-    const [LITTLEPLACEHOLDERCOLOR, setLittlePlaceholercolor] = React.useState(AVERAGE_GREY);
+    const [STYLEINPUT, setStyleInput] = useState(STYLES.notActive);
+    const [ERROR, setError] = useState(0);
+    const [DISPLAYSTATE, setDisplayState] = useState<'flex' | 'none' | undefined>(props.value ? 'flex' : 'none');
+    const [LITTLEPLACEHOLDERCOLOR, setLittlePlaceholercolor] = useState(AVERAGE_GREY);
 
     useEffect((): void => {
         if(props.error === undefined) {

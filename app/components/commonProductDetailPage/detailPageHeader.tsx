@@ -4,6 +4,7 @@ import {
     StyleSheet,
     Text
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import {ALMOST_BLACK, BADGEDOTGREEN, BADGEDOTORANGE, BADGEDOTRED, BADGEGREEN, BADGEORANGE, BADGERED, BADGETEXTGREEN, BADGETEXTORANGE, BADGETEXTRED, CULTURED, DARKBLUEBLACK} from '../../style/colors';
 import {Skeleton} from '@rneui/themed';
@@ -89,7 +90,7 @@ type DetailPageHeaderProps = {
 };
 
 
-const DetailPageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
+const DetailPageHeader = (props: DetailPageHeaderProps): ReactElement => {
 
     function getBadgeTextColor(): string {
         if(!props.skeleton) {
@@ -132,7 +133,7 @@ const DetailPageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
     const [badgeDotColor] = useState<string>(getBadgeDotColor());
     const [badgeTextColor] = useState<string>(getBadgeTextColor());
 
-    function renderContent(): React.ReactElement {
+    function renderContent(): ReactElement {
         if(props.skeleton) {
             return (
                 <>

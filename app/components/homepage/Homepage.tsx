@@ -4,6 +4,7 @@ import {
     SafeAreaView,
     StyleSheet
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import CommonProductTable from '../commonProductTable/CommonProductTable';
 import CustomTextInput from '../CustomTextInput';
@@ -33,7 +34,7 @@ const STYLES = StyleSheet.create({
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const HomePage = ({navigation}: Props): React.ReactElement => {
+const HomePage = ({navigation}: Props): ReactElement => {
 
     const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
     const [isToastText, setIsToastText] = useState<string>('');
@@ -51,7 +52,7 @@ const HomePage = ({navigation}: Props): React.ReactElement => {
         }
     });
 
-    function renderTable(): React.ReactElement {
+    function renderTable(): ReactElement {
         if(commonProductsData.loading) {
             return (
                     <TableSkeleton number={6} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} animation='pulse' />
@@ -64,7 +65,7 @@ const HomePage = ({navigation}: Props): React.ReactElement => {
         return <CommonProductTable commonProducts={commonProductsData.data.commonProducts}/>;
     }
 
-    function renderToast(): React.ReactElement {
+    function renderToast(): ReactElement {
         return (
             <Toast
                 visible={isToastVisible}

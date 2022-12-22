@@ -3,6 +3,7 @@ import {
     Text,
     Pressable
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import {ALMOST_BLACK, VERY_LIGHT_GREY} from '../../style/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -20,7 +21,7 @@ type ProductLineProps = {
     brand: string;
 };
 
-const commonProductLine = (props: ProductLineProps): React.ReactElement => {
+const commonProductLine = (props: ProductLineProps): ReactElement => {
     const navigation = useNavigation<RootStackParamList>();
 
 
@@ -38,7 +39,7 @@ const commonProductLine = (props: ProductLineProps): React.ReactElement => {
 
     getWrapperStyle();
 
-    function getIcon(): React.ReactElement {
+    function getIcon(): ReactElement {
         if(props.head) {
             return <View style={[LINESTYLES.icon, {backgroundColor: VERY_LIGHT_GREY}]} />;
         }

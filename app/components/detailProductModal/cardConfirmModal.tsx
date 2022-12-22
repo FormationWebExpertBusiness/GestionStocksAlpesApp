@@ -1,3 +1,4 @@
+import type {ReactElement} from 'react';
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {ALMOST_BLACK, CULTURED, DARKBLUEBLACK} from '../../style/colors';
@@ -50,7 +51,7 @@ const STYLES = StyleSheet.create({
     }
 });
 
-const CardConfirmModal = (props: CardConfirmModalProps): React.ReactElement => {
+const CardConfirmModal = (props: CardConfirmModalProps): ReactElement => {
     return (
         <View style={STYLES.componentWrapper}>
             <View style={STYLES.cardWrapper}>

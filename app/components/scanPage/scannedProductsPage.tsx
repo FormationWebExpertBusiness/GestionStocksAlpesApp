@@ -1,4 +1,5 @@
 import {useMutation, useQuery} from '@apollo/client';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {GET_PRODUCTS} from '../../graphql/query/getProducts';
@@ -33,7 +34,7 @@ const STYLES = StyleSheet.create({
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ScannedProducts'>;
 
-const ScannedProductsPage = ({navigation, route}: Props): React.ReactElement => {
+const ScannedProductsPage = ({navigation, route}: Props): ReactElement => {
 
     const [isFormModal, setIsFormModal] = useState<boolean>(false);
     const [isComplete, setIsComplete] = useState<boolean>(false);
@@ -119,7 +120,7 @@ const ScannedProductsPage = ({navigation, route}: Props): React.ReactElement => 
         }
     });
 
-    function renderToast(): React.ReactElement {
+    function renderToast(): ReactElement {
         return (
             <Toast
                 visible={isToastVisible}
@@ -138,7 +139,7 @@ const ScannedProductsPage = ({navigation, route}: Props): React.ReactElement => 
         );
     }
 
-    function renderFormModal(): React.ReactElement {
+    function renderFormModal(): ReactElement {
         if(rackData.loading) {
             return (
                 <View />
@@ -162,7 +163,7 @@ const ScannedProductsPage = ({navigation, route}: Props): React.ReactElement => 
         );
     }
 
-    function renderHeader(): React.ReactElement {
+    function renderHeader(): ReactElement {
         if(rackData.loading) {
             return (
                 <RemovePageHeader title1={'Étagère'} title2={'Étage'} skeleton />
@@ -180,7 +181,7 @@ const ScannedProductsPage = ({navigation, route}: Props): React.ReactElement => 
         );
     }
 
-    function renderResults(): React.ReactElement {
+    function renderResults(): ReactElement {
         if(loading) {
             return (
                 <TableSkeleton number={6} title1={'Catégorie'} title2={'Modèle'} title3={'N° série'} animation='pulse' />

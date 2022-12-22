@@ -1,4 +1,5 @@
 import {View} from 'react-native';
+import type {ReactElement} from 'react';
 import React from 'react';
 import CommonProductLine from '../../commonProductTable/CommonProductLine';
 import {TABLESTYLES} from '../../../style/tablesStyle';
@@ -13,10 +14,10 @@ type TableSkeletonProps = {
     title3: string;
   };
 
-const TableSkeleton = (props: TableSkeletonProps): React.ReactElement => {
+const TableSkeleton = (props: TableSkeletonProps): ReactElement => {
 
-    function renderSkeletons(): React.ReactElement[] {
-        const skeletons: React.ReactElement[] = [];
+    function renderSkeletons(): ReactElement[] {
+        const skeletons: ReactElement[] = [];
         for(let i = 0; i < props.number; i++) {
             skeletons.push(
                 <LineSkeleton

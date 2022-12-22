@@ -1,3 +1,4 @@
+import type {ReactElement} from 'react';
 import React from 'react';
 import {View, StyleSheet, Pressable, Text} from 'react-native';
 import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREY, BUTTONRED, CULTURED, TEXTBUTTONGREY, WHITE} from '../../style/colors';
@@ -113,9 +114,9 @@ const STYLES = StyleSheet.create({
     }
 });
 
-const ConfirmationModal = (props: ConfirmationModalProps): React.ReactElement => {
+const ConfirmationModal = (props: ConfirmationModalProps): ReactElement => {
 
-    function renderButtons(): React.ReactElement {
+    function renderButtons(): ReactElement {
         if(props.loading) {
             return (
                 <View style={STYLES.buttonWrapper}>

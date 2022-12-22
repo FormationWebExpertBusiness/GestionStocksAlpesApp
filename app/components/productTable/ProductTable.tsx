@@ -3,6 +3,7 @@ import {
     Text,
     View
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import ProductLine from './ProductLine';
 import {TABLESTYLES} from '../../style/tablesStyle';
@@ -22,11 +23,11 @@ type commonProductTable = {
     commonProductId: number;
 };
 
-const ProductTable = (props: commonProductTable): React.ReactElement => {
+const ProductTable = (props: commonProductTable): ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [idProductQuery, setIdProductQuery] = useState<number>(1);
-    const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false);
+    const [confirmationModal, setConfirmationModal] = useState<boolean>(false);
     const [commentValue, setCommentValue] = useState<string>('');
     const [indexProductQuery, setIndexProductQuery] = useState<number>(-1);
     const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
@@ -125,7 +126,7 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
         }
     });
 
-    function renderToast(): React.ReactElement {
+    function renderToast(): ReactElement {
         return (
             <Toast
                 visible={isToastVisible}
@@ -149,7 +150,7 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
         return 0;
     }
 
-    function renderModal(): React.ReactElement {
+    function renderModal(): ReactElement {
             return (
                 <DetailProductModal
                     id={idProductQuery}
@@ -170,8 +171,8 @@ const ProductTable = (props: commonProductTable): React.ReactElement => {
             );
     }
 
-    function renderProducts(): React.ReactElement | React.ReactElement[] {
-        const PRODUCTSLINES: React.ReactElement[] = [];
+    function renderProducts(): ReactElement | ReactElement[] {
+        const PRODUCTSLINES: ReactElement[] = [];
         const commonProduct: CommonProduct = props.commonProduct;
 
         commonProduct.products?.forEach((product, index): void => {
