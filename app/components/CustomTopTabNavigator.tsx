@@ -4,9 +4,9 @@ import {
 	StyleSheet,
 	Pressable
 } from 'react-native';
-import {CULTURED, BLACK, ALMOST_WHITE} from '../style/colors';
+import {CULTURED, BLACK, ALMOST_WHITE, TOPNAVIGATORBUTTONBG, AVERAGE_GREY} from '../style/colors';
 import type {ReactElement} from 'react';
-import React from 'react';
+import React, {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faQrcode} from '@fortawesome/free-solid-svg-icons/faQrcode';
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
@@ -64,13 +64,21 @@ const STYLES = StyleSheet.create({
 		justifyContent: 'space-between',
 		flexDirection: 'row'
 	},
-	plusBackground: {
-		backgroundColor: '#86868644',
-		height: 50,
-		width: 50,
+	buttonBackground: {
+		backgroundColor: TOPNAVIGATORBUTTONBG,
+		height: 55,
+		width: 55,
 		alignItems: 'center',
 		justifyContent: 'center',
 		borderRadius: 50
+	},
+	backPlusBackground: {
+		height: 50,
+		width: 50
+	},
+	qrCodeBackground: {
+		height: 55,
+		width: 55
 	}
 });
 
@@ -82,13 +90,25 @@ type CustomTopTabNavigatorProps = {
 };
 
 const CustomTopTabNavigator = (props: CustomTopTabNavigatorProps): ReactElement => {
+
+	const [qrCodeIconColor, setQrCodeIconColor] = useState<string>(ALMOST_WHITE);
+	const [backIconColor, setBackIconColor] = useState<string>(ALMOST_WHITE);
+	const [plusIconColor, setPlusIconColor] = useState<string>(ALMOST_WHITE);
+
 	function renderContent(): ReactElement {
 		if(props.mode === 'all') {
 			return (
 				<>
 					<Text style={STYLES.sectionTitle}>Alpes Networks</Text>
-					<Pressable style={STYLES.scan} onPress={(): void => { props.onPressScan?.(); }}>
-						<FontAwesomeIcon color={ALMOST_WHITE} icon={faQrcode} size={30} />
+					<Pressable
+						style={STYLES.scan}
+						onPress={(): void => { props.onPressScan?.(); }}
+						onPressIn={(): void => { setQrCodeIconColor(AVERAGE_GREY); }}
+						onPressOut={(): void => { setQrCodeIconColor(ALMOST_WHITE); }}
+					>
+						<View style={[STYLES.buttonBackground, STYLES.qrCodeBackground]}>
+							<FontAwesomeIcon color={qrCodeIconColor} icon={faQrcode} size={30} />
+						</View>
 					</Pressable>
 				</>
 			);
@@ -96,8 +116,15 @@ const CustomTopTabNavigator = (props: CustomTopTabNavigatorProps): ReactElement 
 		} else if(props.mode === 'back') {
 			return (
 				<View style={STYLES.backWrapper}>
-					<Pressable style={STYLES.backButton} onPress={(): void => { props.onPressBack?.(); } }>
-						<FontAwesomeIcon color={ALMOST_WHITE} icon={faArrowLeft} size={30} />
+					<Pressable
+						style={STYLES.backButton}
+						onPress={(): void => { props.onPressBack?.(); }}
+						onPressIn={(): void => { setBackIconColor(AVERAGE_GREY); }}
+						onPressOut={(): void => { setBackIconColor(ALMOST_WHITE); }}
+					>
+					<View style={[STYLES.buttonBackground, STYLES.backPlusBackground]}>
+							<FontAwesomeIcon color={backIconColor} icon={faArrowLeft} size={30} />
+						</View>
 					</Pressable>
 					<Text style={STYLES.sectionTitle}>Alpes Networks</Text>
 				</View>
@@ -106,14 +133,26 @@ const CustomTopTabNavigator = (props: CustomTopTabNavigatorProps): ReactElement 
 			return (
 				<View style={STYLES.plusWrapper}>
 					<View style={STYLES.backWrapper}>
-						<Pressable style={STYLES.backButton} onPress={(): void => { props.onPressBack?.(); } }>
-							<FontAwesomeIcon color={ALMOST_WHITE} icon={faArrowLeft} size={30} />
+						<Pressable
+							style={STYLES.backButton}
+							onPress={(): void => { props.onPressBack?.(); }}
+							onPressIn={(): void => { setBackIconColor(AVERAGE_GREY); }}
+							onPressOut={(): void => { setBackIconColor(ALMOST_WHITE); }}
+						>
+						<View style={[STYLES.buttonBackground, STYLES.backPlusBackground]}>
+								<FontAwesomeIcon color={backIconColor} icon={faArrowLeft} size={30} />
+							</View>
 						</Pressable>
 						<Text style={STYLES.sectionTitle}>Alpes Networks</Text>
 					</View>
-					<Pressable style={STYLES.plusButton} onPress={(): void => { props.onPressPlus?.(); } }>
-						<View style={STYLES.plusBackground}>
-							<FontAwesomeIcon color={ALMOST_WHITE} icon={faPlus} size={30} />
+					<Pressable
+						style={STYLES.plusButton}
+						onPress={(): void => { props.onPressPlus?.(); }}
+						onPressIn={(): void => { setPlusIconColor(AVERAGE_GREY); }}
+						onPressOut={(): void => { setPlusIconColor(ALMOST_WHITE); }}
+					>
+					<View style={[STYLES.buttonBackground, STYLES.backPlusBackground]}>
+							<FontAwesomeIcon color={plusIconColor} icon={faPlus} size={30} />
 						</View>
 					</Pressable>
 				</View>

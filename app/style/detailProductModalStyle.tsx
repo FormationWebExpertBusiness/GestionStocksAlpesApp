@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {ALMOST_BLACK, ALMOST_WHITE, BLACK, BUTTONPURPLE, BUTTONRED, CULTURED, DARKBLUEBLACK, WHITE} from './colors';
+import {ALMOST_BLACK, ALMOST_WHITE, BLACK, CULTURED, DARKBLUEBLACK, DARK_BLACK, WHITE} from './colors';
 
 export const DETAIL_MODAL_STYLES = StyleSheet.create({
     modalWrapper: {
@@ -64,18 +64,9 @@ export const DETAIL_MODAL_STYLES = StyleSheet.create({
         alignItems: 'center',
         width: 100,
         color: WHITE,
+        borderWidth: 1,
         justifyContent: 'center',
         borderRadius: 5
-    },
-    buttonDelete: {
-        backgroundColor: BUTTONRED,
-        borderWidth: 1,
-        borderColor: BUTTONRED
-    },
-    buttonDeplace: {
-        backgroundColor: BUTTONPURPLE,
-        borderWidth: 1,
-        borderColor: BUTTONPURPLE
     },
     buttonCancel: {
         position: 'absolute',
@@ -129,7 +120,7 @@ export const QRCODE_STYLES = StyleSheet.create({
         position: 'absolute',
         top: -370,
         paddingBottom: 10,
-        backgroundColor: '#000000C4',
+        backgroundColor: DARK_BLACK,
         borderRadius: 40,
         height: 75,
         width: 75,
