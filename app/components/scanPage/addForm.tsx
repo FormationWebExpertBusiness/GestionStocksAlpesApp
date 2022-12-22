@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import type {ReactElement} from 'react';
 import {useRef, useState} from 'react';
@@ -388,6 +387,7 @@ const AddForm = (props: AddFormProps): ReactElement => {
                                 <CustomTextInput
                                     password={false}
                                     required={true}
+                                    keyboardType="numeric"
                                     innerRef={priceRef}
                                     placeholder="Prix"
                                     error={errors.Price ? 1 : 0}

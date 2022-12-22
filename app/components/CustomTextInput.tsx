@@ -50,6 +50,7 @@ type TextInputProps = {
     innerRef?: LegacyRef<TextInput> | null;
     onSubmit?(): void;
     onValueChange?(newValue: string): void;
+    keyboardType?: 'ascii-capable' | 'decimal-pad' | 'default' | 'email-address' | 'name-phone-pad' | 'number-pad' | 'numbers-and-punctuation' | 'numeric' | 'phone-pad' | 'twitter' | 'url' | 'visible-password' | 'web-search' | undefined;
     password: boolean;
     placeholder: string;
     required?: boolean;
@@ -98,6 +99,7 @@ const CustomTextInput = (props: TextInputProps): ReactElement => {
                         props.onValueChange(text);
                     }
                 }}
+                keyboardType={props.keyboardType}
                 value={props.value ? props.value : undefined}
                 onBlur={(): void => {
                     if(ERROR !== 0) {
