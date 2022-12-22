@@ -180,9 +180,7 @@ const AddForm = (props: AddFormProps): ReactElement => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSubmit = (data: any): void => {
         handleFocus();
-        console.log(data);
         const {SerialNb, Price, Comment, CommonId} = data;
-        console.log(data);
 
         props.onAddPress({variables: {
             common_id: CommonId,
