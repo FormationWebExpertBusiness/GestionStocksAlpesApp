@@ -11,16 +11,18 @@ import CustomTextInput from '../CustomTextInput';
 import CustomTopTabNavigator from '../CustomTopTabNavigator';
 import {useQuery} from '@apollo/client';
 import {GET_COMMONPRODUCTS} from '../../graphql/query/getCommonProducts';
-import {BLACK, ERROR, WHITE} from '../../style/colors';
+import {BLACK, CULTURED, ERROR, WHITE} from '../../style/colors';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 import Toast from 'react-native-root-toast';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../../types/rootStackParamList';
+import EmptyTable from '../emptyTable';
 
 const STYLES = StyleSheet.create({
     wrapper: {
         width: '100%',
         marginTop: 20,
+        backgroundColor: CULTURED,
         paddingHorizontal: 20,
         height: '81%',
         paddingBottom: 50
@@ -54,14 +56,13 @@ const HomePage = ({navigation}: Props): ReactElement => {
 
     function renderTable(): ReactElement {
         if(commonProductsData.loading) {
-            return (
-                    <TableSkeleton number={6} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} animation='pulse' />
-            );
+            return <TableSkeleton number={6} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} animation='pulse' />;
         } else if(commonProductsData.error) {
-            return <View>
-                <Text style={STYLES.textStyle}>Error : {commonProductsData.error.message}</Text>
-                </View>;
+            return <EmptyTable title1='Catégory' title2='Modèle' title3='Marque' content='Une erreur est survenue' type={'error'}/>;
+        } else if(commonProductsData.data.commonProducts.length === 0) {
+            return <EmptyTable title1='Catégory' title2='Modèle' title3='Marque' content='Aucun type de produit' type={'empty'}/>;
         }
+
         return <CommonProductTable commonProducts={commonProductsData.data.commonProducts}/>;
     }
 

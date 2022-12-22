@@ -45,6 +45,8 @@ export const DARKBLUEBLACK = '#252d3a';
 
 export const REDBACKGROUND = '#FF00003C';
 
+export const STONE = '#9DABBA';
+
 
 // Text Badge colors
 export const BADGETEXTRED = '#991B1B';

@@ -58,6 +58,14 @@ export const LINESTYLES = StyleSheet.create({
     activeProduct: {
         backgroundColor: VERY_VERY_LIGHT_GREY
     },
+    centerHeadWrapper: {
+        borderTopRightRadius: 5,
+        borderTopLeftRadius: 5,
+        height: 50,
+        backgroundColor: VERY_LIGHT_GREY,
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
     headWrapper: {
         borderTopRightRadius: 5,
         borderTopLeftRadius: 5,

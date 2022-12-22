@@ -28,6 +28,7 @@
     "react-native": "0.70.6",
     "react-native-camera": "^4.2.1",
     "react-native-dropdown-picker": "^5.4.3",
+    "react-native-heroicons": "^3.2.0",
     "react-native-modal": "^13.0.1",
     "react-native-permissions": "^3.6.1",
     "react-native-qrcode-scanner": "^1.5.5",

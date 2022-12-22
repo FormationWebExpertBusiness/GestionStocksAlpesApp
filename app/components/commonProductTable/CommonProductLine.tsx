@@ -14,6 +14,7 @@ import type {RootStackParamList} from '../../types/rootStackParamList';
 
 type ProductLineProps = {
     keyI?: number;
+    center?: boolean;
     head?: boolean;
     id?: number;
     category: string;
@@ -27,6 +28,7 @@ const commonProductLine = (props: ProductLineProps): ReactElement => {
 
     function getWrapperStyle(): object {
         if(props.head) {
+            if(props.center) return LINESTYLES.centerHeadWrapper;
             return LINESTYLES.headWrapper;
         } else if(props.keyI !== undefined && props.keyI % 2 === 0) {
             return LINESTYLES.evenWrapper;
@@ -71,7 +73,7 @@ const commonProductLine = (props: ProductLineProps): ReactElement => {
             <Text style={LINESTYLES.text} numberOfLines={1}>{props.category}</Text>
             <Text style={LINESTYLES.text} numberOfLines={1}>{props.model}</Text>
             <Text style={LINESTYLES.text} numberOfLines={1}>{props.brand}</Text>
-            {getIcon()}
+            {props.center !== true ? getIcon() : null}
         </Pressable>
     );
 };
