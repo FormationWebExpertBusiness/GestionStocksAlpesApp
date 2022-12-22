@@ -4,6 +4,7 @@ import {
     SafeAreaView,
     StyleSheet
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import CommonProductTable from '../commonProductTable/CommonProductTable';
 import CustomTextInput from '../CustomTextInput';
@@ -13,6 +14,8 @@ import {GET_COMMONPRODUCTS} from '../../graphql/query/getCommonProducts';
 import {BLACK, ERROR, WHITE} from '../../style/colors';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 import Toast from 'react-native-root-toast';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../../types/rootStackParamList';
 
 const STYLES = StyleSheet.create({
     wrapper: {
@@ -29,8 +32,9 @@ const STYLES = StyleSheet.create({
     }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const HomePage = ({navigation}: any): React.ReactElement => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+const HomePage = ({navigation}: Props): ReactElement => {
 
     const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
     const [isToastText, setIsToastText] = useState<string>('');
@@ -48,7 +52,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
         }
     });
 
-    function renderTable(): React.ReactElement {
+    function renderTable(): ReactElement {
         if(commonProductsData.loading) {
             return (
                     <TableSkeleton number={6} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} animation='pulse' />
@@ -61,7 +65,7 @@ const HomePage = ({navigation}: any): React.ReactElement => {
         return <CommonProductTable commonProducts={commonProductsData.data.commonProducts}/>;
     }
 
-    function renderToast(): React.ReactElement {
+    function renderToast(): ReactElement {
         return (
             <Toast
                 visible={isToastVisible}

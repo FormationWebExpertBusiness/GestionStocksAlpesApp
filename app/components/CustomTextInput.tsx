@@ -1,8 +1,11 @@
 import {AVERAGE_GREY, RED, BLACK, WHITE, VERY_LIGHT_GREY, ALMOST_BLACK} from '../style/colors';
 
+import type {
+    ReactElement} from 'react';
 import React, {
     type LegacyRef,
-    useEffect
+    useEffect,
+    useState
 } from 'react';
 
 import {StyleSheet, Text, TextInput, View} from 'react-native';
@@ -47,18 +50,19 @@ type TextInputProps = {
     innerRef?: LegacyRef<TextInput> | null;
     onSubmit?(): void;
     onValueChange?(newValue: string): void;
+    keyboardType?: 'ascii-capable' | 'decimal-pad' | 'default' | 'email-address' | 'name-phone-pad' | 'number-pad' | 'numbers-and-punctuation' | 'numeric' | 'phone-pad' | 'twitter' | 'url' | 'visible-password' | 'web-search' | undefined;
     password: boolean;
     placeholder: string;
     required?: boolean;
     value?: string | null;
 };
 
-const CustomTextInput = (props: TextInputProps): React.ReactElement => {
+const CustomTextInput = (props: TextInputProps): ReactElement => {
     const PLACEHOLDERVALUE = props.required !== false ? `${props.placeholder} *` : props.placeholder;
-    const [STYLEINPUT, setStyleInput] = React.useState(STYLES.notActive);
-    const [ERROR, setError] = React.useState(0);
-    const [DISPLAYSTATE, setDisplayState] = React.useState<'flex' | 'none' | undefined>(props.value ? 'flex' : 'none');
-    const [LITTLEPLACEHOLDERCOLOR, setLittlePlaceholercolor] = React.useState(AVERAGE_GREY);
+    const [STYLEINPUT, setStyleInput] = useState(STYLES.notActive);
+    const [ERROR, setError] = useState(0);
+    const [DISPLAYSTATE, setDisplayState] = useState<'flex' | 'none' | undefined>(props.value ? 'flex' : 'none');
+    const [LITTLEPLACEHOLDERCOLOR, setLittlePlaceholercolor] = useState(AVERAGE_GREY);
 
     useEffect((): void => {
         if(props.error === undefined) {
@@ -95,6 +99,7 @@ const CustomTextInput = (props: TextInputProps): React.ReactElement => {
                         props.onValueChange(text);
                     }
                 }}
+                keyboardType={props.keyboardType}
                 value={props.value ? props.value : undefined}
                 onBlur={(): void => {
                     if(ERROR !== 0) {

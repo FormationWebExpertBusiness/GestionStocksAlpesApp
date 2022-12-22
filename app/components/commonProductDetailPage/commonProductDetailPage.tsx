@@ -3,6 +3,7 @@ import {
     StyleSheet,
     Text
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import {BLACK, CULTURED, ERROR, WHITE} from '../../style/colors';
 import ProductTable from '../productTable/ProductTable';
@@ -14,6 +15,8 @@ import type {CommonProduct} from '../../types/commonProductType';
 import {GET_COMMONPRODUCT_QUANTITY} from '../../graphql/query/getCommonProductQuantity';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 import Toast from 'react-native-root-toast';
+import type {RootStackParamList} from '../../types/rootStackParamList';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -41,8 +44,9 @@ const STYLES = StyleSheet.create({
     }
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement => {
+type Props = NativeStackScreenProps<RootStackParamList, 'CommonProductDetail'>;
+
+const CommonProductDetailPage = ({navigation, route}: Props): ReactElement => {
 
     const {commonProductId} = route.params;
 
@@ -80,7 +84,7 @@ const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement =
         }
     });
 
-    function renderToast(): React.ReactElement {
+    function renderToast(): ReactElement {
         return (
             <Toast
                 visible={isToastVisible}
@@ -99,7 +103,7 @@ const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement =
         );
     }
 
-    function renderHeader(): React.ReactElement {
+    function renderHeader(): ReactElement {
         if(commonProductQuantityData.loading) {
             return (
                 <DetailPageHeader title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} skeleton/>
@@ -119,7 +123,7 @@ const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement =
         );
     }
 
-    function renderProductTable(): React.ReactElement {
+    function renderProductTable(): ReactElement {
         if(commonProductProductsData.loading) {
             return (
                 <TableSkeleton number={6} title1={'N° série'} title2={'Étage'} title3={'Ètagère'}/>
@@ -135,7 +139,8 @@ const CommonProductDetailPage = ({navigation, route}: any): React.ReactElement =
         const commonProduct: CommonProduct = commonProductProductsData.data.commonProduct;
 
         return (
-            <ProductTable commonProductId={commonProductId} commonProduct={commonProduct} />
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            <ProductTable commonProductId={commonProductId!} commonProduct={commonProduct} />
         );
     }
 

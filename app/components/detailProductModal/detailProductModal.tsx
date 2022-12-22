@@ -1,4 +1,5 @@
 import {View, Text, Pressable, Image} from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import {AVERAGE_GREY, CULTURED, ERROR, RED, WHITE} from '../../style/colors';
 import Modal from 'react-native-modal/dist/modal';
@@ -44,7 +45,7 @@ type DetailProductModalProps = {
     remove?: boolean;
 };
 
-const DetailProductModal = (props: DetailProductModalProps): React.ReactElement => {
+const DetailProductModal = (props: DetailProductModalProps): ReactElement => {
 
     const [isLightOn, setIsLightOn] = useState(RNCamera.Constants.FlashMode.off);
     const [lightIcon, setLightIcon] = useState(faLightbulbOff);
@@ -70,7 +71,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         }
     });
 
-    function renderButtons(): React.ReactElement {
+    function renderButtons(): ReactElement {
         if(props.remove) {
             if(props.loading) {
                 return (
@@ -135,7 +136,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         return <View />;
     }
 
-    function renderToast(): React.ReactElement {
+    function renderToast(): ReactElement {
         return (
             <Toast
                 visible={isToastVisible}
@@ -192,7 +193,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         switchLightMode();
     }
 
-    function renderQrCodeScanner(): React.ReactElement {
+    function renderQrCodeScanner(): ReactElement {
         return (
             <View style={{display: isScanner}}>
                 <QRCodeScanner
@@ -233,7 +234,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
         );
     }
 
-    function renderContent(type: 'data' | 'skeleton'): React.ReactElement {
+    function renderContent(type: 'data' | 'skeleton'): ReactElement {
 
         if(type === 'data') {
             const {serial_number, model, category, brand, rack_level, rack, created_at} = productModalData.data.product;
@@ -302,7 +303,7 @@ const DetailProductModal = (props: DetailProductModalProps): React.ReactElement 
 
     }
 
-    function renderCards(): React.ReactElement {
+    function renderCards(): ReactElement {
 
         if(productModalData.loading) {
             return (

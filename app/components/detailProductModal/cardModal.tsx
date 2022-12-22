@@ -3,6 +3,7 @@ import {
     StyleSheet,
     Text
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React from 'react';
 import {ALMOST_BLACK, CULTURED, DARKBLUEBLACK} from '../../style/colors';
 
@@ -63,9 +64,9 @@ type CardModalProps = {
 };
 
 
-const CardModal = (props: CardModalProps): React.ReactElement => {
+const CardModal = (props: CardModalProps): ReactElement => {
 
-    function renderContent(): React.ReactElement {
+    function renderContent(): ReactElement {
         if(props.skeleton) {
             return (
                 <>

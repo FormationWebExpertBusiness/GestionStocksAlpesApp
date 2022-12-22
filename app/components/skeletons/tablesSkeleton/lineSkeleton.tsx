@@ -1,4 +1,5 @@
 import {View} from 'react-native';
+import type {ReactElement} from 'react';
 import React from 'react';
 import {ALMOST_BLACK, BUTTONRED} from '../../../style/colors';
 import {Skeleton} from '@rneui/themed';
@@ -12,9 +13,9 @@ type LineSkeletonProps = {
     remove?: boolean;
   };
 
-const LineSkeleton = (props: LineSkeletonProps): React.ReactElement => {
+const LineSkeleton = (props: LineSkeletonProps): ReactElement => {
 
-    function renderIcon(): React.ReactElement {
+    function renderIcon(): ReactElement {
         if(!props.remove) {
             return (
                 <View style={LINESTYLES.icon}>

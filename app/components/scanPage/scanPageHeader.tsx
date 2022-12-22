@@ -3,6 +3,7 @@ import {
     StyleSheet,
     Text
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import {ALMOST_BLACK, BADGEDOTPURPLE, BADGEPURPLE, BADGETEXTPURPLE, CULTURED, DARKBLUEBLACK} from '../../style/colors';
 
@@ -83,13 +84,13 @@ type DetailPageHeaderProps = {
 };
 
 
-const RemovePageHeader = (props: DetailPageHeaderProps): React.ReactElement => {
+const RemovePageHeader = (props: DetailPageHeaderProps): ReactElement => {
 
     const [badgeColor] = useState<string>(BADGEPURPLE);
     const [badgeDotColor] = useState<string>(BADGEDOTPURPLE);
     const [badgeTextColor] = useState<string>(BADGETEXTPURPLE);
 
-    function renderContent(): React.ReactElement {
+    function renderContent(): ReactElement {
         if(props.skeleton) {
             return (
                 <>

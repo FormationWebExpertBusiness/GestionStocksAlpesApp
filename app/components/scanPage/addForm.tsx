@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useEffect, useRef, useState} from 'react';
+import type {ReactElement} from 'react';
+import {useRef, useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Modal from 'react-native-modal/dist/modal';
-import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREEN, BUTTONGREENDISABLED, BUTTONGREY, BUTTONTEXTDISABLED, DARKBLUEBLACK, ERROR, RED, TEXTBUTTONGREY, WHITE} from '../../style/colors';
+import {ALMOST_BLACK, ALMOST_WHITE, AVERAGE_GREY, BUTTONGREEN, BUTTONGREY, DARKBLUEBLACK, ERROR, TEXTBUTTONGREY, WHITE} from '../../style/colors';
 import CustomTextInput from '../CustomTextInput';
 import LottieView from 'lottie-react-native';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
@@ -13,6 +13,8 @@ import {GET_COMMONPRODUCTS_ADD} from '../../graphql/query/getCommonProductAdd';
 import {APPSTYLES} from '../../style/appStyle';
 import Toast from 'react-native-root-toast';
 import {useQuery} from '@apollo/client';
+import type {CommonProduct} from '../../types/commonProductType';
+import {Controller, useForm} from 'react-hook-form';
 
 const STYLES = StyleSheet.create({
     titles: {
@@ -41,9 +43,8 @@ const STYLES = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around',
         paddingTop: 15,
-        top: 50,
         width: '98%',
-        minHeight: 450,
+        minHeight: 500,
         paddingHorizontal: 20,
         borderRadius: 10,
         backgroundColor: WHITE,
@@ -73,10 +74,6 @@ const STYLES = StyleSheet.create({
         backgroundColor: BUTTONGREEN,
         borderColor: BUTTONGREEN
     },
-    buttonAddDisabled: {
-        backgroundColor: BUTTONGREENDISABLED,
-        borderColor: BUTTONGREENDISABLED
-    },
     crossCancel: {
         position: 'absolute',
         top: 0,
@@ -91,11 +88,6 @@ const STYLES = StyleSheet.create({
     },
     buttonText: {
         color: ALMOST_WHITE,
-        fontWeight: 'bold',
-        textAlign: 'center'
-    },
-    buttonTextDisabled: {
-        color: BUTTONTEXTDISABLED,
         fontWeight: 'bold',
         textAlign: 'center'
     },
@@ -117,134 +109,90 @@ const STYLES = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-around',
-        height: 280,
+        height: 320,
         width: '100%'
+    },
+    errorText: {
+        color: ERROR,
+        fontSize: 12,
+        paddingBottom: 10,
+        justifyContent: 'center',
+        fontWeight: 'bold',
+        textAlign: 'center'
     }
 });
+
+type AddMutationType = {
+    variables: {
+        common_id: number;
+        user_id: number;
+        rack_id: number;
+        rack_level: number;
+        serial_number: string;
+        price: number;
+        comment: string;
+    };
+};
 
 type AddFormProps = {
     onBackdropPress(): void;
     isVisible: boolean;
     rackName: string;
     complete: boolean;
-    onAddPress(variables: any): void;
+    onAddPress(variables: AddMutationType): void;
     loading: boolean;
     rackId: number;
     rackLevel: number;
 };
 
-const AddForm = (props: AddFormProps): React.ReactElement => {
+const AddForm = (props: AddFormProps): ReactElement => {
 
-    const serialNumberRef = useRef<any>(null);
-    const priceRef = useRef<any>(null);
-    const commentRef = useRef<any>(null);
-
-    const [serial_number, setSerialNumber] = useState<string>('');
-    const [price, setPrice] = useState<string>('');
-    const [comment, setComment] = useState<string>('');
-    const [common_id, setCommonId] = useState<number>(-1);
-    const [serialNb_error, setSerialNb_error] = useState<number>(0);
-    const [price_error, setPrice_error] = useState<number>(0);
-    const [commonId_error, setCommonId_error] = useState<number>(0);
-    const [commonIdActive, setCommonIdActive] = useState<boolean>(false);
-    const [priceActive, setPriceActive] = useState<boolean>(false);
-    const [serialNbActive, setSerialNbActive] = useState<boolean>(false);
-    const [serialNb_error2, setSerialNb_error2] = useState<number>(1);
-    const [price_error2, setPrice_error2] = useState<number>(1);
-    const [commonId_error2, setCommonId_error2] = useState<number>(1);
     const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
     const [isToastText, setIsToastText] = useState<string>('');
     const [isToastColor, setToastColor] = useState<string>('');
 
+        /* eslint-disable @typescript-eslint/no-explicit-any */
+        const serialNumberRef = useRef<any>(null);
+        const priceRef = useRef<any>(null);
+        const commentRef = useRef<any>(null);
+        /* eslint-enable @typescript-eslint/no-explicit-any */
 
-    function isValidFloat(str: string): boolean {
-        return /^[+-]?\d+(\.\d+)?$/.test(str);
-    }
+        function handleFocus(): void {
+            serialNumberRef.current.blur();
+            priceRef.current.blur();
+            commentRef.current.blur();
+        }
 
-    function isAlphaNumeric(str: string): boolean {
-        return /^[a-zA-Z0-9]+$/.test(str);
-    }
+        const {
+            control,
+            register,
+            handleSubmit,
+            clearErrors,
+            reset,
+            formState: {errors}
+        } = useForm({mode: 'onBlur'});
 
-    function resetInputs(): void {
-        setSerialNumber('');
-        setPrice('');
-        setComment('');
-        setSerialNbActive(false);
-        setPriceActive(false);
-        setCommonIdActive(false);
-        setPrice_error(0);
-        setSerialNb_error(0);
-        setCommonId_error(0);
-        setPrice_error2(1);
-        setSerialNb_error2(1);
-    }
+        function resetInputs(): void {
+            clearErrors();
+            reset();
+        }
 
-    useEffect((): void => {
-        if(common_id !== -1) {
-            setCommonIdActive(true);
-        }
-        if(serial_number.length > 0) {
-            setSerialNbActive(true);
-        }
-        if(price.length > 0) {
-            setPriceActive(true);
-        }
-        if(commonIdActive !== false) {
-            if(common_id !== -1) {
-                setCommonId_error2(0);
-                setCommonId_error(0);
-            } else {
-                setCommonId_error(1);
-            }
-        }
-        if(priceActive !== false) {
-            if(isValidFloat(price)) {
-                setPrice_error2(0);
-                setPrice_error(0);
-            } else {
-                setPrice_error(1);
-            }
-        }
-        if(serialNbActive !== false) {
-            if(isAlphaNumeric(serial_number)) {
-                setSerialNb_error2(0);
-                setSerialNb_error(0);
-            } else {
-                setSerialNb_error(1);
-            }
-        }
-        if(props.complete === true) resetInputs(); props.complete = false;
-    }, [price, serial_number, priceActive, serialNbActive, common_id, commonIdActive, props.complete]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const onSubmit = (data: any): void => {
+        handleFocus();
+        const {SerialNb, Price, Comment, CommonId} = data;
 
-    function getErrorMsg(): string {
-        if(serialNb_error === 1 && price_error === 1) {
-            return 'Le numéro de série et le prix sont invalides';
-        } else if(serialNb_error === 1) {
-            return 'Le numéro de série doit être composé de chiffres et de lettres';
-        } else if(price_error === 1) {
-            return 'Le prix doit être un nombre';
-        }
-        return 'Une erreur est survenue';
-    }
-
-    function renderToast(): React.ReactElement {
-        return (
-            <Toast
-                visible={serialNb_error === 1 || price_error === 1 || commonId_error === 1}
-                hideOnPress={true}
-                opacity={1}
-                containerStyle={{borderRadius: 5, zIndex: 200000}}
-                backgroundColor={RED}
-                position={40}
-                duration={2000}
-                shadow={false}
-            >
-                <Text style={{color: WHITE, fontWeight: 'bold'}}>
-                    {getErrorMsg()}
-                </Text>
-            </Toast>
-        );
-    }
+        props.onAddPress({variables: {
+            common_id: CommonId,
+            user_id: 0,
+            rack_id: props.rackId,
+            rack_level: props.rackLevel,
+            serial_number: SerialNb,
+            price: parseFloat(Price),
+            comment: Comment
+        }});
+        resetInputs();
+    };
 
     const commonProductsData = useQuery(GET_COMMONPRODUCTS_ADD, {
         fetchPolicy: 'network-only',
@@ -258,7 +206,7 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
         }
     });
 
-    function renderErrorToast(): React.ReactElement {
+    function renderErrorToast(): ReactElement {
         return (
             <Toast
                 visible={isToastVisible}
@@ -280,7 +228,7 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
     function formatCommonProductData(): {label: string; value: number;}[] {
         const commonProductsItems: {label: string; value: number;}[] = [];
         if(commonProductsData.data !== undefined) {
-            commonProductsData.data.commonProducts.forEach((commonProduct: any): void => {
+            commonProductsData.data.commonProducts.forEach((commonProduct: CommonProduct): void => {
                 const category = commonProduct.category.name;
                 const model = commonProduct.model;
 
@@ -289,22 +237,13 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
                     value: commonProduct.id
                 });
             });
-        } else if(commonProductsData.loading) {
-            commonProductsItems.push({label: 'Chargement...', value: 0});
         } else if(commonProductsData.error) {
             commonProductsItems.push({label: 'Pas de donnée', value: 0});
         }
         return commonProductsItems;
     }
 
-
-    function handleFocus(): void {
-        serialNumberRef.current.blur();
-        priceRef.current.blur();
-        commentRef.current.blur();
-    }
-
-    function renderButtons(): React.ReactElement {
+    function renderButtons(): ReactElement {
         if(props.loading) {
             return (
                 <View style={STYLES.buttonWrapper}>
@@ -323,23 +262,6 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
                 </View>
             );
         }
-        if(serialNb_error === 1 || price_error === 1 || serialNb_error2 === 1 || price_error2 === 1 || commonId_error === 1 || commonId_error2 === 1) {
-            return (
-                <View style={STYLES.buttonWrapper}>
-                    <Pressable
-                        onPress={(): void => { props.onBackdropPress(); }}
-                        style={[STYLES.button, STYLES.buttonCancel]}
-                    >
-                        <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
-                    </Pressable>
-                    <View
-                        style={[STYLES.button, STYLES.buttonAddDisabled]}
-                    >
-                        <Text style={STYLES.buttonTextDisabled}>Ajouter</Text>
-                    </View>
-                </View>
-            );
-        }
         return (
             <View style={STYLES.buttonWrapper}>
                 <Pressable
@@ -349,25 +271,60 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
                     <Text style={[STYLES.buttonText, {color: TEXTBUTTONGREY}]}>Annuler</Text>
                 </Pressable>
                 <Pressable
-                    onPress={(): void => {
-                        handleFocus();
-                        props.onAddPress({variables: {
-                            common_id,
-                            user_id: 0,
-                            rack_id: props.rackId,
-                            rack_level: props.rackLevel,
-                            serial_number,
-                            price: parseFloat(price),
-                            comment
-                        }});
-                    }}
+                    onPress={handleSubmit(onSubmit)}
                     style={[STYLES.button, STYLES.buttonAdd]}
                 >
-                    <Text style={STYLES.buttonText}>Ajouter</Text>
+                    <Text style={[STYLES.buttonText, {color: WHITE}]}>Ajouter</Text>
                 </Pressable>
             </View>
         );
     }
+
+    function getCommonIdError(): ReactElement {
+        if(errors.CommonId) {
+            return (
+                <Text style={STYLES.errorText}>
+                    {errors.CommonId.message?.toString()}
+                </Text>
+            );
+        }
+        return (
+            <Text style={STYLES.errorText}>
+                &nbsp;
+            </Text>
+        );
+    }
+
+    function getPriceError(): ReactElement {
+        if(errors.Price) {
+            return (
+                <Text style={STYLES.errorText}>
+                    {errors.Price.message?.toString()}
+                </Text>
+            );
+        }
+        return (
+            <Text style={STYLES.errorText}>
+                &nbsp;
+            </Text>
+        );
+    }
+
+    function getSerialNbError(): ReactElement {
+        if(errors.SerialNb) {
+            return (
+                <Text style={STYLES.errorText}>
+                    {errors.SerialNb.message?.toString()}
+                </Text>
+            );
+        }
+        return (
+            <Text style={STYLES.errorText}>
+                &nbsp;
+            </Text>
+        );
+    }
+
 
     return (
         <Modal
@@ -393,24 +350,116 @@ const AddForm = (props: AddFormProps): React.ReactElement => {
                 <Text style={STYLES.secondTitle}>Étage {props.rackLevel}</Text>
             </View>
             <View style={STYLES.inputs}>
-                <View style={STYLES.input}>
-                    <CustomDropdownPicker error={commonId_error} onValueChange={(v: number): void => {setCommonId(v);}} multiple={false} placeholder={'Type de produit'} required={true} zindex={1} item={formatCommonProductData()}/>
-                </View>
-                <View style={STYLES.input}>
-                    <CustomTextInput error={serialNb_error} value={serial_number} onValueChange={(text): void => {setSerialNumber(text);}} innerRef={serialNumberRef} placeholder='N° de série' required={true} password={false}/>
-                </View>
-                <View style={STYLES.input}>
-                    <CustomTextInput error={price_error} value={price} onValueChange={(text): void => {setPrice(text);}} innerRef={priceRef} placeholder='Prix' required={true} password={false}/>
-                </View>
-                <View style={STYLES.input}>
-                    <CustomTextInput value={comment} onValueChange={(text): void => {setComment(text);}} innerRef={commentRef} placeholder='Commentaire' required={false} password={false}/>
-                </View>
+                <Controller
+                    control={control}
+                    {...register('CommonId')}
+                    render={({field: {onChange}}): ReactElement => {
+                        return (
+                            <View style={STYLES.input}>
+                                <CustomDropdownPicker
+                                    required={true}
+                                    placeholder="Type de produit"
+                                    error={errors.CommonId ? 1 : 0}
+                                    multiple={false}
+                                    zindex={1}
+                                    item={formatCommonProductData()}
+                                    onValueChange={(val: number): void => {onChange(val);}}
+                                />
+                            </View>
+                        );
+                    }}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: 'Le type de produit ne peux pas être vide !'
+                        }
+                    }}
+                />
+                {getCommonIdError()}
+                <Controller
+                    control={control}
+                    {...register('Price')}
+                    render={({field: {onChange, value}}): ReactElement => {
+                        return (
+                            <View style={STYLES.input}>
+                                <CustomTextInput
+                                    password={false}
+                                    required={true}
+                                    keyboardType="numeric"
+                                    innerRef={priceRef}
+                                    placeholder="Prix"
+                                    error={errors.Price ? 1 : 0}
+                                    value={value}
+                                    onValueChange={(val: string): void => {onChange(val);}}
+                                />
+                            </View>
+                        );
+                    }}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: 'Le prix ne peux pas être vide !'
+                        },
+                        pattern: {
+                            value: /^[+-]?\d+(\.\d+)?$/,
+                            message: 'Le prix doit être composé de chiffre !'
+                        }
+                    }}
+                />
+                {getPriceError()}
+                <Controller
+                    control={control}
+                    {...register('SerialNb')}
+                    render={({field: {onChange, value}}): ReactElement => {
+                        return (
+                            <View style={STYLES.input}>
+                                <CustomTextInput
+                                    password={false}
+                                    required={true}
+                                    innerRef={serialNumberRef}
+                                    placeholder="N° de série"
+                                    error={errors.SerialNb ? 1 : 0}
+                                    value={value}
+                                    onValueChange={(val: string): void => {onChange(val);}}
+                                />
+                            </View>
+                        );
+                    }}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: 'Le N° de série ne peux pas être vide !'
+                        },
+                        pattern: {
+                            value: /^[a-zA-Z0-9]+$/,
+                            message: 'Le N° de série doit être composé de chiffre et de lettres !'
+                        }
+                    }}
+                />
+                {getSerialNbError()}
+                <Controller
+                    control={control}
+                    {...register('Comment')}
+                    render={({field: {onChange, value}}): ReactElement => {
+                        return (
+                            <View style={STYLES.input}>
+                                <CustomTextInput
+                                    password={false}
+                                    required={false}
+                                    innerRef={commentRef}
+                                    placeholder="Commentaire"
+                                    value={value}
+                                    onValueChange={(val: string): void => {onChange(val);}}
+                                />
+                            </View>
+                        );
+                    }}
+                />
             </View>
             <View style={STYLES.buttonWrapper}>
                 {renderButtons()}
             </View>
         </Pressable>
-        {renderToast()}
         {renderErrorToast()}
     </Modal>
     );

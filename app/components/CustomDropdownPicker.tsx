@@ -6,6 +6,8 @@ import {
     RED
 } from '../style/colors';
 
+import type {
+    ReactElement} from 'react';
 import React, {
     useEffect,
     useState
@@ -128,17 +130,16 @@ type DropdownProps = {
     zindex: number;
 };
 
-export const CustomDropdownPicker = (props: DropdownProps): React.ReactElement => {
+export const CustomDropdownPicker = (props: DropdownProps): ReactElement => {
     const PLACEHOLDERVALUE = props.required ?? true ? `${props.placeholder} *` : props.placeholder;
     const [isOpen, setIsOpen] = useState(false);
     const [OBJECT, setObject] = useState<number | string | null>(null);
     const [VALUEMULTIPLE, setValueMultiple] = useState<number[]>([]);
-    const [DISPLAYSTATE, setDisplayState] = React.useState<'flex' | 'none' | undefined>(props.initialValue ? 'flex' : 'none');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [STYLEINPUT, setStyleInput] = React.useState<any>(STYLES.notActive);
+    const [DISPLAYSTATE, setDisplayState] = useState<'flex' | 'none' | undefined>(props.initialValue ? 'flex' : 'none');
+    const [STYLEINPUT, setStyleInput] = useState<StyleProp<ViewStyle>>(STYLES.notActive);
     const [ITEMS, setItems] = useState<ItemType[]>(props.item);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [ERROR, setError] = React.useState(0);
+    const [ERROR, setError] = useState(0);
 
     useEffect((): void => {
         if(props.error === undefined) {
@@ -168,7 +169,7 @@ export const CustomDropdownPicker = (props: DropdownProps): React.ReactElement =
         return STYLES.dropdownWrapper;
     }
 
-    function simpleOrMultipleRenderer(): React.ReactElement {
+    function simpleOrMultipleRenderer(): ReactElement {
         if(props.multiple) {
             return <DropDownPicker
                         onChangeValue={(value: unknown[] | number | string | null): void => {

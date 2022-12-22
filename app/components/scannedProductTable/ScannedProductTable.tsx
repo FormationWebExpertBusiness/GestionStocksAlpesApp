@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     ScrollView,
     Text,
     View
 } from 'react-native';
+import type {ReactElement} from 'react';
 import React, {useState} from 'react';
 import {TABLESTYLES} from '../../style/tablesStyle';
 import ScannedProductLine from './ScannedProductLine';
@@ -25,13 +25,13 @@ type ScannedProductTableProps = {
     remove?: boolean;
 };
 
-const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElement => {
+const ScannedProductTable = (props: ScannedProductTableProps): ReactElement => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [commentValue, setCommentValue] = useState<string>('');
     const [idProductQuery, setIdProductQuery] = useState<number>(-1);
     const [indexProductQuery, setIndexProductQuery] = useState<number>(1);
-    const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false);
+    const [confirmationModal, setConfirmationModal] = useState<boolean>(false);
     const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
     const [isToastText, setIsToastText] = useState<string>('');
     const [isToastColor, setToastColor] = useState<string>('');
@@ -120,7 +120,7 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
         }
     });
 
-    function renderToast(): React.ReactElement {
+    function renderToast(): ReactElement {
         return (
             <Toast
                 visible={isToastVisible}
@@ -139,7 +139,7 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
         );
     }
 
-    function renderModal(): React.ReactElement {
+    function renderModal(): ReactElement {
             return (
                 <DetailProductModal
                     id={idProductQuery}
@@ -160,8 +160,8 @@ const ScannedProductTable = (props: ScannedProductTableProps): React.ReactElemen
             );
     }
 
-    function renderProducts(): React.ReactElement[] {
-        const SCANNEDPRODUCTSLINES: React.ReactElement[] = [];
+    function renderProducts(): ReactElement[] {
+        const SCANNEDPRODUCTSLINES: ReactElement[] = [];
 
         props.products.forEach((product, index): void => {
             SCANNEDPRODUCTSLINES.push(
