@@ -14,6 +14,7 @@ import {ADD_PRODUCT} from '../../graphql/mutation/addProduct';
 import Toast from 'react-native-root-toast';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../../types/rootStackParamList';
+import EmptyTable from '../emptyTable';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -187,11 +188,9 @@ const ScannedProductsPage = ({navigation, route}: Props): ReactElement => {
                 <TableSkeleton number={6} title1={'Catégorie'} title2={'Modèle'} title3={'N° série'} animation='pulse' />
             );
         } else if(error) {
-            return (
-                <View>
-                    <Text style={STYLES.text}>Error : {error.message}</Text>
-                </View>
-            );
+            return <EmptyTable title1='Catégory' title2='Modèle' title3='N° série' content='Une erreur est survenue' type={'error'}/>;
+        } else if(data.products.length === 0) {
+            return <EmptyTable title1='Catégory' title2='Modèle' title3='N° série' content='Aucun produit' type={'empty'}/>;
         }
 
         return (
