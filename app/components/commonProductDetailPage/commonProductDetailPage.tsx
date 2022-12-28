@@ -17,6 +17,8 @@ import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 import Toast from 'react-native-root-toast';
 import type {RootStackParamList} from '../../types/rootStackParamList';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import EmptyTable from '../emptyTable';
+import DetailPageHeaderEmpty from '../detailPageHeaderEmpty';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -110,17 +112,15 @@ const CommonProductDetailPage = ({navigation, route}: Props): ReactElement => {
             );
         } else if(commonProductQuantityData.error) {
             return (
-                <View>
-                    <Text style={STYLES.textStyle}>Error : {commonProductQuantityData.error.message}</Text>
-                </View>
+                <DetailPageHeaderEmpty title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} type={'error'} />
             );
         }
 
         const commonProduct: CommonProduct = commonProductQuantityData.data.commonProduct;
 
-        return (
-            <DetailPageHeader quantityCritical={commonProduct.quantity_critical} quantityLow={commonProduct.quantity_low} size={commonProduct.quantity} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} content1={commonProduct.category.name} content2={commonProduct.brand.name} content3={commonProduct.model} />
-        );
+        if(commonProduct.quantity === 0) return <DetailPageHeaderEmpty title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} type={'empty'} quantityCritical={commonProduct.quantity_critical} quantityLow={commonProduct.quantity_low}/>;
+
+        return <DetailPageHeader quantityCritical={commonProduct.quantity_critical} quantityLow={commonProduct.quantity_low} size={commonProduct.quantity} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} content1={commonProduct.category.name} content2={commonProduct.brand.name} content3={commonProduct.model} />;
     }
 
     function renderProductTable(): ReactElement {
@@ -130,14 +130,15 @@ const CommonProductDetailPage = ({navigation, route}: Props): ReactElement => {
             );
         } else if(commonProductProductsData.error) {
             return (
-                <View>
-                    <Text style={STYLES.textStyle}>Error : {commonProductProductsData.error.message}</Text>
-                </View>
+                <EmptyTable title1={'N° série'} title2={'Étage'} title3={'Ètagère'} content='Une erreur est survenue' type={'error'}/>
             );
         }
 
         const commonProduct: CommonProduct = commonProductProductsData.data.commonProduct;
 
+        if(commonProduct.products.length === 0) {
+            return <EmptyTable title1={'N° série'} title2={'Étage'} title3={'Ètagère'} content='Aucun produit' type={'empty'}/>;
+        }
         return (
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             <ProductTable commonProductId={commonProductId!} commonProduct={commonProduct} />
