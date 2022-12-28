@@ -18,6 +18,7 @@ import Toast from 'react-native-root-toast';
 import type {RootStackParamList} from '../../types/rootStackParamList';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import EmptyTable from '../emptyTable';
+import DetailPageHeaderEmpty from '../detailPageHeaderEmpty';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -111,17 +112,15 @@ const CommonProductDetailPage = ({navigation, route}: Props): ReactElement => {
             );
         } else if(commonProductQuantityData.error) {
             return (
-                <View>
-                    <Text style={STYLES.textStyle}>Error : {commonProductQuantityData.error.message}</Text>
-                </View>
+                <DetailPageHeaderEmpty title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} type={'error'} />
             );
         }
 
         const commonProduct: CommonProduct = commonProductQuantityData.data.commonProduct;
 
-        return (
-            <DetailPageHeader quantityCritical={commonProduct.quantity_critical} quantityLow={commonProduct.quantity_low} size={commonProduct.quantity} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} content1={commonProduct.category.name} content2={commonProduct.brand.name} content3={commonProduct.model} />
-        );
+        if(commonProduct.quantity === 0) return <DetailPageHeaderEmpty title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} type={'empty'} quantityCritical={commonProduct.quantity_critical} quantityLow={commonProduct.quantity_low}/>;
+
+        return <DetailPageHeader quantityCritical={commonProduct.quantity_critical} quantityLow={commonProduct.quantity_low} size={commonProduct.quantity} title1={'Catégorie'} title2={'Modèle'} title3={'Marque'} content1={commonProduct.category.name} content2={commonProduct.brand.name} content3={commonProduct.model} />;
     }
 
     function renderProductTable(): ReactElement {

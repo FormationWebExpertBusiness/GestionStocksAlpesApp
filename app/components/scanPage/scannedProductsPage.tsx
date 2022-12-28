@@ -5,7 +5,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {GET_PRODUCTS} from '../../graphql/query/getProducts';
 import {GET_RACK} from '../../graphql/query/getRack';
 import {BLACK, CULTURED, ERROR, SUCCESS, WHITE} from '../../style/colors';
-import RemovePageHeader from './scanPageHeader';
+import ScanPageHeader from './scanPageHeader';
 import CustomTopTabNavigator from '../CustomTopTabNavigator';
 import TableSkeleton from '../skeletons/tablesSkeleton/tableSkeleton';
 import ScannedProductTable from '../scannedProductTable/ScannedProductTable';
@@ -15,6 +15,7 @@ import Toast from 'react-native-root-toast';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../../types/rootStackParamList';
 import EmptyTable from '../emptyTable';
+import DetailPageHeaderEmpty from '../detailPageHeaderEmpty';
 
 const STYLES = StyleSheet.create({
     pageWrapper: {
@@ -167,19 +168,19 @@ const ScannedProductsPage = ({navigation, route}: Props): ReactElement => {
     function renderHeader(): ReactElement {
         if(rackData.loading) {
             return (
-                <RemovePageHeader title1={'Étagère'} title2={'Étage'} skeleton />
+                <ScanPageHeader title1={'Étagère'} title2={'Étage'} skeleton />
             );
         } else if(rackData.error) {
             return (
-                <View>
-                    <Text style={STYLES.text}>Error : {rackData.error.message}</Text>
-                </View>
+                <DetailPageHeaderEmpty title1={'Étagère'} title2={'Étage'} type={'error'} />
             );
         }
 
-        return (
-            <RemovePageHeader title1={'Étagère'} title2={'Étage'} size={rackData.data.rack.nb_products} content1={rackData.data.rack.name} content2={routeData.values.rack_level} />
-        );
+        if(rackData.data.rack.nb_products === 0) {
+            return <DetailPageHeaderEmpty title1={'Étagère'} title2={'Étage'} type={'empty'} scanned />;
+        }
+
+        return <ScanPageHeader title1={'Étagère'} title2={'Étage'} size={rackData.data.rack.nb_products} content1={rackData.data.rack.name} content2={routeData.values.rack_level} />;
     }
 
     function renderResults(): ReactElement {

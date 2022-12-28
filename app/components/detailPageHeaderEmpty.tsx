@@ -6,8 +6,8 @@ import {
 } from 'react-native';
 import type {ReactElement} from 'react';
 import React, {useState} from 'react';
-import {ALMOST_BLACK, BADGEDOTGREEN, BADGEDOTORANGE, BADGEDOTRED, BADGEGREEN, BADGEORANGE, BADGERED, BADGETEXTGREEN, BADGETEXTORANGE, BADGETEXTRED, CULTURED, DARKBLUEBLACK} from '../../style/colors';
-import {Skeleton} from '@rneui/themed';
+import {CubeIcon, XCircleIcon} from 'react-native-heroicons/outline';
+import {ALMOST_BLACK, BADGEDOTGREEN, BADGEDOTORANGE, BADGEDOTPURPLE, BADGEDOTRED, BADGEGREEN, BADGEORANGE, BADGEPURPLE, BADGERED, BADGETEXTGREEN, BADGETEXTORANGE, BADGETEXTPURPLE, BADGETEXTRED, CULTURED, DARKBLUEBLACK, ERROR, PURPLE} from '../style/colors';
 
 const STYLES = StyleSheet.create({
     componentWrapper: {
@@ -63,6 +63,19 @@ const STYLES = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 11
     },
+    contentText: {
+        textAlign: 'center',
+        marginLeft: 25,
+        fontWeight: 'bold',
+        color: ALMOST_BLACK,
+        fontSize: 15
+    },
+    contentTextIcon: {
+        display: 'flex',
+        alignItems: 'center',
+        paddingLeft: 20,
+        flexDirection: 'row'
+    },
     badgeDot: {
         width: 6,
         height: 6,
@@ -72,61 +85,52 @@ const STYLES = StyleSheet.create({
         display: 'flex',
         marginTop: 10,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        width: '100%'
     }
 });
 
-type DetailPageHeaderProps = {
+type DetailPageHeaderEmptyProps = {
     title1: string;
     title2: string;
-    skeleton?: boolean;
-    title3: string;
+    title3?: string;
     quantityCritical?: number;
     quantityLow?: number;
-    size?: number;
-    content1?: string;
-    content2?: string;
-    content3?: string;
+    type: 'empty' | 'error';
+    scanned?: boolean;
 };
 
 
-const DetailPageHeader = (props: DetailPageHeaderProps): ReactElement => {
+const DetailPageHeaderEmpty = (props: DetailPageHeaderEmptyProps): ReactElement => {
 
     function getBadgeTextColor(): string {
-        if(!props.skeleton) {
-            if(props.size! < props.quantityCritical!) {
-                return BADGETEXTRED;
-            } else if(props.size! < props.quantityLow!) {
-                return BADGETEXTORANGE;
-            }
-                return BADGETEXTGREEN;
+        if(props.scanned) return BADGETEXTPURPLE;
+        if(props.quantityCritical! > 0) {
+            return BADGETEXTRED;
+        } else if(props.quantityLow! > 0) {
+            return BADGETEXTORANGE;
         }
         return BADGETEXTGREEN;
     }
 
     function getBadgeDotColor(): string {
-        if(!props.skeleton) {
-            if(props.size! < props.quantityCritical!) {
-                return BADGEDOTRED;
-            } else if(props.size! < props.quantityLow!) {
-                return BADGEDOTORANGE;
-            }
-                return BADGEDOTGREEN;
+        if(props.scanned) return BADGEDOTPURPLE;
+        if(props.quantityCritical! > 0) {
+            return BADGEDOTRED;
+        } else if(props.quantityLow! > 0) {
+            return BADGEDOTORANGE;
         }
         return BADGEDOTGREEN;
     }
 
     function getBadgeColor(): string {
-        if(!props.skeleton) {
-            if(props.size! < props.quantityCritical!) {
-                return BADGERED;
-            } else if(props.size! < props.quantityLow!) {
-                return BADGEORANGE;
-            }
-                return BADGEGREEN;
+        if(props.scanned) return BADGEPURPLE;
+        if(props.quantityCritical! > 0) {
+            return BADGERED;
+        } else if(props.quantityLow! > 0) {
+            return BADGEORANGE;
         }
         return BADGEGREEN;
-
     }
 
     const [badgeColor] = useState<string>(getBadgeColor());
@@ -134,22 +138,35 @@ const DetailPageHeader = (props: DetailPageHeaderProps): ReactElement => {
     const [badgeTextColor] = useState<string>(getBadgeTextColor());
 
     function renderContent(): ReactElement {
-        if(props.skeleton) {
+        if(props.type === 'error') {
             return (
-                <>
-                    <Skeleton width={70} height={20} />
-                    <Skeleton width={70} height={20} />
-                    <Skeleton width={70} height={20} />
-                </>
+                <View style={STYLES.contentTextIcon}>
+                    <XCircleIcon color={ERROR} height={30} width={30}/>
+                    <Text numberOfLines={1} style={[STYLES.contentText]}>Une erreur est survenu !</Text>
+                </View>
             );
         }
         return (
-            <>
-                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content1}</Text>
-                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content2}</Text>
-                <Text numberOfLines={1} style={[STYLES.textStyle, {fontWeight: 'bold'}]}>{props.content3}</Text>
-            </>
+            <View style={STYLES.contentTextIcon}>
+                <CubeIcon color={PURPLE} height={30} width={30}/>
+                <Text numberOfLines={1} style={[STYLES.contentText]}>Aucun produit</Text>
+            </View>
         );
+
+    }
+
+    function renderBadge(): ReactElement {
+        if(props.type === 'empty') {
+            return (
+                <View style={STYLES.badgeWrapper}>
+                    <View style={[STYLES.badge, {backgroundColor: badgeColor}]}>
+                        <View style={[STYLES.badgeDot, {backgroundColor: badgeDotColor}]} />
+                        <Text style={[STYLES.badgeText, {color: badgeTextColor}]}>0</Text>
+                    </View>
+                </View>
+            );
+        }
+        return <View />;
     }
 
     return (
@@ -157,23 +174,18 @@ const DetailPageHeader = (props: DetailPageHeaderProps): ReactElement => {
             <View style={STYLES.headerWrapper}>
                 <Text style={STYLES.textStyle}>{props.title1}</Text>
                 <Text style={STYLES.textStyle}>{props.title2}</Text>
-                <Text style={STYLES.textStyle}>{props.title3}</Text>
+                {props.title3 && <Text style={STYLES.textStyle}>{props.title3}</Text>}
                 <Text style={[STYLES.textStyle]}>Quantité</Text>
             </View>
             <View style={STYLES.contentWrapper}>
-            <View style={STYLES.textContent}>
-                {renderContent()}
-            </View>
-            <View style={STYLES.badgeWrapper}>
-                <View style={[STYLES.badge, {backgroundColor: badgeColor}]}>
-                    <View style={[STYLES.badgeDot, {backgroundColor: badgeDotColor}]} />
-                    <Text style={[STYLES.badgeText, {color: badgeTextColor}]}>{props.size !== undefined ? props.size : ''}</Text>
+                <View style={STYLES.textContent}>
+                    {renderContent()}
                 </View>
-            </View>
+                {renderBadge()}
             </View>
         </View>
     );
 };
 
 
-export default DetailPageHeader;
+export default DetailPageHeaderEmpty;
